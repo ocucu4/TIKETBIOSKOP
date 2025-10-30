@@ -5,18 +5,7 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-// ROUTES UNTUK HALAMAN FILM (ADMIN)
-$routes->get('/film', 'Film::index');
-$routes->get('/film/create', 'Film::create');
-$routes->post('/film/store', 'Film::store');
-$routes->get('/film/edit/(:num)', 'Film::edit/$1');
-$routes->post('/film/update/(:num)', 'Film::update/$1');
-$routes->get('/film/delete/(:num)', 'Film::delete/$1');
 
-// ROUTES UNTUK PEMESANAN TIKET (USER)
-$routes->get('/order/create/(:num)', 'Order::create/$1');
-$routes->post('/order/store', 'Order::store');
-$routes->get('/order/success', 'Order::success');
 
 // ROUTES UTAMA (HALAMAN HOME)
 $routes->get('/', 'Home::index');
