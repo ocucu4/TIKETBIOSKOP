@@ -17,7 +17,7 @@
                 <th>Durasi</th>
                 <th>Harga Tiket</th>
                 <th>Tanggal mulai</th>
-                <th>Tanggal berakhir</th>
+                <th>Tanggal selesai</th>
             </tr>
         </thead>
         <tbody>
