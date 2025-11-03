@@ -19,7 +19,6 @@
                     <p><strong>Durasi:</strong> <?= $f['durasi'] ?> menit</p>
                     <p><strong>Harga:</strong> Rp <?= number_format($f['harga_tiket'], 0, ',', '.') ?></p>
                     <p><strong>Tayang:</strong><br><?= $f['tanggal_mulai'] ?> - <?= $f['tanggal_selesai'] ?></p>
-                    <a href="<?= base_url('order/create/'.$f['id_film']) ?>" class="btn btn-primary btn-sm w-100">Pesan Tiket 🎟️</a>
                 </div>
             </div>
         </div>
