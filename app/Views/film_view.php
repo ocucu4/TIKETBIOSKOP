@@ -16,8 +16,8 @@
                 <th>Judul Film</th>
                 <th>Durasi</th>
                 <th>Harga Tiket</th>
-                <th>Tanggal Mulai</th>
-                <th>Tanggal Selesai</th>
+                <th>Tanggal masuk</th>
+                <th>Tanggal keluar</th>
             </tr>
         </thead>
         <tbody>
