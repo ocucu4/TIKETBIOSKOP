@@ -13,7 +13,7 @@
         <thead class="table-dark">
             <tr>
                 <th>ID</th>
-                <th>Judul Film</th>
+                <th>nama film</th>
                 <th>Durasi</th>
                 <th>Harga Tiket</th>
                 <th>Tanggal mulai</th>
