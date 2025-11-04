@@ -6,8 +6,17 @@ use CodeIgniter\Model;
 
 class OrderModel extends Model
 {
-    protected $table = 'orders';
+    protected $table = 'order';
     protected $primaryKey = 'id_order';
-    protected $allowedFields = ['nama_pemesan', 'id_film', 'jumlah_tiket', 'total_bayar', 'tanggal_order'];
     protected $useTimestamps = false;
+    
+    protected $allowedFields = [
+        'nama_pemesan', 
+        'status_order',
+        'tanggal_order',
+        'total_bayar', 
+        'id_film',
+        'id_room',
+    ];
+    
 }
