@@ -18,5 +18,8 @@ class OrderModel extends Model
         'id_film',
         'id_room',
     ];
+
+    protected bool $allowEmptyInserts = false;
+    protected bool $updateOnlyChanged = true;
     
 }

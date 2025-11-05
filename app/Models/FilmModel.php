@@ -17,4 +17,7 @@ class FilmModel extends Model
         'sinopsis',
         'harga_tiket'
     ];
+
+    protected bool $allowEmptyInserts = false;
+    protected bool $updateOnlyChanged = true;
 }
