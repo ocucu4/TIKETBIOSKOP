@@ -15,7 +15,6 @@ class FilmModel extends Model
         'tanggal_mulai',
         'tanggal_selesai',
         'sinopsis',
-        'harga_tiket'
     ];
 
     protected bool $allowEmptyInserts = false;
