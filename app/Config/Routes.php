@@ -18,10 +18,10 @@ $routes->group('bioskop', function($routes){
     $routes->get('hapus/(:any)', 'Bioskop::hapus/$1');
 });
 
-$routes->group('gendre', function($routes){
-    $routes->get('/', 'Gendre::index');
-    $routes->add('tambah', 'Gendre::tambah');
-    $routes->add('ubah', 'Gendre::ubah');
-    $routes->get('hapus/(:any)', 'Gendre::hapus/$1');
+$routes->group('genre', function($routes){
+    $routes->get('/', 'Genre::index');
+    $routes->add('tambah', 'Genre::tambah');
+    $routes->add('ubah', 'Genre::ubah');
+    $routes->get('hapus/(:any)', 'Genre::hapus/$1');
 });
 
