@@ -17,7 +17,6 @@ $routes->group('bioskop', function($routes){
     $routes->get('hapus/(:num)', 'Bioskop::hapus/$1');
 });
 
-
 $routes->group('genre', function($routes){
     $routes->get('/', 'Genre::index');
     $routes->add('tambah', 'Genre::tambah');
