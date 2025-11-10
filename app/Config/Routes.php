@@ -6,7 +6,12 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-$routes->get('/', 'Home::index');
+$routes->get('/', 'Admin::Login');
+$routes->get('admin/login', 'Admin::login');
+$routes->post('admin/login', 'Admin::prosesLogin');
+$routes->get('admin/dashboard', 'Admin::dashboard');
+$routes->get('admin', 'Admin::index');
+$routes->get('admin/logout', 'Admin::logout');
 
 $routes->group('bioskop', function($routes){
     $routes->get('/', 'Bioskop::index');

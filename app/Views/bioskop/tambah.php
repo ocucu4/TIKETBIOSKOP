@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah Bioskop</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= base_url('assets/css/backend.css') ?>">
+    <link rel="icon" href="<?= base_url('bioskop.ico') ?>" type="image/x-icon">
+<style>
+    input[type="time"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
+</style>
 </head>
+
 <body class="bg-light">
 <div class="container mt-5">
     <h2 class="mb-4 text-center">Tambah Data Bioskop</h2>
@@ -45,13 +53,13 @@
         </div>
 
         <div class="form-group">
-            <label for="jam_buka">Jam Buka</label>
-            <input type="time" class="form-control" id="jam_buka" name="jam_buka">
+            <label for="jam_buka">Jam Buka (24 Jam)</label>
+            <input type="time" class="form-control" id="jam_buka" name="jam_buka" step="60">
         </div>
 
         <div class="form-group">
-            <label for="jam_tutup">Jam Tutup</label>
-            <input type="time" class="form-control" id="jam_tutup" name="jam_tutup">
+            <label for="jam_tutup">Jam Tutup (24 Jam)</label>
+            <input type="time" class="form-control" id="jam_tutup" name="jam_tutup" step="60">
         </div>
 
         <button type="submit" class="btn btn-primary btn-block">Simpan Data</button>

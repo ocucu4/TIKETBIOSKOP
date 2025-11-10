@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Bioskop</title>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= base_url('assets/css/backend.css') ?>">
+    <link rel="icon" href="<?= base_url('bioskop.ico') ?>" type="image/x-icon">
 </head>
+
 <body class="bg-light">
 <div class="container mt-5">
     <h2 class="mb-4 text-center">Daftar Bioskop</h2>
