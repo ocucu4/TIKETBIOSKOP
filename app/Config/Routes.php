@@ -1,12 +1,16 @@
 <?php
 
+use App\Controllers\Bioskop;
 use CodeIgniter\Router\RouteCollection;
 
 /**
  * @var RouteCollection $routes
  */
 
-$routes->post('/', 'home::Login');
+$routes->get('/', 'home::index');
+
+$routes->get('dashboard', 'Dashboard::index');
+
 
     $routes->get('bioskop', 'Bioskop::index');
     $routes->get('bioskop/tambah', 'Bioskop::tambah');
@@ -14,6 +18,7 @@ $routes->post('/', 'home::Login');
     $routes->get('bioskop/ubah', 'Bioskop::ubah');
     $routes->post('bioskop/update', 'Bioskop::update');
     $routes->get('bioskop/delete/(:num)', 'Bioskop::delete/$1');
+
 
 $routes->group('genre', function($routes){
     $routes->get('/', 'Genre::index');

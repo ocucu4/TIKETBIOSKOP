@@ -1,3 +1,3 @@
-<footer class="footer text-center py-3" style="position: relative; bottom: 0; width: 100%; z-index: 1; background: #f8f9fa;">
-  <p class="mb-0">&copy; <?= date('Y') ?> Sistem Penjualan Tiket Bioskop | Template by CodedThemes</p>
+<footer class="text-center py-3 border-top mt-auto bg-white">
+  <p class="mb-0 small text-muted">© <?= date('Y') ?> Tiket Bioskop — Dashboard Admin Template</p>
 </footer>
