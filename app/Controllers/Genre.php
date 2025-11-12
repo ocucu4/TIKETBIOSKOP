@@ -4,8 +4,6 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\GenreModel;
-use CodeIgniter\HTTP\ResponseInterface;
-
 class Genre extends BaseController
 {
     protected $genre;
@@ -16,29 +14,38 @@ class Genre extends BaseController
 
     public function index()
     {
-        $data['genre'] = $this->genre->first();
+        $data['genre'] = $this->genre->findAll();
         return view('genre/index', $data);
     }
 
     public function tambah()
     {
-        
-
-
-
         return view('genre/tambah');
     }
-    public function ubah()
+
+    public function add()
     {
-        
-
-
-        return view('genre/ubah');
+        $param = $this->request->getPost();
+        $this->genre->insert($param);
+        return redirect()->to(base_url('genre'));
     }
 
-    public function hapus($id)
+    public function ubah($id)
+    {
+        $data['genre'] = $this->genre->find($id);
+        return view('genre/ubah', $data);
+    }
+
+    public function update($id)
+    {
+        $param = $this->request->getPost();
+        $this->genre->update($id, $param);
+        return redirect()->to(base_url('genre'));
+    }
+
+    public function delete($id)
     {
         $this->genre->delete($id);
-        redirect()->to(base_url('genre/index'));
+        return redirect()->to(base_url('genre'));
     }
 }

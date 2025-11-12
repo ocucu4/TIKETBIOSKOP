@@ -1,105 +1,47 @@
 <?php
 
 namespace App\Controllers;
-
-use App\Controllers\BaseController;
 use App\Models\BioskopModel;
-use CodeIgniter\HTTP\ResponseInterface;
 
 class Bioskop extends BaseController
 {
     protected $bioskop;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->bioskop = new BioskopModel();
     }
 
-    public function index()
+    public function index(): string
     {
-        $data['bioskop'] = $this->bioskop->orderBy('id_bioskop', 'DESC')->findAll();
-        return view('bioskop/index', $data);
+        $data = $this->bioskop->findAll();
+        return view('bioskop/index', ['data' => $data]);
     }
 
     public function tambah()
     {
-        if ($this->request->getMethod() == 'post') {
-            $data = [
-                'nama_bioskop' => $this->request->getPost('nama_bioskop'),
-                'alamat' => $this->request->getPost('alamat'),
-                'kota' => $this->request->getPost('kota'),
-                'telepon' => $this->request->getPost('telepon'),
-                'email' => $this->request->getPost('email'),
-                'website' => $this->request->getPost('website'),
-                'jam_buka' => $this->request->getPost('jam_buka'),
-                'jam_tutup' => $this->request->getPost('jam_tutup'),
-            ];
-
-            $this->bioskop->insert($data);
-            return redirect()->to(base_url('bioskop'));
-        }
-
         return view('bioskop/tambah');
     }
 
-    public function simpan()
+    public function add()
     {
-        $data = [
-            'nama_bioskop' => $this->request->getPost('nama_bioskop'),
-            'alamat' => $this->request->getPost('alamat'),
-            'kota' => $this->request->getPost('kota'),
-            'telepon' => $this->request->getPost('telepon'),
-            'email' => $this->request->getPost('email'),
-            'website' => $this->request->getPost('website'),
-            'jam_buka' => $this->request->getPost('jam_buka'),
-            'jam_tutup' => $this->request->getPost('jam_tutup'),
-        ];
-
-        $this->bioskop->insert($data);
+        $param = $this->request->getPost();
+        $this->bioskop->insert($param);
         return redirect()->to(base_url('bioskop'));
     }
 
-    public function ubah($id)
+    public function ubah()
     {
-        $data['bioskop'] = $this->bioskop->find($id);
-
-        if ($this->request->getMethod() == 'post') {
-            $updateData = [
-                'nama_bioskop' => $this->request->getPost('nama_bioskop'),
-                'alamat' => $this->request->getPost('alamat'),
-                'kota' => $this->request->getPost('kota'),
-                'telepon' => $this->request->getPost('telepon'),
-                'email' => $this->request->getPost('email'),
-                'website' => $this->request->getPost('website'),
-                'jam_buka' => $this->request->getPost('jam_buka'),
-                'jam_tutup' => $this->request->getPost('jam_tutup'),
-            ];
-
-            $this->bioskop->update($id, $updateData);
-            return redirect()->to(base_url('bioskop'));
-        }
-
-        return view('bioskop/ubah', $data);
+        return view('bioskop/ubah');
     }
 
-    public function update($id)
+    public function update()
     {
-        $data = [
-            'nama_bioskop' => $this->request->getPost('nama_bioskop'),
-            'alamat' => $this->request->getPost('alamat'),
-            'kota' => $this->request->getPost('kota'),
-            'telepon' => $this->request->getPost('telepon'),
-            'email' => $this->request->getPost('email'),
-            'website' => $this->request->getPost('website'),
-            'jam_buka' => $this->request->getPost('jam_buka'),
-            'jam_tutup' => $this->request->getPost('jam_tutup'),
-        ];
-
-        $this->bioskop->update($id, $data);
+        $param = $this->request->getPost();
+        $this->bioskop->insert($param);
         return redirect()->to(base_url('bioskop'));
     }
 
-    public function hapus($id)
+    public function delete($id)
     {
         $this->bioskop->delete($id);
         return redirect()->to(base_url('bioskop'));
