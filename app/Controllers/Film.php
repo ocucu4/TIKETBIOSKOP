@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use App\Models\FilmModel;
+
 class Film extends BaseController
 {
     protected $film;
@@ -27,15 +28,16 @@ class Film extends BaseController
         return redirect()->to(base_url('film'));
     }
 
-    public function ubah()
+    public function ubah($id)
     {
-        return view('film/ubah');
+        $data = $this->film->find($id);
+        return view('film/ubah', ['data' => $data]);
     }
 
-    public function update()
+    public function update($id)
     {
         $param = $this->request->getPost();
-        $this->film->insert($param);
+        $this->film->update($id, $param);
         return redirect()->to(base_url('film'));
     }
 

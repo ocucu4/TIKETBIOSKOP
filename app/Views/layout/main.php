@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="<?= base_url('assets/css/plugins/bootstrap.min.css') ?>">
   <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
   <link rel="stylesheet" href="<?= base_url('assets/css/style-preset.css') ?>">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link rel="icon" href="<?= base_url('assets/images/favicon.svg') ?>">
 
   <style>
@@ -17,6 +18,7 @@
       background: #f5f7fa;
       overflow-x: hidden;
       display: flex;
+      height: 100%;
   }
 
   .pc-sidebar {
@@ -36,6 +38,9 @@
       width: calc(100% - 250px);
       padding: 0 20px;
       transition: .3s;
+      min-height: calc(100vh - 100px);
+      display: flex;
+      flex-direction: column;
   }
 
   .pc-header {
@@ -55,8 +60,12 @@
       z-index: 2000;
   }
 
+  footer {
+    margin-top: auto;
+  }
+
   .page-wrapper {
-      margin-top: 10px;
+      margin-top: auto;
       margin-bottom: 20px;
   }
 
@@ -102,8 +111,10 @@
       width: 100%;
       height: 100%;
       background: rgba(0,0,0,.35);
+      backdrop-filter: blur(2px);
       display: none;
       z-index: 3200;
+      transition: 0.3s;
   }
   .profile-overlay.show {
       display: block;
@@ -116,8 +127,10 @@
       width:100%;
       height:100%;
       background: rgba(0,0,0,0.25);
+      backdrop-filter: blur(2px);
       display:none;
       z-index:3000;
+      transition: 0.3s;
   }
 
   </style>

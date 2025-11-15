@@ -9,13 +9,19 @@
       <i data-feather="home" class="me-2"></i> Dashboard
     </a>
     <a href="<?= base_url('bioskop') ?>" class="nav-link text-dark mb-2">
-      <i data-feather="film" class="me-2"></i> Bioskop
+      <i data-feather="map-pin" class="me-2"></i> Bioskop
     </a>
     <a href="<?= base_url('film') ?>" class="nav-link text-dark mb-2">
       <i data-feather="film" class="me-2"></i> Film
     </a>
     <a href="<?= base_url('genre') ?>" class="nav-link text-dark mb-2">
-      <i data-feather="tag" class="me-2"></i> Genre
+      <i data-feather="sliders" class="me-2"></i> Genre
+    </a>
+    <a href="<?= base_url('kursi') ?>" class="nav-link text-dark mb-2 d-flex align-items-center">
+    <img src="<?= base_url('assets/icons-sidebar/cinema-seats.png') ?>" 
+         width="24" height="24" 
+         class="me-2" 
+         alt="kursi">Kursi
     </a>
     <a href="<?= base_url('pesanan') ?>" class="nav-link text-dark mb-2">
       <i data-feather="shopping-cart" class="me-2"></i> Pesanan

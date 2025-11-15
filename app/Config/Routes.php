@@ -21,6 +21,15 @@ $routes->group('bioskop', function($routes){
     $routes->get('delete/(:num)', 'Bioskop::delete/$1');
 });
 
+$routes->group('film', function($routes){
+    $routes->get('/', 'Film::index');
+    $routes->get('tambah', 'Film::tambah');
+    $routes->post('simpan', 'Film::add');
+    $routes->get('ubah/(:num)', 'Film::ubah/$1');
+    $routes->post('update/(:num)', 'Film::update/$1');
+    $routes->get('hapus(:any)', 'Film::delete/$1');
+    $routes->get('delete/(:num)', 'Film::delete/$1');
+});
 
 $routes->group('genre', function($routes){
     $routes->get('/', 'Genre::index');

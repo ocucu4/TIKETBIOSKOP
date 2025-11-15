@@ -41,16 +41,21 @@
       </div>
     </div>
   </div>
+
 </div>
 
 <div class="row mt-4">
+
   <div class="col-md-8">
     <div class="card">
       <div class="card-header">
-        <h5>Grafik Penjualan Tiket</h5>
+        <h5>Informasi</h5>
       </div>
       <div class="card-body">
-        <div id="chart-sales" style="min-height: 320px;"></div>
+        <p class="text-muted">
+          Grafik penjualan tiket sementara dinonaktifkan.
+          Anda dapat menambahkan modul laporan jika diperlukan.
+        </p>
       </div>
     </div>
   </div>
@@ -75,29 +80,7 @@
       </div>
     </div>
   </div>
-</div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  if (typeof ApexCharts !== 'undefined') {
-    var options = {
-      chart: {
-        type: 'area',
-        height: 320
-      },
-      series: [{
-        name: 'Tiket Terjual',
-        data: [120, 200, 180, 250, 300, 350, 400]
-      }],
-      xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul']
-      },
-      colors: ['#3B82F6']
-    };
-    var chart = new ApexCharts(document.querySelector("#chart-sales"), options);
-    chart.render();
-  }
-});
-</script>
+</div>
 
 <?= $this->endSection() ?>

@@ -11,7 +11,7 @@
     style="margin-right: 20px;"
     onclick="openProfilePanel()">
 
-        <img src="<?= base_url('assets/images/user/avatar-1.jpg') ?>"
+        <img src="<?= base_url('assets/images/user/mypfp.jpg') ?>"
              class="rounded-circle me-2"
              width="34" height="34">
 
