@@ -3,20 +3,20 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\BioskopModel;
+use App\Models\RoomModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Room extends BaseController
 {
-    protected $bioskop;
+    protected $Room;
 
     public function __construct() {
-        $this->bioskop = new BioskopModel();
+        $this->Room= new RoomModel();
     }
 
     public function index()
     {
-        $data['bioskop'] = $this->bioskop->first();
+        $data['bioskop'] = $this->Room->first();
         return view('bioskop/index', $data);
     }
 
@@ -38,7 +38,7 @@ class Room extends BaseController
 
     public function hapus($id)
     {
-        $this->bioskop->delete($id);
+        $this->Room->delete($id);
         redirect()->to(base_url('bioskop/index'));
     }
 }

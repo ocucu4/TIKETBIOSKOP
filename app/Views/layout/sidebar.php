@@ -11,11 +11,17 @@
     <a href="<?= base_url('bioskop') ?>" class="nav-link text-dark mb-2">
       <i data-feather="film" class="me-2"></i> Bioskop
     </a>
+    <a href="<?= base_url('film') ?>" class="nav-link text-dark mb-2">
+      <i data-feather="film" class="me-2"></i> Film
+    </a>
     <a href="<?= base_url('genre') ?>" class="nav-link text-dark mb-2">
       <i data-feather="tag" class="me-2"></i> Genre
     </a>
     <a href="<?= base_url('pesanan') ?>" class="nav-link text-dark mb-2">
       <i data-feather="shopping-cart" class="me-2"></i> Pesanan
+    </a>
+    <a href="<?= base_url('detailorder') ?>" class="nav-link text-dark mb-2">
+      <i data-feather="shopping-cart" class="me-2"></i> DetailOrder
     </a>
     <hr>
     <a href="#" class="nav-link text-muted small mb-1">LAINNYA</a>

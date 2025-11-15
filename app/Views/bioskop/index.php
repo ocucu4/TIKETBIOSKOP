@@ -36,8 +36,18 @@
             <td><?= esc($b->jam_buka) ?></td>
             <td><?= esc($b->jam_tutup) ?></td>
             <td>
-              <a href="<?= base_url('bioskop/ubah/'.$b->id_bioskop) ?>" class="btn btn-warning btn-sm">Ubah</a>
-              <a href="<?= base_url('bioskop/delete/'.$b->id_bioskop) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus data ini?')">Hapus</a>
+              <div class="btn-group">
+              <a href="<?= base_url('bioskop/ubah/'.$b->id_bioskop) ?>" 
+   class="btn btn-outline-primary action-circle">
+    <i data-feather="edit"></i>
+</a>
+
+<button onclick="hapusData(<?= $b->id_bioskop ?>)" 
+        class="btn btn-outline-danger action-circle">
+    <i data-feather="trash-2"></i>
+</button>
+
+            </div>
             </td>
           </tr>
           <?php endforeach; ?>

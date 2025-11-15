@@ -26,18 +26,21 @@ class Bioskop extends BaseController
     {
         $param = $this->request->getPost();
         $this->bioskop->insert($param);
+
         return redirect()->to(base_url('bioskop'));
     }
 
-    public function ubah()
+    public function ubah($id)
     {
-        return view('bioskop/ubah');
+        $data = $this->bioskop->find($id);
+        return view('bioskop/ubah', ['data' => $data]);
     }
 
-    public function update()
+    public function update($id)
     {
         $param = $this->request->getPost();
-        $this->bioskop->insert($param);
+        $this->bioskop->update($id, $param);
+
         return redirect()->to(base_url('bioskop'));
     }
 

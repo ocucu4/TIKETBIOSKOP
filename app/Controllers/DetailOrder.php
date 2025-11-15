@@ -1,49 +1,41 @@
-<?php
+<?php 
+namespace App\Controller;
 
-namespace App\Controllers;
+use App\Controllers\BaseController;
 use App\Models\DetailOrderModel;
 
 class DetailOrder extends BaseController
 {
-    protected $detailOrder;
-
+    protected $detailorder;
     public function __construct() {
-        $this->detailOrder = new DetailOrderModel();
+        $this->detailorder = new DetailOrderModel();
     }
-
     public function index(): string
-    {
-        $data = $this->detailOrder->findAll();
-        return view('detail_order/index', ['data' => $data]);
-    }
+{
+   $data = $this->detailorder->findAll();
+   return view('detailorder' ,['data'=>$data]);
+}
+public function tambah(){
+    return view('tambah_detailorder');
+}
 
-    public function tambah()
-    {
-        return view('detail_order/tambah');
-    }
+public function add() {
+    $param =$this->request->getPost();
+    $this->detailorder->insert($param);
+    return redirect()->to(base_url('detailorder'));
+}
+    
+public function ubah() {
+ return view('ubah_detailorder');
+}
+public function update(){
+    $param=$this->request->getPost();
+    $this->detailorder->insert($param);
+    return redirect()->to(base_url('detailorder'));
 
-    public function add()
-    {
-        $param = $this->request->getPost();
-        $this->detailOrder->insert($param);
-        return redirect()->to(base_url('detailorder'));
-    }
-
-    public function ubah()
-    {
-        return view('detail_order/ubah');
-    }
-
-    public function update()
-    {
-        $param = $this->request->getPost();
-        $this->detailOrder->insert($param);
-        return redirect()->to(base_url('detailorder'));
-    }
-
-    public function delete($id)
-    {
-        $this->detailOrder->delete($id);
-        return redirect()->to(base_url('detailorder'));
-    }
+}
+public function deleteI($id) {
+    $this->detailorder->delete($id);
+    return redirect()->to(base_url('detailorder'));
+}
 }

@@ -2,12 +2,10 @@
 
 <?= $this->section('content') ?>
 
-<div class="page-header">
-  <h4 class="mb-3">Dashboard</h4>
-</div>
+<div class="page-header"></div>
 
 <div class="row">
-  <!-- Kartu Statistik -->
+
   <div class="col-md-4">
     <div class="card">
       <div class="card-body d-flex justify-content-between align-items-center">

@@ -11,13 +11,15 @@ $routes->get('/', 'home::index');
 
 $routes->get('dashboard', 'Dashboard::index');
 
-
-    $routes->get('bioskop', 'Bioskop::index');
-    $routes->get('bioskop/tambah', 'Bioskop::tambah');
-    $routes->post('bioskop/simpan', 'Bioskop::add');
-    $routes->get('bioskop/ubah', 'Bioskop::ubah');
-    $routes->post('bioskop/update', 'Bioskop::update');
-    $routes->get('bioskop/delete/(:num)', 'Bioskop::delete/$1');
+$routes->group('bioskop', function($routes){
+    $routes->get('/', 'Bioskop::index');
+    $routes->get('tambah', 'Bioskop::tambah');
+    $routes->post('simpan', 'Bioskop::add');
+    $routes->get('ubah/(:num)', 'Bioskop::ubah/$1');
+    $routes->post('update/(:num)', 'Bioskop::update/$1');
+    $routes->get('hapus/(:num)', 'Bioskop::delete/$1');
+    $routes->get('delete/(:num)', 'Bioskop::delete/$1');
+});
 
 
 $routes->group('genre', function($routes){
@@ -27,13 +29,3 @@ $routes->group('genre', function($routes){
     $routes->get('hapus/(:any)', 'Genre::hapus/$1');
     $routes->post('simpan', 'Genre::simpan');
 });
-
-$routes->group('detailorder', function($routes){
-    $routes->get('/', 'DetailOrder::index');        
-    $routes->get('tambah', 'DetailOrder::tambah');  
-    $routes->post('add', 'DetailOrder::add');
-    $routes->get('ubah', 'DetailOrder::ubah');    
-    $routes->post('update', 'DetailOrder::update');
-    $routes->get('delete/(:num)', 'DetailOrder::delete/$1');
-});
-
