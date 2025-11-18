@@ -28,7 +28,7 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    transition: .3s;
+    transition: .1s;
     overflow-y: auto;
     z-index: 3000;
 }
@@ -79,20 +79,21 @@ body {
     width: 100%;
 }
 
-.profile-panel {
+.profile-card {
     position: fixed;
-    top: 0;
-    right: -320px;
-    width: 320px;
-    height: 100vh;
+    top: 90px;
+    right: -380px;
+    width: 350px;
     background: #fff;
-    border-left: 1px solid #e5e7eb;
-    padding: 10px;
-    transition: .35s;
-    z-index: 3300;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,.08);
+    transition: .35s ease;
+    padding: 20px;
+    z-index: 4000;
 }
-.profile-panel.open {
-    right: 0;
+
+.profile-card.show {
+    right: 20px;
 }
 
 .profile-overlay {
@@ -105,8 +106,27 @@ body {
     display: none;
     z-index: 3000;
 }
+
 .profile-overlay.show {
     display: block;
+}
+
+.profile-menu .menu-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.profile-menu .menu-item i {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.profile-menu .menu-item:hover {
+    background: #f1f3f7;
 }
 </style>
 </head>
@@ -127,19 +147,25 @@ body {
     <?= $this->include('layout/footer') ?>
 </div>
 
-<div id="profilePanel" class="profile-panel">
-    <div class="d-flex justify-content-between">
-        <h5>Profil</h5>
-        <button class="btn-close" onclick="closeProfilePanel()"></button>
-    </div>
+<div id="profileCard" class="profile-card">
+    <div class="card-inner">
 
-    <div class="text-center mt-3">
-        <img src="<?= base_url('assets/images/user/mypfp.jpg') ?>" width="70" class="rounded-circle mb-2">
-        <h6 class="fw-semibold">Admin</h6>
-        <p class="text-muted small">administrator@system.local</p>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="m-0">Profile</h5>
+            <button class="btn-close" onclick="closeProfilePanel()"></button>
+        </div>
+
+        <div class="text-center mb-3">
+            <img src="<?= base_url('assets/images/user/mypfp.jpg') ?>" width="70" class="rounded-circle mb-2">
+            <h6 class="fw-semibold"><?= session()->get('admin_name') ?></h6>
+        </div>
+
         <hr>
-        <a class="btn btn-outline-primary w-100 mb-2">Profil</a>
-        <a class="btn btn-danger w-100">Keluar</a>
+
+        <a href="<?= base_url('logout') ?>" class="btn btn-danger w-100 mt-2" style="font-weight: 600;">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
+
     </div>
 </div>
 
@@ -164,12 +190,12 @@ toggleBtn?.addEventListener("click", () => {
 });
 
 function openProfilePanel() {
-    profilePanel.classList.add("open");
-    profileOverlay.classList.add("show");
+    document.getElementById("profileCard").classList.add("show");
+    document.getElementById("profileOverlay").classList.add("show");
 }
 function closeProfilePanel() {
-    profilePanel.classList.remove("open");
-    profileOverlay.classList.remove("show");
+    document.getElementById("profileCard").classList.remove("show");
+    document.getElementById("profileOverlay").classList.remove("show");
 }
 </script>
 

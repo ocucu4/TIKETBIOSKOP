@@ -68,13 +68,13 @@
       <div class="card-body">
         <ul class="list-group list-group-flush">
           <li class="list-group-item d-flex justify-content-between align-items-center">
-            Avatar 2 <span class="badge bg-primary rounded-pill">120</span>
+            Inside Out 2 <span class="badge bg-primary rounded-pill">120</span>
           </li>
           <li class="list-group-item d-flex justify-content-between align-items-center">
-            Fast X <span class="badge bg-primary rounded-pill">98</span>
+            Fast and Forious <span class="badge bg-primary rounded-pill">98</span>
           </li>
           <li class="list-group-item d-flex justify-content-between align-items-center">
-            The Marvels <span class="badge bg-primary rounded-pill">85</span>
+            Joker 2 <span class="badge bg-primary rounded-pill">85</span>
           </li>
         </ul>
       </div>

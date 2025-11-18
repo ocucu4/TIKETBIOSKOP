@@ -42,7 +42,7 @@
          alt="kursi">Kursi
     </a>
 
-<hr>
+    <hr>
     <p class="menu-title">PROSES PENJUALAN TIKET</p>
     <a href="<?= base_url('order') ?>" class="nav-link text-dark mb-2 d-flex align-items-center">
     <img src="<?= base_url('assets/icons-sidebar/Order.png') ?>" 
