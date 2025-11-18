@@ -1,49 +1,61 @@
 <?php
 
 namespace App\Controllers;
+
+use App\Controllers\BaseController;
 use App\Models\FilmModel;
+use App\Models\GenreModel;
 
 class Film extends BaseController
 {
     protected $film;
-    public function __construct() {
-        $this->film = new FilmModel();
+    protected $genre;
+
+    public function __construct()
+    {
+        $this->film  = new FilmModel();
+        $this->genre = new GenreModel();
     }
 
-    public function index(): string
+    public function index()
     {
-        $data = $this->film->findAll();
-        return view('film/index', ['data' => $data]);
+        $data['data'] = $this->film
+            ->select('film.*, genre.nama_genre')
+            ->join('genre', 'genre.id_genre = film.id_genre', 'left')
+            ->findAll();
+
+        return view('film/index', $data);
     }
 
     public function tambah()
     {
-        return view('film/tambah');
+        $data['genres'] = $this->genre->findAll();
+        return view('film/tambah', $data);
     }
 
     public function add()
     {
-        $param = $this->request->getPost();
-        $this->film->insert($param);
-        return redirect()->to(base_url('film'));
+        $this->film->insert($this->request->getPost());
+        return redirect()->to(base_url('film'))->with('success', 'Film berhasil ditambahkan!');
     }
 
     public function ubah($id)
     {
-        $data = $this->film->find($id);
-        return view('film/ubah', ['data' => $data]);
+        $data['data']   = $this->film->find($id);
+        $data['genres'] = $this->genre->findAll();
+
+        return view('film/ubah', $data);
     }
 
     public function update($id)
     {
-        $param = $this->request->getPost();
-        $this->film->update($id, $param);
-        return redirect()->to(base_url('film'));
+        $this->film->update($id, $this->request->getPost());
+        return redirect()->to(base_url('film'))->with('success', 'Film berhasil diperbarui!');
     }
 
     public function delete($id)
     {
         $this->film->delete($id);
-        return redirect()->to(base_url('film'));
+        return redirect()->to(base_url('film'))->with('success', 'Film berhasil dihapus!');
     }
 }

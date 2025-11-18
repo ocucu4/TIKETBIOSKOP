@@ -8,6 +8,7 @@ class FilmModel extends Model
 {
     protected $table = 'film';
     protected $primaryKey = 'id_film';
+    protected $returnType = 'object';
     protected $allowedFields = [
         'judul_film',
         'id_genre',

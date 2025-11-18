@@ -5,12 +5,13 @@
   <div class="card-header">
     <h4>Daftar Bioskop</h4>
   </div>
+
   <div class="card-body">
     <a href="<?= base_url('bioskop/tambah') ?>" class="btn btn-primary mb-3">Tambah Bioskop</a>
     
     <div class="table-responsive">
-      <table class="table table-bordered">
-        <thead>
+      <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
           <tr>
             <th>No</th>
             <th>Nama Bioskop</th>
@@ -23,7 +24,7 @@
             <th class="hide-mobile">Jam Buka</th>
             <th class="hide-mobile">Jam Tutup</th>
 
-            <th>Aksi</th>
+            <th class="text-center">Aksi</th>
           </tr>
         </thead>
 
@@ -42,20 +43,16 @@
               <td class="hide-mobile"><?= esc($b->jam_buka) ?></td>
               <td class="hide-mobile"><?= esc($b->jam_tutup) ?></td>
 
-              <td>
-                <div class="btn-group">
+              <td class="text-center">
+                <a href="<?= base_url('bioskop/ubah/'.$b->id_bioskop) ?>" 
+                   class="btn btn-outline-primary action-circle">
+                    <i data-feather="edit"></i>
+                </a>
 
-                  <a href="<?= base_url('bioskop/ubah/'.$b->id_bioskop) ?>" 
-                     class="btn btn-outline-primary action-circle">
-                      <i data-feather="edit"></i>
-                  </a>
-
-                  <button onclick="hapusData(<?= $b->id_bioskop ?>)" 
-                          class="btn btn-outline-danger action-circle">
-                      <i data-feather="trash-2"></i>
-                  </button>
-
-                </div>
+                <button onclick="hapusData(<?= $b->id_bioskop ?>)" 
+                        class="btn btn-outline-danger action-circle" type="button">
+                    <i data-feather="trash-2"></i>
+                </button>
               </td>
             </tr>
             <?php endforeach; ?>
@@ -71,5 +68,23 @@
 
   </div>
 </div>
+
+<script>
+function hapusData(id) {
+    Swal.fire({
+        title: 'Hapus Bioskop?',
+        text: "Data ini akan dihapus permanen!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Hapus'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = "<?= base_url('bioskop/hapus') ?>/" + id;
+        }
+    });
+}
+</script>
 
 <?= $this->endSection() ?>

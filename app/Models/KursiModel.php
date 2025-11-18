@@ -6,9 +6,9 @@ use CodeIgniter\Model;
 
 class KursiModel extends Model
 {
-    protected $stable      = 'kursi';
+    protected $table      = 'kursi';
     protected $primaryKey  = 'id_kursi';
-    protected $returntype  = 'object';
+    protected $returnType  = 'object';
     protected $allowedFields = 
     
     [
@@ -16,9 +16,6 @@ class KursiModel extends Model
         'kode_kursi', 
         'status'
     ];
-    
-    protected $useTimestamps = false;
-    protected $useSoftDeletes = false;
    
     protected bool $allowEmptyInserts = false; 
     protected bool $updateOnlyChanged = true;

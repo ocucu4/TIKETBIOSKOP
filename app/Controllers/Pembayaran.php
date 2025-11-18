@@ -4,42 +4,76 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\PembayaranModel;
-use App\Models\PembayaranModelModel;
-use CodeIgniter\HTTP\ResponseInterface;
 
-class Room extends BaseController
+class Pembayaran extends BaseController
 {
-    protected $Pembayaran;
+    protected $pembayaran;
 
-    public function __construct() {
-        $this->Pembayaran = new PembayaranModel();
+    public function __construct()
+    {
+        $this->pembayaran = new PembayaranModel();
     }
 
     public function index()
     {
-        $data['bioskop'] = $this->Pembayaran->first();
-        return view('bioskop/index', $data);
+        $data['title'] = 'Pembayaran';
+        $data['data'] = $this->pembayaran
+              ->select('pembayaran.*, order.status_order')
+              ->join('order', 'order.id_order = pembayaran.id_order')
+              ->findAll();
+        return view('pembayaran/index', $data);
     }
 
     public function tambah()
     {
-        
+        $orderModel = new \App\Models\OrderModel();
 
+        $data['title'] = 'Tambah Pembayaran';
+        $data['orders'] = $orderModel->findAll();
 
-
-        return view('bioskop/tambah');
+        return view('pembayaran/tambah', $data);
     }
-    public function ubah()
+
+    public function add()
     {
-        
+        $data = $this->request->getPost();
 
+        $this->pembayaran->insert($data);
 
-        return view('bioskop/ubah');
+        $orderModel = new \App\Models\OrderModel();
+        $orderModel->update($data['id_order'], [
+        'status_order' => 'lunas'
+    ]);
+
+        return redirect()->to(base_url('pembayaran'));
+    }
+
+    public function ubah($id)
+    {
+        $data['title'] = 'Ubah Pembayaran';
+        $data['row'] = $this->pembayaran->find($id);
+        return view('pembayaran/ubah', $data);
+    }
+
+    public function update()
+    {
+        $post = $this->request->getPost();
+        $id = $post['id_pembayaran'];
+
+        $this->pembayaran->update($id, $post);
+
+        $orderModel = new \App\Models\OrderModel();
+        $orderModel->update($post['id_order'], [
+        'status_order' => 'lunas'
+    ]);
+
+        return redirect()->to(base_url('pembayaran'));
+
     }
 
     public function hapus($id)
     {
-        $this->Pembayaran->delete($id);
-        redirect()->to(base_url('bioskop/index'));
+        $this->pembayaran->delete($id);
+        return redirect()->to(base_url('pembayaran'));
     }
 }

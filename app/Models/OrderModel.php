@@ -9,7 +9,7 @@ class OrderModel extends Model
     protected $table = 'order';
     protected $primaryKey = 'id_order';
     protected $useTimestamps = false;
-    
+    protected $returnType = 'object';
     protected $allowedFields = [
         'nama_pemesan', 
         'status_order',

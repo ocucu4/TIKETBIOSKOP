@@ -1,44 +1,52 @@
 <?php
 
 namespace App\Controllers;
-
-use App\Controllers\BaseController;
 use App\Models\RoomModel;
-use CodeIgniter\HTTP\ResponseInterface;
 
 class Room extends BaseController
 {
-    protected $Room;
+    protected $room;
 
     public function __construct() {
-        $this->Room= new RoomModel();
+        $this->room = new RoomModel();
     }
 
-    public function index()
+    public function index(): string
     {
-        $data['bioskop'] = $this->Room->first();
-        return view('bioskop/index', $data);
+        $data = $this->room->findAll();
+        return view('room/index', ['data' => $data]);
     }
 
     public function tambah()
     {
-        
-
-
-
-        return view('bioskop/tambah');
+        return view('room/tambah');
     }
-    public function ubah()
+
+    public function add()
     {
-        
+        $param = $this->request->getPost();
+        $this->room->insert($param);
 
+        return redirect()->to(base_url('room'));
+    }
 
-        return view('bioskop/ubah');
+    public function ubah($id)
+    {
+        $data = $this->room->find($id);
+        return view('room/ubah', ['data' => $data]);
+    }
+
+    public function update($id)
+    {
+        $param = $this->request->getPost();
+        $this->room->update($id, $param);
+
+        return redirect()->to(base_url('room'));
     }
 
     public function hapus($id)
     {
-        $this->Room->delete($id);
-        redirect()->to(base_url('bioskop/index'));
+        $this->room->delete($id);
+        return redirect()->to(base_url('room'));
     }
 }

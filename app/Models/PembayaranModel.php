@@ -7,10 +7,10 @@ use CodeIgniter\Model;
 class PembayaranModel extends Model
 
 {
-    protected $stable   = 'pembayaran';
+    protected $table   = 'pembayaran';
     protected $primaryKey = 'id_pembayaran';
     protected $returnType = 'object';
-    protected $allowedFields = ['id_order', 'metode_pembayaran', 'status_pembayaran', 'tanggal_pembayaran'];
+    protected $allowedFields = ['id_order', 'metode_bayar', 'tanggal_bayar', 'jumlah_bayar', 'keterangan'];
     protected $useTimestamps = false;
     protected $useSoftDeletes = false;
     

@@ -1,44 +1,66 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 
-<div class="card p-4 shadow-sm">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="fw-semibold">Daftar Film</h5>
-        <a href="<?= base_url('film/tambah') ?>" class="btn btn-primary">
-            <i data-feather="plus"></i> Tambah Film
-        </a>
+<div class="card">
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-semibold mb-0">Daftar Film</h5>
+            <a href="<?= base_url('film/tambah') ?>" class="btn btn-primary">
+                <i class="ti ti-plus"></i> Tambah Film
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>No</th>
+                        <th>Judul Film</th>
+                        <th>Genre</th>
+                        <th>Durasi</th>
+                        <th>Tanggal Mulai</th>
+                        <th>Tanggal Selesai</th>
+                        <th>Harga Tiket</th>
+                        <th>Sinopsis</th>
+                        <th class="text-center" style="width:120px;">Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <?php foreach ($data as $i => $d): ?>
+                        <tr>
+                            <td><?= $i + 1 ?></td>
+                            <td><?= esc($d->judul_film) ?></td>
+                            <td><?= esc($d->nama_genre) ?></td>
+                            <td><?= esc($d->durasi) ?> menit</td>
+                            <td><?= date('d M Y', strtotime($d->tanggal_mulai)) ?></td>
+                            <td><?= date('d M Y', strtotime($d->tanggal_selesai)) ?></td>
+                            <td>Rp <?= number_format($d->harga_tiket, 0, ',', '.') ?></td>
+
+                            <td class="text-truncate" style="max-width:180px;">
+                                <?= esc($d->sinopsis) ?>
+                            </td>
+
+                            <td class="text-center">
+                                <a href="<?= base_url('film/ubah/'.$d->id_film) ?>" 
+                                   class="btn btn-outline-primary action-circle me-1">
+                                    <i data-feather="edit"></i>
+                                </a>
+
+                                <button onclick="hapusData(<?= $d->id_film ?>)" 
+                                        class="btn btn-outline-danger action-circle">
+                                    <i data-feather="trash-2"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    <?php endforeach ?>
+                </tbody>
+
+            </table>
+        </div>
+
     </div>
-
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Judul Film</th>
-                <th>Sinopsis</th>
-                <th style="width:120px;">Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($data as $i => $d): ?>
-                <tr>
-                    <td><?= $i + 1 ?></td>
-                    <td><?= esc($d['judul_film']) ?></td>
-                    <td><?= esc($d['sinopsis']) ?></td>
-                    <td>
-                        <a href="<?= base_url('film/ubah/' . $d['id_film']) ?>" 
-                           class="btn btn-outline-primary action-circle">
-                            <i data-feather="edit"></i>
-                        </a>
-
-                        <button class="btn btn-outline-danger action-circle"
-                                onclick="hapusData(<?= $d['id_film'] ?>)">
-                            <i data-feather="trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            <?php endforeach ?>
-        </tbody>
-    </table>
 </div>
 
 <script>
@@ -53,7 +75,7 @@ function hapusData(id) {
         confirmButtonText: 'Hapus'
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = "<?= base_url('film/hapus') ?>/" + id;
+            window.location.href = "<?= base_url('film/delete') ?>/" + id;
         }
     });
 }

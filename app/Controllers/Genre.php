@@ -1,44 +1,51 @@
 <?php
 
 namespace App\Controllers;
+use App\Models\GenreModel;
 
-use App\Controllers\BaseController;
-use App\Models\BioskopModel;
-use CodeIgniter\HTTP\ResponseInterface;
-
-class Room extends BaseController
+class Genre extends BaseController
 {
-    protected $Genre;
+    protected $genre;
 
     public function __construct() {
-        $this->Genre = new BioskopModel();
+        $this->genre = new GenreModel();
     }
 
     public function index()
     {
-        $data['bioskop'] = $this->Genre->first();
-        return view('bioskop/index', $data);
+        $data['data'] = $this->genre->findAll();
+        return view('genre/index', $data);
     }
 
     public function tambah()
     {
-        
-
-
-
-        return view('bioskop/tambah');
+        return view('genre/tambah');
     }
-    public function ubah()
+
+    public function simpan()
     {
-        
+        $param = $this->request->getPost();
+        $this->genre->insert($param);
+        return redirect()->to(base_url('genre'));
+    }
 
+    public function ubah($id)
+    {
+        $data['data'] = $this->genre->find($id);
+        return view('genre/ubah', $data);
+    }
 
-        return view('bioskop/ubah');
+    public function update($id)
+    {
+        $param = $this->request->getPost();
+        $this->genre->update($id, $param);
+
+        return redirect()->to(base_url('genre'));
     }
 
     public function hapus($id)
     {
-        $this->Genre->delete($id);
-        redirect()->to(base_url('bioskop/index'));
+        $this->genre->delete($id);
+        return redirect()->to(base_url('genre'));
     }
 }
