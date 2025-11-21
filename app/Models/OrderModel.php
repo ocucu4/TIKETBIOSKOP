@@ -17,6 +17,8 @@ class OrderModel extends Model
         'total_bayar', 
         'id_film',
         'id_room',
+        'jadwal_tayang_id_tayang
+        ',
     ];
 
     protected bool $allowEmptyInserts = false;
