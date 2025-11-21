@@ -6,18 +6,21 @@ use App\Controllers\BaseController;
 use App\Models\OrderModel;
 use App\Models\FilmModel;
 use App\Models\RoomModel;
+use App\Models\JadwalTayangModel; 
 
 class Order extends BaseController
 {
     protected $order;
     protected $film;
     protected $room;
+    protected $jadwal; 
 
     public function __construct()
     {
-        $this->order = new OrderModel();
-        $this->film  = new FilmModel();
-        $this->room  = new RoomModel();
+        $this->order  = new OrderModel();
+        $this->film   = new FilmModel();
+        $this->room   = new RoomModel();
+        $this->jadwal = new JadwalTayangModel(); 
     }
 
     public function index()
@@ -33,8 +36,9 @@ class Order extends BaseController
 
     public function tambah()
     {
-        $data['films'] = $this->film->findAll();
-        $data['rooms'] = $this->room->findAll();
+        $data['films']  = $this->film->findAll();
+        $data['rooms']  = $this->room->findAll();
+        $data['jadwal'] = $this->jadwal->findAll(); 
 
         return view('order/tambah', $data);
     }
@@ -42,12 +46,13 @@ class Order extends BaseController
     public function add()
     {
         $data = [
-            'nama_pemesan'   => $this->request->getPost('nama_pemesan'),
-            'tanggal_order'  => $this->request->getPost('tanggal_order'),
-            'total_bayar'    => $this->request->getPost('total_bayar'),
-            'status_order'   => $this->request->getPost('status_order'),
-            'id_film'        => $this->request->getPost('id_film'),
-            'id_room'        => $this->request->getPost('id_room'),
+            'nama_pemesan'            => $this->request->getPost('nama_pemesan'),
+            'tanggal_order'           => $this->request->getPost('tanggal_order'),
+            'total_bayar'             => $this->request->getPost('total_bayar'),
+            'status_order'            => $this->request->getPost('status_order'),
+            'id_film'                 => $this->request->getPost('id_film'),
+            'id_room'                 => $this->request->getPost('id_room'),
+            'jadwal_tayang_id_tayang' => $this->request->getPost('id_jadwal'),
         ];
 
         $this->order->insert($data);
@@ -57,9 +62,10 @@ class Order extends BaseController
 
     public function ubah($id)
     {
-        $data['data']  = $this->order->find($id);
-        $data['films'] = $this->film->findAll();
-        $data['rooms'] = $this->room->findAll();
+        $data['data']   = $this->order->find($id);
+        $data['films']  = $this->film->findAll();
+        $data['rooms']  = $this->room->findAll();
+        $data['jadwal'] = $this->jadwal->findAll();
 
         return view('order/ubah', $data);
     }
@@ -67,12 +73,13 @@ class Order extends BaseController
     public function update($id)
     {
         $data = [
-            'nama_pemesan'   => $this->request->getPost('nama_pemesan'),
-            'tanggal_order'  => $this->request->getPost('tanggal_order'),
-            'total_bayar'    => $this->request->getPost('total_bayar'),
-            'status_order'   => $this->request->getPost('status_order'),
-            'id_film'        => $this->request->getPost('id_film'),
-            'id_room'        => $this->request->getPost('id_room'),
+            'nama_pemesan'            => $this->request->getPost('nama_pemesan'),
+            'tanggal_order'           => $this->request->getPost('tanggal_order'),
+            'total_bayar'             => $this->request->getPost('total_bayar'),
+            'status_order'            => $this->request->getPost('status_order'),
+            'id_film'                 => $this->request->getPost('id_film'),
+            'id_room'                 => $this->request->getPost('id_room'),
+            'jadwal_tayang_id_tayang' => $this->request->getPost('id_jadwal'),
         ];
 
         $this->order->update($id, $data);
