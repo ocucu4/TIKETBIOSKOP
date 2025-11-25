@@ -10,11 +10,14 @@ class RoomModel extends Model
     protected $primaryKey       = 'id_room';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';
-    protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['nama_room', 'kapasitas'];
+
+    protected $allowedFields = [
+        'nama_room',
+        'kapasitas',
+        'id_tayang'
+    ];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
-
 }

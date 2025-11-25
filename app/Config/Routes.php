@@ -8,37 +8,39 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->get('/', 'Home::index');
 
-$routes->get('makepass', function() {
-    echo password_hash("admin123", PASSWORD_DEFAULT);
+// LOGIN
+$routes->get('login', 'UserAuth::loginForm');
+$routes->post('auth/login', 'UserAuth::login');
+$routes->get('logout', 'UserAuth::logout');
+
+// KASIR
+$routes->group('kasir', ['filter' => 'kasirAuth'], function ($routes) {
+    $routes->get('dashboard', 'Kasir\Dashboard::index');
+    $routes->get('transaksi', 'Kasir\Transaksi::index');
 });
 
-
-$routes->get('login', 'Auth::loginForm');
-$routes->post('auth/login', 'Auth::login');
-$routes->get('logout', 'Auth::logout');
-
+// ADMIN
 $routes->group('', ['filter' => 'adminAuth'], function($routes){
 
     $routes->get('dashboard', 'Dashboard::index');
 
-    $routes->group('bioskop', function($routes){
+    // BIOSKOP
+    $routes->group('bioskop', function($routes) {
         $routes->get('/', 'Bioskop::index');
-        $routes->get('tambah', 'Bioskop::tambah');
-        $routes->post('simpan', 'Bioskop::add');
-        $routes->get('ubah/(:num)', 'Bioskop::ubah/$1');
+        $routes->post('simpan', 'Bioskop::simpan');
         $routes->post('update/(:num)', 'Bioskop::update/$1');
-        $routes->get('hapus/(:num)', 'Bioskop::delete/$1');
+        $routes->get('hapus/(:num)', 'Bioskop::hapus/$1');
     });
 
-    $routes->group('film', function($routes){
+    // FILM
+    $routes->group('film', function($routes) {
         $routes->get('/', 'Film::index');
-        $routes->get('tambah', 'Film::tambah');
-        $routes->post('simpan', 'Film::add');
-        $routes->get('ubah/(:num)', 'Film::ubah/$1');
+        $routes->post('simpan', 'Film::simpan');
         $routes->post('update/(:num)', 'Film::update/$1');
         $routes->get('hapus/(:num)', 'Film::delete/$1');
     });
 
+    // GENRE
     $routes->group('genre', function($routes){
         $routes->get('/', 'Genre::index');
         $routes->get('tambah', 'Genre::tambah');
@@ -48,6 +50,7 @@ $routes->group('', ['filter' => 'adminAuth'], function($routes){
         $routes->get('hapus/(:num)', 'Genre::hapus/$1');
     });
 
+    // ROOM
     $routes->group('room', function($routes){
         $routes->get('/', 'Room::index');
         $routes->get('tambah', 'Room::tambah');
@@ -57,15 +60,31 @@ $routes->group('', ['filter' => 'adminAuth'], function($routes){
         $routes->get('hapus/(:num)', 'Room::hapus/$1');
     });
 
-    $routes->group('kursi', function($routes){
-        $routes->get('/', 'Kursi::index');
-        $routes->get('tambah', 'Kursi::tambah');
-        $routes->post('add', 'Kursi::add');
-        $routes->get('ubah/(:num)', 'Kursi::ubah/$1');
-        $routes->post('update/(:num)', 'Kursi::update/$1');
-        $routes->get('hapus/(:num)', 'Kursi::delete/$1');
+    // JADWAL TAYANG
+    $routes->group('jadwaltayang', function($routes){
+        $routes->get('/', 'JadwalTayang::index');
+        $routes->post('simpan', 'JadwalTayang::simpan');
+        $routes->post('update/(:num)', 'JadwalTayang::update/$1');
+        $routes->get('hapus/(:num)', 'JadwalTayang::delete/$1');
     });
 
+    // KURSI
+    $routes->group('kursi', function($routes) {
+        $routes->get('/', 'Kursi::index');
+        $routes->post('add', 'Kursi::add');
+        $routes->post('update/(:num)', 'Kursi::update/$1');
+        $routes->get('hapus/(:num)', 'Kursi::hapus/$1');
+    });
+
+    // KURSI JADWAL STATUS
+    $routes->group('kursijadwalstatus', function($routes){
+        $routes->get('/', 'KursiJadwalStatus::index');
+        $routes->post('simpan', 'KursiJadwalStatus::simpan');
+        $routes->post('update/(:num)', 'KursiJadwalStatus::update/$1');
+        $routes->get('hapus/(:num)', 'KursiJadwalStatus::hapus/$1');
+    });
+
+    // ORDER
     $routes->group('order', function($routes){
         $routes->get('/', 'Order::index');
         $routes->get('tambah', 'Order::tambah');
@@ -75,6 +94,7 @@ $routes->group('', ['filter' => 'adminAuth'], function($routes){
         $routes->get('hapus/(:num)', 'Order::delete/$1');
     });
 
+    // DETAIL ORDER
     $routes->group('detailorder', function($routes){
         $routes->get('/', 'DetailOrder::index');
         $routes->get('tambah', 'DetailOrder::tambah');
@@ -84,6 +104,7 @@ $routes->group('', ['filter' => 'adminAuth'], function($routes){
         $routes->get('delete/(:num)', 'DetailOrder::delete/$1');
     });
 
+    // PEMBAYARAN
     $routes->group('pembayaran', function($routes){
         $routes->get('/', 'Pembayaran::index');
         $routes->get('tambah', 'Pembayaran::tambah');
@@ -92,4 +113,5 @@ $routes->group('', ['filter' => 'adminAuth'], function($routes){
         $routes->post('update', 'Pembayaran::update');
         $routes->get('hapus/(:num)', 'Pembayaran::hapus/$1');
     });
+
 });

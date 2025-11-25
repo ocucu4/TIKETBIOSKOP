@@ -2,57 +2,49 @@
 
 namespace App\Controllers;
 
+use App\Controllers\BaseController;
 use App\Models\JadwalTayangModel;
+use App\Models\FilmModel;
 
 class JadwalTayang extends BaseController
 {
     protected $jadwal;
+    protected $film;
 
     public function __construct()
     {
         $this->jadwal = new JadwalTayangModel();
+        $this->film   = new FilmModel();
     }
 
     public function index()
     {
-        return view("jadwal_tayang/index", [
-            'data' => $this->jadwal->findAll()
-        ]);
-    }
+        $data['data'] = $this->jadwal
+            ->select('jadwal_tayang.*, film.judul_film')
+            ->join('film', 'film.id_film = jadwal_tayang.id_film')
+            ->findAll();
 
-    public function tambah()
-    {
-        return view("jadwal_tayang/tambah");
+        $data['film'] = $this->film->findAll();
+        $data['tayang'] = $this->jadwal->findAll(); // FIX TAMBAHAN
+
+        return view('jadwaltayang/index', $data);
     }
 
     public function simpan()
     {
-        $this->jadwal->save([
-            'tanggal' => $this->request->getPost('tanggal'),
-            'jam_mulai' => $this->request->getPost('jam_mulai'),
-            'jam_selesai' => $this->request->getPost('jam_selesai'),
-            'harga' => $this->request->getPost('harga'),
-        ]);
-
-        return redirect()->to('/jadwal_tayang')->with('success', 'Data berhasil ditambah');
-    }
-
-    public function edit($id)
-    {
-        return view("jadwal_tayang/edit", [
-            'data' => $this->jadwal->find($id)
-        ]);
+        $this->jadwal->insert($this->request->getPost());
+        return redirect()->to(base_url('jadwaltayang'));
     }
 
     public function update($id)
     {
-        $this->jadwal->update($id, [
-            'tanggal' => $this->request->getPost('tanggal'),
-            'jam_mulai' => $this->request->getPost('jam_mulai'),
-            'jam_selesai' => $this->request->getPost('jam_selesai'),
-            'harga' => $this->request->getPost('harga'),
-        ]);
+        $this->jadwal->update($id, $this->request->getPost());
+        return redirect()->to(base_url('jadwaltayang'));
+    }
 
-        return redirect()->to('/jadwal_tayang');
+    public function delete($id)
+    {
+        $this->jadwal->delete($id);
+        return redirect()->to(base_url('jadwaltayang'));
     }
 }

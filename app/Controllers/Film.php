@@ -24,38 +24,35 @@ class Film extends BaseController
             ->join('genre', 'genre.id_genre = film.id_genre', 'left')
             ->findAll();
 
+        $data['genres'] = $this->genre->findAll();
+
         return view('film/index', $data);
     }
 
-    public function tambah()
-    {
-        $data['genres'] = $this->genre->findAll();
-        return view('film/tambah', $data);
-    }
-
-    public function add()
+    public function simpan()
     {
         $this->film->insert($this->request->getPost());
-        return redirect()->to(base_url('film'))->with('success', 'Film berhasil ditambahkan!');
-    }
 
-    public function ubah($id)
-    {
-        $data['data']   = $this->film->find($id);
-        $data['genres'] = $this->genre->findAll();
-
-        return view('film/ubah', $data);
+        return redirect()
+            ->to(base_url('film'))
+            ->with('success', 'Film berhasil ditambahkan!');
     }
 
     public function update($id)
     {
         $this->film->update($id, $this->request->getPost());
-        return redirect()->to(base_url('film'))->with('success', 'Film berhasil diperbarui!');
+
+        return redirect()
+            ->to(base_url('film'))
+            ->with('success', 'Film berhasil diperbarui!');
     }
 
     public function delete($id)
     {
         $this->film->delete($id);
-        return redirect()->to(base_url('film'))->with('success', 'Film berhasil dihapus!');
+
+        return redirect()
+            ->to(base_url('film'))
+            ->with('success', 'Film berhasil dihapus!');
     }
 }

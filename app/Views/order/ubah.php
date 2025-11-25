@@ -14,6 +14,18 @@
         </div>
 
         <div class="mb-3">
+            <label class="form-label">Pilih Jadwal Tayang</label>
+            <select name="id_tayang" class="form-select" required>
+                <?php foreach ($jadwal as $j): ?>
+                    <option value="<?= $j->id_tayang ?>"
+                        <?= ($j->id_tayang == $data->id_tayang) ? 'selected' : '' ?>>
+                        <?= $j->tanggal ?> | <?= $j->jam_mulai ?> - <?= $j->jam_selesai ?>
+                    </option>
+                <?php endforeach ?>
+            </select>
+        </div>
+
+        <div class="mb-3">
             <label class="form-label">Tanggal Order</label>
             <input type="datetime-local" name="tanggal_order"
                    value="<?= date('Y-m-d\TH:i', strtotime($data->tanggal_order)) ?>"
@@ -30,9 +42,9 @@
         <div class="mb-3">
             <label class="form-label">Status Order</label>
             <select name="status_order" class="form-select" required>
-                <option value="pending" <?= $data->status_order=='pending'?'selected':'' ?>>Pending</option>
-                <option value="lunas" <?= $data->status_order=='lunas'?'selected':'' ?>>Lunas</option>
-                <option value="batal" <?= $data->status_order=='batal'?'selected':'' ?>>Batal</option>
+                <option value="pending" <?= ($data->status_order=='pending')?'selected':'' ?>>Pending</option>
+                <option value="lunas"   <?= ($data->status_order=='lunas')?'selected':'' ?>>Lunas</option>
+                <option value="batal"   <?= ($data->status_order=='batal')?'selected':'' ?>>Batal</option>
             </select>
         </div>
 
@@ -41,7 +53,7 @@
             <select name="id_film" class="form-select" required>
                 <?php foreach ($films as $f): ?>
                     <option value="<?= $f->id_film ?>"
-                        <?= $f->id_film == $data->id_film ? 'selected' : '' ?>>
+                        <?= ($f->id_film == $data->id_film) ? 'selected' : '' ?>>
                         <?= $f->judul_film ?>
                     </option>
                 <?php endforeach ?>
@@ -53,7 +65,7 @@
             <select name="id_room" class="form-select" required>
                 <?php foreach ($rooms as $r): ?>
                     <option value="<?= $r->id_room ?>"
-                        <?= $r->id_room == $data->id_room ? 'selected' : '' ?>>
+                        <?= ($r->id_room == $data->id_room) ? 'selected' : '' ?>>
                         <?= $r->nama_room ?>
                     </option>
                 <?php endforeach ?>

@@ -6,12 +6,12 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Filters\FilterInterface;
 
-class AdminAuth implements FilterInterface
+class KasirAuth implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-        if (session()->get('role') !== 'admin') {
-            return redirect()->to('/login')->with('error', 'Tidak punya akses!');
+        if (!session()->get('login') || session()->get('role') !== 'kasir') {
+            return redirect()->to('/login')->with('error', 'Akses hanya untuk KASIR.');
         }
     }
 

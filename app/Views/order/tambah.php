@@ -12,6 +12,18 @@
         </div>
 
         <div class="mb-3">
+            <label class="form-label">Pilih Jadwal Tayang</label>
+            <select name="id_tayang" class="form-select" required>
+                <option value="">-- Pilih Jadwal --</option>
+                <?php foreach ($jadwal as $j): ?>
+                <option value="<?= $j->id_tayang ?>">
+                    <?= $j->tanggal ?> | <?= $j->jam_mulai ?> - <?= $j->jam_selesai ?>
+                </option>
+                <?php endforeach ?>
+            </select>
+        </div>
+
+        <div class="mb-3">
             <label class="form-label">Tanggal Order</label>
             <input type="datetime-local" name="tanggal_order" class="form-control" required>
         </div>
@@ -34,7 +46,7 @@
             <select name="id_film" class="form-select" required>
                 <option value="">-- Pilih Film --</option>
                 <?php foreach ($films as $f): ?>
-                    <option value="<?= $f->id_film ?>"><?= $f->judul_film ?></option>
+                <option value="<?= $f->id_film ?>"><?= $f->judul_film ?></option>
                 <?php endforeach ?>
             </select>
         </div>
@@ -44,12 +56,12 @@
             <select name="id_room" class="form-select" required>
                 <option value="">-- Pilih Room --</option>
                 <?php foreach ($rooms as $r): ?>
-                    <option value="<?= $r->id_room ?>"><?= $r->nama_room ?></option>
+                <option value="<?= $r->id_room ?>"><?= $r->nama_room ?></option>
                 <?php endforeach ?>
             </select>
         </div>
 
-        <button type="submit" class="btn btn-primary">Simpan</button>
+        <button class="btn btn-primary">Simpan</button>
         <a href="<?= base_url('order') ?>" class="btn btn-secondary">Kembali</a>
 
     </form>

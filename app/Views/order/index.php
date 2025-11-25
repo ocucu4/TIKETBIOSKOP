@@ -16,12 +16,13 @@
                 <tr>
                     <th>No</th>
                     <th>Nama Pemesan</th>
-                    <th>Film (ID)</th>
-                    <th>Room (ID)</th>
-                    <th>Tanggal</th>
+                    <th>Film</th>
+                    <th>Room</th>
+                    <th>Jadwal Tayang</th>
+                    <th>Tanggal Order</th>
                     <th>Status</th>
                     <th>Total Bayar</th>
-                    <th class="text-center" style="width:120px;">Aksi</th>
+                    <th class="text-center">Aksi</th>
                 </tr>
             </thead>
 
@@ -30,15 +31,21 @@
                 <tr>
                     <td><?= $i + 1 ?></td>
                     <td><?= esc($o->nama_pemesan) ?></td>
-                    <td><?= esc($o->id_film) ?></td>
-                    <td><?= esc($o->id_room) ?></td>
+                    <td><?= esc($o->judul_film) ?></td>
+                    <td><?= esc($o->nama_room) ?></td>
+                    <td>
+                        <?= esc($o->tanggal) ?> <br>
+                        <small><?= $o->jam_mulai ?> - <?= $o->jam_selesai ?></small>
+                    </td>
                     <td><?= esc($o->tanggal_order) ?></td>
+
                     <td>
                         <span class="badge 
                             <?= $o->status_order == 'lunas' ? 'bg-success' : ($o->status_order == 'pending' ? 'bg-warning' : 'bg-danger') ?>">
                             <?= esc($o->status_order) ?>
                         </span>
                     </td>
+
                     <td>Rp <?= number_format($o->total_bayar, 0, ',', '.') ?></td>
 
                     <td class="text-center">
@@ -47,8 +54,7 @@
                             <i data-feather="edit"></i>
                         </a>
 
-                        <button 
-                            onclick="hapusOrder(<?= $o->id_order ?>)"
+                        <button onclick="hapusOrder(<?= $o->id_order ?>)"
                             class="btn btn-outline-danger action-circle">
                             <i data-feather="trash-2"></i>
                         </button>

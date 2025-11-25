@@ -17,22 +17,12 @@ class Genre extends BaseController
         return view('genre/index', $data);
     }
 
-    public function tambah()
-    {
-        return view('genre/tambah');
-    }
-
     public function simpan()
     {
         $param = $this->request->getPost();
         $this->genre->insert($param);
-        return redirect()->to(base_url('genre'));
-    }
 
-    public function ubah($id)
-    {
-        $data['data'] = $this->genre->find($id);
-        return view('genre/ubah', $data);
+        return redirect()->to(base_url('genre'));
     }
 
     public function update($id)

@@ -2,30 +2,31 @@
 
 namespace App\Controllers;
 
+use App\Controllers\BaseController;
 use App\Models\KursiModel;
 use App\Models\RoomModel;
 
 class Kursi extends BaseController
 {
     protected $kursi;
+    protected $room;
 
     public function __construct()
     {
         $this->kursi = new KursiModel();
+        $this->room  = new RoomModel();
     }
 
     public function index()
     {
-        $data['data'] = $this->kursi->findAll();
+        $data['data'] = $this->kursi
+            ->select('kursi.*, room.nama_room, room.kapasitas')
+            ->join('room', 'room.id_room = kursi.id_room', 'left')
+            ->findAll();
+
+        $data['room'] = $this->room->findAll();
+
         return view('kursi/index', $data);
-    }
-
-    public function tambah()
-    {
-        $roomModel = new RoomModel();
-        $data['room'] = $roomModel->findAll();
-
-        return view('kursi/tambah', $data);
     }
 
     public function add()
@@ -33,13 +34,8 @@ class Kursi extends BaseController
         $param = $this->request->getPost();
         $this->kursi->insert($param);
 
-        return redirect()->to(base_url('kursi'));
-    }
-
-    public function ubah($id)
-    {
-        $data['data'] = $this->kursi->find($id);
-        return view('kursi/ubah', $data);
+        return redirect()->to(base_url('kursi'))
+                         ->with('success', 'Kursi berhasil ditambahkan!');
     }
 
     public function update($id)
@@ -47,12 +43,15 @@ class Kursi extends BaseController
         $param = $this->request->getPost();
         $this->kursi->update($id, $param);
 
-        return redirect()->to(base_url('kursi'));
+        return redirect()->to(base_url('kursi'))
+                         ->with('success', 'Kursi berhasil diperbarui!');
     }
 
-    public function delete($id)
+    public function hapus($id)
     {
         $this->kursi->delete($id);
-        return redirect()->to(base_url('kursi'));
+
+        return redirect()->to(base_url('kursi'))
+                         ->with('success', 'Kursi berhasil dihapus!');
     }
 }
