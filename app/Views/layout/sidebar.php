@@ -79,10 +79,12 @@
 
     <hr>
 
-    <p class="menu-title">LAINNYA</p>
+    <p class="menu-title">Pengguna</p>
 
-    <a href="#" class="nav-link text-dark mb-2 d-flex align-items-center">
-      <i data-feather="users" class="me-2"></i> Pengguna
+    <a href="<?= base_url('kasir') ?>" 
+       class="nav-link text-dark mb-2 d-flex align-items-center">
+      <img src="<?= base_url('assets/icons-sidebar/Cashier.png') ?>" width="24" class="me-2">
+      Kasir
     </a>
 
   </nav>

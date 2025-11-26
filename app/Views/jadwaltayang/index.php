@@ -1,18 +1,40 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 
+<style>
+.table-premium thead {
+    background: #6fb3ff;
+    color: white;
+    font-weight: bold;
+}
+.table-premium tbody tr:hover {
+    background-color: #f0f6ff !important;
+}
+.table-premium {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+.action-btn {
+    width: 38px;
+    height: 38px;
+    padding: 6px;
+    border-radius: 50%;
+}
+</style>
+
 <div class="card p-4 shadow-sm">
 
-    <div class="d-flex justify-content-between mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="fw-semibold">Jadwal Tayang</h4>
 
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah">
+        <button class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#modalTambah">
             Tambah Jadwal
         </button>
     </div>
 
-    <table class="table table-bordered align-middle">
-        <thead class="table-light">
+    <table class="table table-premium align-middle">
+        <thead>
             <tr>
                 <th>No</th>
                 <th>Film</th>
@@ -20,120 +42,200 @@
                 <th>Jam Mulai</th>
                 <th>Jam Selesai</th>
                 <th>Harga</th>
-                <th class="text-center">Aksi</th>
+                <th class="text-center" style="width:120px">Aksi</th>
             </tr>
         </thead>
 
         <tbody>
+            <?php if (!empty($data)): ?>
             <?php $no=1; foreach($data as $d): ?>
             <tr>
                 <td><?= $no++ ?></td>
-                <td><?= $d->judul_film ?></td>
-                <td><?= $d->tanggal ?></td>
-                <td><?= $d->jam_mulai ?></td>
-                <td><?= $d->jam_selesai ?></td>
-                <td><?= number_format($d->harga) ?></td>
+                <td><?= esc($d->judul_film) ?></td>
+                <td><?= esc($d->tanggal) ?></td>
+                <td><?= esc($d->jam_mulai) ?></td>
+                <td><?= esc($d->jam_selesai) ?></td>
+                <td>Rp <?= number_format($d->harga, 0, ',', '.') ?></td>
 
                 <td class="text-center">
-                    <button 
-                        class="btn btn-sm btn-outline-primary"
+
+                    <!-- BUTTON EDIT -->
+                    <button class="btn btn-outline-primary action-btn me-2"
                         data-bs-toggle="modal"
                         data-bs-target="#modalUbah<?= $d->id_tayang ?>">
-                        Edit
+                        <i data-feather="edit"></i>
                     </button>
 
-                    <a onclick="return confirm('Hapus jadwal ini?')" 
-                       href="<?= base_url('jadwaltayang/delete/'.$d->id_tayang) ?>"
-                       class="btn btn-sm btn-outline-danger">
-                        Hapus
-                    </a>
+                    <!-- BUTTON HAPUS -->
+                    <button class="btn btn-outline-danger action-btn"
+                        onclick="hapusJadwal(<?= $d->id_tayang ?>)">
+                        <i data-feather="trash-2"></i>
+                    </button>
+
                 </td>
             </tr>
 
-            <div class="modal fade" id="modalUbah<?= $d->id_tayang ?>">
-                <div class="modal-dialog">
-                    <form method="post" action="<?= base_url('jadwaltayang/update/'.$d->id_tayang) ?>" class="modal-content">
+            <!-- ========== MODAL EDIT ========== -->
+            <div class="modal fade" id="modalUbah<?= $d->id_tayang ?>" tabindex="-1">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+
                         <div class="modal-header">
-                            <h5 class="modal-title">Ubah Jadwal</h5>
+                            <h5 class="modal-title fw-semibold">Ubah Jadwal</h5>
+                            <button class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
 
-                        <div class="modal-body">
+                        <form action="<?= base_url('jadwaltayang/update/'.$d->id_tayang) ?>" method="post">
+                            <?= csrf_field() ?>
 
-                            <label class="mb-1">Film</label>
-                            <select name="id_film" class="form-control mb-2">
-                                <?php foreach($film as $f): ?>
-                                <option value="<?= $f->id_film ?>" <?= $f->id_film==$d->id_film?'selected':'' ?>>
-                                    <?= $f->judul_film ?>
-                                </option>
-                                <?php endforeach; ?>
-                            </select>
+                            <div class="modal-body">
 
-                            <label class="mb-1">Tanggal</label>
-                            <input type="date" name="tanggal" value="<?= $d->tanggal ?>" class="form-control mb-2">
+                                <div class="row g-3">
 
-                            <label class="mb-1">Jam Mulai</label>
-                            <input type="time" name="jam_mulai" value="<?= $d->jam_mulai ?>" class="form-control mb-2">
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold">Film</label>
+                                        <select name="id_film" class="form-select" required>
+                                            <?php foreach($film as $f): ?>
+                                            <option value="<?= $f->id_film ?>" 
+                                                <?= $f->id_film == $d->id_film ? 'selected' : '' ?>>
+                                                <?= $f->judul_film ?>
+                                            </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
 
-                            <label class="mb-1">Jam Selesai</label>
-                            <input type="time" name="jam_selesai" value="<?= $d->jam_selesai ?>" class="form-control mb-2">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Tanggal</label>
+                                        <input type="date" name="tanggal"
+                                            value="<?= $d->tanggal ?>" 
+                                            class="form-control" required>
+                                    </div>
 
-                            <label class="mb-1">Harga</label>
-                            <input type="number" name="harga" value="<?= $d->harga ?>" class="form-control mb-2">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Harga</label>
+                                        <input type="number" name="harga"
+                                            value="<?= $d->harga ?>" 
+                                            class="form-control" required>
+                                    </div>
 
-                        </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Jam Mulai</label>
+                                        <input type="time" name="jam_mulai"
+                                            value="<?= $d->jam_mulai ?>" 
+                                            class="form-control" required>
+                                    </div>
 
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <button class="btn btn-primary">Simpan</button>
-                        </div>
-                    </form>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Jam Selesai</label>
+                                        <input type="time" name="jam_selesai"
+                                            value="<?= $d->jam_selesai ?>" 
+                                            class="form-control" required>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                <button class="btn btn-primary">Simpan</button>
+                            </div>
+
+                        </form>
+
+                    </div>
                 </div>
             </div>
+            <!-- END MODAL EDIT -->
 
-            <?php endforeach; ?>
+            <?php endforeach; else: ?>
+
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-3">Belum ada jadwal.</td>
+                </tr>
+
+            <?php endif; ?>
         </tbody>
     </table>
-
 </div>
 
-<div class="modal fade" id="modalTambah">
-    <div class="modal-dialog">
-        <form method="post" action="<?= base_url('jadwaltayang/simpan') ?>" class="modal-content">
+<!-- ========== MODAL TAMBAH ========== -->
+<div class="modal fade" id="modalTambah" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">Tambah Jadwal</h5>
+                <h5 class="modal-title fw-semibold">Tambah Jadwal</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <div class="modal-body">
+            <form action="<?= base_url('jadwaltayang/simpan') ?>" method="post">
+                <?= csrf_field() ?>
 
-                <label class="mb-1">Film</label>
-                <select name="id_film" class="form-control mb-2" required>
-                    <?php foreach($film as $f): ?>
-                    <option value="<?= $f->id_film ?>"><?= $f->judul_film ?></option>
-                    <?php endforeach; ?>
-                </select>
+                <div class="modal-body">
+                    <div class="row g-3">
 
-                <label class="mb-1">Tanggal</label>
-                <input type="date" name="tanggal" class="form-control mb-2" required>
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Film</label>
+                            <select name="id_film" class="form-select" required>
+                                <?php foreach($film as $f): ?>
+                                <option value="<?= $f->id_film ?>"><?= $f->judul_film ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
 
-                <label class="mb-1">Jam Mulai</label>
-                <input type="time" name="jam_mulai" class="form-control mb-2" required>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Tanggal</label>
+                            <input type="date" name="tanggal" class="form-control" required>
+                        </div>
 
-                <label class="mb-1">Jam Selesai</label>
-                <input type="time" name="jam_selesai" class="form-control mb-2" required>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Harga</label>
+                            <input type="number" name="harga" class="form-control" required>
+                        </div>
 
-                <label class="mb-1">Harga</label>
-                <input type="number" name="harga" class="form-control mb-2" required>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Jam Mulai</label>
+                            <input type="time" name="jam_mulai" class="form-control" required>
+                        </div>
 
-            </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Jam Selesai</label>
+                            <input type="time" name="jam_selesai" class="form-control" required>
+                        </div>
 
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button class="btn btn-primary">Simpan</button>
-            </div>
+                    </div>
+                </div>
 
-        </form>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button class="btn btn-success">Simpan</button>
+                </div>
+
+            </form>
+
+        </div>
     </div>
 </div>
+
+<script>
+function hapusJadwal(id) {
+    Swal.fire({
+        title: 'Hapus Jadwal?',
+        text: "Data jadwal akan dihapus permanen!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#666',
+        confirmButtonText: 'Hapus'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = "<?= base_url('jadwaltayang/hapus') ?>/" + id;
+        }
+    });
+}
+
+feather.replace();
+</script>
 
 <?= $this->endSection() ?>

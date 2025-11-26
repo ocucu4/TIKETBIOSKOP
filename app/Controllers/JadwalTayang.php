@@ -25,7 +25,7 @@ class JadwalTayang extends BaseController
             ->findAll();
 
         $data['film'] = $this->film->findAll();
-        $data['tayang'] = $this->jadwal->findAll(); // FIX TAMBAHAN
+        $data['tayang'] = $this->jadwal->findAll();
 
         return view('jadwaltayang/index', $data);
     }

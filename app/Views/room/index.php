@@ -42,6 +42,11 @@
         </div>
 
         <div class="mb-3">
+            <label class="form-label fw-semibold">Panjang Baris Kursi</label>
+            <input type="number" name="panjang" id="u-panjang" class="form-control" required>
+          </div>
+
+        <div class="mb-3">
           <label class="form-label fw-semibold">Jadwal Tayang</label>
           <select name="id_tayang" class="form-control" required>
             <option value="">-- Pilih Jadwal --</option>
@@ -141,6 +146,7 @@
             <label class="form-label fw-semibold">Kapasitas</label>
             <input type="number" name="kapasitas" id="u-kapasitas" class="form-control" required>
           </div>
+          
 
           <div class="mb-3">
             <label class="form-label fw-semibold">Jadwal Tayang</label>
@@ -176,7 +182,8 @@
 
   function hapusRoom(id) {
     Swal.fire({
-      title: 'Hapus Room?',
+      title: 'Hapus Film?',
+      text: "Data film akan dihapus permanen!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',

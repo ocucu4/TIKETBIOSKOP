@@ -37,7 +37,7 @@ $routes->group('', ['filter' => 'adminAuth'], function($routes){
         $routes->get('/', 'Film::index');
         $routes->post('simpan', 'Film::simpan');
         $routes->post('update/(:num)', 'Film::update/$1');
-        $routes->get('hapus/(:num)', 'Film::delete/$1');
+        $routes->get('delete/(:num)', 'Film::delete/$1');
     });
 
     // GENRE
@@ -65,7 +65,7 @@ $routes->group('', ['filter' => 'adminAuth'], function($routes){
         $routes->get('/', 'JadwalTayang::index');
         $routes->post('simpan', 'JadwalTayang::simpan');
         $routes->post('update/(:num)', 'JadwalTayang::update/$1');
-        $routes->get('hapus/(:num)', 'JadwalTayang::delete/$1');
+        $routes->get('delete/(:num)', 'JadwalTayang::delete/$1');
     });
 
     // KURSI
