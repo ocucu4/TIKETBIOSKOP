@@ -12,7 +12,6 @@ class KursiJadwalStatusModel extends Model
     
     protected $allowedFields = [
         'status',
-        'id_order',
         'id_kursi',
         'id_tayang'
     ];

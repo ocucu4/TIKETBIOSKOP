@@ -15,7 +15,7 @@ class RoomModel extends Model
     protected $allowedFields = [
         'nama_room',
         'kapasitas',
-        'id_tayang'
+        'panjang'
     ];
 
     protected bool $allowEmptyInserts = false;

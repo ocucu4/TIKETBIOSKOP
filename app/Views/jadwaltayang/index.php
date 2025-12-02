@@ -27,7 +27,6 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="fw-semibold">Jadwal Tayang</h4>
-
         <button class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#modalTambah">
             Tambah Jadwal
         </button>
@@ -38,44 +37,40 @@
             <tr>
                 <th>No</th>
                 <th>Film</th>
+                <th>Room</th>
                 <th>Tanggal</th>
-                <th>Jam Mulai</th>
-                <th>Jam Selesai</th>
+                <th>Jam</th>
                 <th>Harga</th>
                 <th class="text-center" style="width:120px">Aksi</th>
             </tr>
         </thead>
 
         <tbody>
-            <?php if (!empty($data)): ?>
+        <?php if (!empty($data)): ?>
             <?php $no=1; foreach($data as $d): ?>
             <tr>
                 <td><?= $no++ ?></td>
                 <td><?= esc($d->judul_film) ?></td>
+                <td><?= esc($d->nama_room) ?></td>
                 <td><?= esc($d->tanggal) ?></td>
-                <td><?= esc($d->jam_mulai) ?></td>
-                <td><?= esc($d->jam_selesai) ?></td>
-                <td>Rp <?= number_format($d->harga, 0, ',', '.') ?></td>
+                <td><?= esc($d->jam_mulai) ?> - <?= esc($d->jam_selesai) ?></td>
+                <td>Rp <?= number_format($d->harga,0,',','.') ?></td>
 
                 <td class="text-center">
-
-                    <!-- BUTTON EDIT -->
                     <button class="btn btn-outline-primary action-btn me-2"
                         data-bs-toggle="modal"
                         data-bs-target="#modalUbah<?= $d->id_tayang ?>">
                         <i data-feather="edit"></i>
                     </button>
 
-                    <!-- BUTTON HAPUS -->
                     <button class="btn btn-outline-danger action-btn"
                         onclick="hapusJadwal(<?= $d->id_tayang ?>)">
                         <i data-feather="trash-2"></i>
                     </button>
-
                 </td>
             </tr>
 
-            <!-- ========== MODAL EDIT ========== -->
+            <!-- UBAH -->
             <div class="modal fade" id="modalUbah<?= $d->id_tayang ?>" tabindex="-1">
                 <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
@@ -87,79 +82,76 @@
 
                         <form action="<?= base_url('jadwaltayang/update/'.$d->id_tayang) ?>" method="post">
                             <?= csrf_field() ?>
-
                             <div class="modal-body">
-
                                 <div class="row g-3">
 
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <label class="form-label fw-semibold">Film</label>
                                         <select name="id_film" class="form-select" required>
                                             <?php foreach($film as $f): ?>
-                                            <option value="<?= $f->id_film ?>" 
-                                                <?= $f->id_film == $d->id_film ? 'selected' : '' ?>>
-                                                <?= $f->judul_film ?>
-                                            </option>
-                                            <?php endforeach; ?>
+                                                <option value="<?= $f->id_film ?>"
+                                                    <?= $f->id_film==$d->id_film?'selected':'' ?>>
+                                                    <?= $f->judul_film ?>
+                                                </option>
+                                            <?php endforeach ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Room</label>
+                                        <select name="id_room" class="form-select" required>
+                                            <?php foreach($room as $r): ?>
+                                                <option value="<?= $r->id_room ?>"
+                                                    <?= $r->id_room==$d->id_room?'selected':'' ?>>
+                                                    <?= $r->nama_room ?>
+                                                </option>
+                                            <?php endforeach ?>
                                         </select>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Tanggal</label>
-                                        <input type="date" name="tanggal"
-                                            value="<?= $d->tanggal ?>" 
-                                            class="form-control" required>
+                                        <input type="date" name="tanggal" value="<?= $d->tanggal ?>" class="form-control" required>
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Harga</label>
-                                        <input type="number" name="harga"
-                                            value="<?= $d->harga ?>" 
-                                            class="form-control" required>
-                                    </div>
-
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label class="form-label fw-semibold">Jam Mulai</label>
-                                        <input type="time" name="jam_mulai"
-                                            value="<?= $d->jam_mulai ?>" 
-                                            class="form-control" required>
+                                        <input type="time" name="jam_mulai" value="<?= $d->jam_mulai ?>" class="form-control" required>
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label class="form-label fw-semibold">Jam Selesai</label>
-                                        <input type="time" name="jam_selesai"
-                                            value="<?= $d->jam_selesai ?>" 
-                                            class="form-control" required>
+                                        <input type="time" name="jam_selesai" value="<?= $d->jam_selesai ?>" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold">Harga</label>
+                                        <input type="number" name="harga" value="<?= $d->harga ?>" class="form-control" required>
                                     </div>
 
                                 </div>
-
                             </div>
 
                             <div class="modal-footer">
                                 <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button class="btn btn-primary">Simpan</button>
+                                <button class="btn btn-primary">Update</button>
                             </div>
-
                         </form>
 
                     </div>
                 </div>
             </div>
-            <!-- END MODAL EDIT -->
-
-            <?php endforeach; else: ?>
-
-                <tr>
-                    <td colspan="7" class="text-center text-muted py-3">Belum ada jadwal.</td>
-                </tr>
-
-            <?php endif; ?>
+            <?php endforeach ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="7" class="text-center py-3 text-muted">Belum ada jadwal.</td>
+            </tr>
+        <?php endif ?>
         </tbody>
     </table>
 </div>
 
-<!-- ========== MODAL TAMBAH ========== -->
+<!-- TAMBAH -->
 <div class="modal fade" id="modalTambah" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -171,16 +163,24 @@
 
             <form action="<?= base_url('jadwaltayang/simpan') ?>" method="post">
                 <?= csrf_field() ?>
-
                 <div class="modal-body">
                     <div class="row g-3">
 
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <label class="form-label fw-semibold">Film</label>
                             <select name="id_film" class="form-select" required>
                                 <?php foreach($film as $f): ?>
-                                <option value="<?= $f->id_film ?>"><?= $f->judul_film ?></option>
-                                <?php endforeach; ?>
+                                    <option value="<?= $f->id_film ?>"><?= $f->judul_film ?></option>
+                                <?php endforeach ?>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Room</label>
+                            <select name="id_room" class="form-select" required>
+                                <?php foreach($room as $r): ?>
+                                    <option value="<?= $r->id_room ?>"><?= $r->nama_room ?></option>
+                                <?php endforeach ?>
                             </select>
                         </div>
 
@@ -189,19 +189,19 @@
                             <input type="date" name="tanggal" class="form-control" required>
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Harga</label>
-                            <input type="number" name="harga" class="form-control" required>
-                        </div>
-
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label fw-semibold">Jam Mulai</label>
                             <input type="time" name="jam_mulai" class="form-control" required>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="form-label fw-semibold">Jam Selesai</label>
                             <input type="time" name="jam_selesai" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Harga</label>
+                            <input type="number" name="harga" class="form-control" required>
                         </div>
 
                     </div>
@@ -211,7 +211,6 @@
                     <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                     <button class="btn btn-success">Simpan</button>
                 </div>
-
             </form>
 
         </div>
@@ -222,19 +221,18 @@
 function hapusJadwal(id) {
     Swal.fire({
         title: 'Hapus Jadwal?',
-        text: "Data jadwal akan dihapus permanen!",
+        text: "Data akan dihapus permanen!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#666',
         confirmButtonText: 'Hapus'
-    }).then((result) => {
-        if (result.isConfirmed) {
+    }).then((result)=>{
+        if(result.isConfirmed){
             window.location.href = "<?= base_url('jadwaltayang/hapus') ?>/" + id;
         }
     });
 }
-
 feather.replace();
 </script>
 

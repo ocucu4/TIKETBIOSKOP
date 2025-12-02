@@ -11,9 +11,9 @@ class KursiModel extends Model
     protected $returnType    = 'object';
 
     protected $allowedFields = [
-        'id_room',
         'kode_kursi',
-        'status'
+        'status',
+        'id_room'
     ];
 
     protected bool $allowEmptyInserts = false;

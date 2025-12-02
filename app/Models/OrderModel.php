@@ -15,7 +15,6 @@ class OrderModel extends Model
         'status_order',
         'tanggal_order',
         'total_bayar', 
-        'id_room',
         'id_tayang'
     ];
 

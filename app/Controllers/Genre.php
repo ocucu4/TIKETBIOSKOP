@@ -1,39 +1,57 @@
 <?php
 
 namespace App\Controllers;
+
+use App\Controllers\BaseController;
 use App\Models\GenreModel;
 
 class Genre extends BaseController
 {
     protected $genre;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->genre = new GenreModel();
     }
 
     public function index()
     {
-        $data['data'] = $this->genre->findAll();
-        return view('genre/index', $data);
+        return view('genre/index', [
+            'data' => $this->genre->findAll()
+        ]);
     }
 
-    public function simpan()
+    public function add()
     {
-        $param = $this->request->getPost();
-        $this->genre->insert($param);
+        $nama = $this->request->getPost('nama_genre');
+
+        if (!$nama) {
+            return redirect()->back()->with('error', 'Nama genre wajib diisi');
+        }
+
+        $this->genre->insert([
+            'nama_genre' => $nama
+        ]);
 
         return redirect()->to(base_url('genre'));
     }
 
     public function update($id)
     {
-        $param = $this->request->getPost();
-        $this->genre->update($id, $param);
+        $nama = $this->request->getPost('nama_genre');
+
+        if (!$nama) {
+            return redirect()->back()->with('error', 'Nama genre wajib diisi');
+        }
+
+        $this->genre->update($id, [
+            'nama_genre' => $nama
+        ]);
 
         return redirect()->to(base_url('genre'));
     }
 
-    public function hapus($id)
+    public function delete($id)
     {
         $this->genre->delete($id);
         return redirect()->to(base_url('genre'));

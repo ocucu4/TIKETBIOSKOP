@@ -19,40 +19,53 @@ class Film extends BaseController
 
     public function index()
     {
-        $data['data'] = $this->film
-            ->select('film.*, genre.nama_genre')
-            ->join('genre', 'genre.id_genre = film.id_genre', 'left')
-            ->findAll();
-
-        $data['genres'] = $this->genre->findAll();
-
-        return view('film/index', $data);
+        return view('film/index', [
+            'data'   => $this->film
+                ->select('film.*, genre.nama_genre')
+                ->join('genre', 'genre.id_genre = film.id_genre', 'left')
+                ->findAll(),
+            'genres' => $this->genre->findAll()
+        ]);
     }
 
-    public function simpan()
+    public function add()
     {
-        $this->film->insert($this->request->getPost());
+        $data = [
+            'judul_film'       => $this->request->getPost('judul_film'),
+            'durasi'           => $this->request->getPost('durasi'),
+            'tanggal_mulai'    => $this->request->getPost('tanggal_mulai'),
+            'tanggal_selesai'  => $this->request->getPost('tanggal_selesai'),
+            'sinopsis'         => $this->request->getPost('sinopsis'),
+            'harga_tiket'      => $this->request->getPost('harga_tiket'),
+            'id_genre'         => $this->request->getPost('id_genre')
+        ];
 
-        return redirect()
-            ->to(base_url('film'))
-            ->with('success', 'Film berhasil ditambahkan!');
+        if (!$data['judul_film'] || !$data['id_genre']) {
+            return redirect()->back()->with('error', 'Judul film & genre wajib diisi');
+        }
+
+        $this->film->insert($data);
+        return redirect()->to(base_url('film'));
     }
 
     public function update($id)
     {
-        $this->film->update($id, $this->request->getPost());
+        $this->film->update($id, [
+            'judul_film'      => $this->request->getPost('judul_film'),
+            'durasi'          => $this->request->getPost('durasi'),
+            'tanggal_mulai'   => $this->request->getPost('tanggal_mulai'),
+            'tanggal_selesai' => $this->request->getPost('tanggal_selesai'),
+            'sinopsis'        => $this->request->getPost('sinopsis'),
+            'harga_tiket'     => $this->request->getPost('harga_tiket'),
+            'id_genre'        => $this->request->getPost('id_genre')
+        ]);
 
-        return redirect()
-            ->to(base_url('film'))
-            ->with('success', 'Film berhasil diperbarui!');
+        return redirect()->to(base_url('film'));
     }
 
     public function delete($id)
     {
         $this->film->delete($id);
-
-        return redirect()
-            ->to(base_url('film'))
-            ->with('success', 'Film berhasil dihapus!');
+        return redirect()->to(base_url('film'));
     }
 }

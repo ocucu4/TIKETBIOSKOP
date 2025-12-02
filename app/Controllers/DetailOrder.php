@@ -4,74 +4,87 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\DetailOrderModel;
+use App\Models\OrderModel;
+use App\Models\KursiModel;
 
 class DetailOrder extends BaseController
 {
-    protected $detailorder;
+    protected $detailOrder;
+    protected $order;
+    protected $kursi;
 
     public function __construct()
     {
-        $this->detailorder = new DetailOrderModel();
+        $this->detailOrder = new DetailOrderModel();
+        $this->order = new OrderModel();
+        $this->kursi = new KursiModel();
     }
 
-        public function index()
+    public function index()
     {
-        $data['title'] = 'Detail Order';
-        $data['data']  = $this->detailorder
-                            ->select('detail_order.*, order.id_order, kursi.kode_kursi')
-                            ->join('order', 'order.id_order = detail_order.id_order', 'left')
-                            ->join('kursi', 'kursi.id_kursi = detail_order.id_kursi', 'left')
-                            ->findAll();
-        return view('detailorder/index', $data);
-    }
-
-    public function tambah()
-    {
-        $orderModel = new \App\Models\OrderModel();
-        $kursiModel = new \App\Models\KursiModel();
-        
-        $data['title']  = 'Tambah Detail Order';
-        $data['orders'] = $orderModel->findAll();
-        $data['kursi']  = $kursiModel->findAll();
-
-        return view('detailorder/tambah', $data);
+        return view('detailorder/index', [
+            'title' => 'Detail Order',
+            'data'  => $this->detailOrder
+                ->select('detail_order.*, order.id_order, kursi.kode_kursi')
+                ->join('order', 'order.id_order = detail_order.id_order', 'left')
+                ->join('kursi', 'kursi.id_kursi = detail_order.id_kursi', 'left')
+                ->findAll()
+        ]);
     }
 
     public function add()
     {
-        $param = $this->request->getPost();
-
-        $this->detailorder->insert($param);
-
-        return redirect()->to(base_url('detailorder'))->with('success', 'Detail Order berhasil ditambahkan!');
+        return view('detailorder/form', [
+            'title'  => 'Tambah Detail Order',
+            'orders' => $this->order->findAll(),
+            'kursi'  => $this->kursi->findAll(),
+            'mode'   => 'add'
+        ]);
     }
 
-    public function ubah($id)
+    public function create()
     {
-        $orderModel = new \App\Models\OrderModel();
-        $kursiModel = new \App\Models\KursiModel();
+        $data = [
+            'id_order' => $this->request->getPost('id_order'),
+            'id_kursi' => $this->request->getPost('id_kursi'),
+            'jumlah'   => $this->request->getPost('jumlah'),
+            'subtotal' => $this->request->getPost('subtotal')
+        ];
 
-        $data['title']  = 'Ubah Detail Order';
-        $data['row']    = $this->detailorder->find($id);
-        $data['orders'] = $orderModel->findAll();
-        $data['kursi']  = $kursiModel->findAll();
+        if (!$data['id_order'] || !$data['id_kursi']) {
+            return redirect()->back()->with('error', 'Order dan Kursi wajib dipilih');
+        }
 
-        return view('detailorder/ubah', $data);
+        $this->detailOrder->insert($data);
+        return redirect()->to(base_url('detailorder'));
+    }
+
+    public function edit($id)
+    {
+        return view('detailorder/form', [
+            'title'  => 'Ubah Detail Order',
+            'row'    => $this->detailOrder->find($id),
+            'orders' => $this->order->findAll(),
+            'kursi'  => $this->kursi->findAll(),
+            'mode'   => 'edit'
+        ]);
     }
 
     public function update($id)
     {
-        $param = $this->request->getPost();
+        $this->detailOrder->update($id, [
+            'id_order' => $this->request->getPost('id_order'),
+            'id_kursi' => $this->request->getPost('id_kursi'),
+            'jumlah'   => $this->request->getPost('jumlah'),
+            'subtotal' => $this->request->getPost('subtotal')
+        ]);
 
-        $this->detailorder->update($id, $param);
-
-        return redirect()->to(base_url('detailorder'))->with('success', 'Data berhasil diupdate!');
+        return redirect()->to(base_url('detailorder'));
     }
 
     public function delete($id)
     {
-        $this->detailorder->delete($id);
-
-        return redirect()->to(base_url('detailorder'))->with('success', 'Data berhasil dihapus!');
+        $this->detailOrder->delete($id);
+        return redirect()->to(base_url('detailorder'));
     }
 }

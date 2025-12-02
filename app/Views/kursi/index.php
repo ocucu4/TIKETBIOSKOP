@@ -1,218 +1,109 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 
-<style>
-  .table-premium thead {
-    background: #f8f9fa;
-    font-weight: bold;
-  }
+<div class="card shadow-sm p-4">
+    <h5 class="fw-semibold mb-3">Daftar Kursi per Room</h5>
 
-  .table-premium tbody tr:hover {
-    background-color: #f0f6ff !important;
-  }
+    <?php if (empty($data)): ?>
+        <p class="text-muted">Data kursi belum tersedia.</p>
+    <?php else: ?>
 
-  .table-premium {
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
-  }
+        <?php
+        // DATA SUDAH DI-ORDER BY nama_room, kode_kursi DI CONTROLLER
+        $currentRoom = null;
+        ?>
 
-  .action-btn {
-    width: 38px;
-    height: 38px;
-    padding: 6px;
-    border-radius: 50%;
-  }
-</style>
+        <?php foreach ($data as $k): ?>
+            <?php
+            // Deteksi pergantian room
+            if ($currentRoom !== $k->nama_room):
+                // Tutup grid room sebelumnya (kalau ada)
+                if ($currentRoom !== null): ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php endif; ?>
 
-<div class="row">
+                <!-- HEADER ROOM BARU -->
+                <div class="mb-4">
+                    <h6 class="fw-bold mb-2">
+                        Room: <?= esc($k->nama_room) ?>
+                    </h6>
+                    <table class="table table-bordered align-middle text-center mb-0">
+                        <tbody>
+                <?php
+                $currentRoom = $k->nama_room;
+                $currentRowLetter = null;
+            endif;
 
-  <div class="col-md-4">
-    <div class="card p-4 shadow-sm">
+            // Dapatkan huruf baris (A, B, C) dan nomor kursi
+            $rowLetter = substr($k->kode_kursi, 0, 1);
+            $nomorKursi = substr($k->kode_kursi, 1);
 
-      <form action="<?= base_url('kursi/add') ?>" method="post">
-        <?= csrf_field() ?>
+            // Kalau huruf baris ganti, mulai baris <tr> baru
+            if (!isset($currentRowLetter) || $currentRowLetter !== $rowLetter):
+                // Kalau bukan baris pertama di room ini, tutup baris lama
+                if (isset($currentRowLetter)): ?>
+                            </tr>
+                        <?php endif; ?>
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h4 class="fw-semibold">Tambah Kursi</h4>
-        </div>
+                        <tr>
+                            <th class="text-nowrap"><?= $rowLetter ?></th>
+                <?php
+                $currentRowLetter = $rowLetter;
+            endif;
+            ?>
 
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Room</label>
-          <select name="id_room" class="form-control" required>
-            <option value="">-- Pilih Room --</option>
-            <?php foreach ($room as $r): ?>
-              <option value="<?= $r->id_room ?>">
-                <?= $r->nama_room ?> (Kapasitas: <?= $r->kapasitas ?>)
-              </option>
-            <?php endforeach ?>
-          </select>
-        </div>
+            <!-- CELL KURSI -->
+            <td class="text-nowrap">
+                <button class="btn btn-sm <?= $k->status == 0 ? 'btn-success' : 'btn-danger' ?>"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal<?= $k->id_kursi ?>">
+                    <?= esc($k->kode_kursi) ?>
+                </button>
+            </td>
 
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Kode Kursi</label>
-          <input type="text" name="kode_kursi" class="form-control"
-                 placeholder="A1, B2, C10" required>
-        </div>
+            <!-- MODAL UPDATE STATUS -->
+            <div class="modal fade" id="modal<?= $k->id_kursi ?>" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <form action="<?= site_url('kursi/update/'.$k->id_kursi) ?>" method="post">
+                            <?= csrf_field() ?>
 
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Status</label>
-          <select name="status" class="form-control" required>
-            <option value="0">Kosong</option>
-            <option value="1">Terisi</option>
-          </select>
-        </div>
+                            <div class="modal-header">
+                                <h6 class="modal-title">
+                                    Update Status Kursi <?= esc($k->kode_kursi) ?> (Room <?= esc($k->nama_room) ?>)
+                                </h6>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
 
-        <div class="modal-footer">
-          <button class="btn btn-secondary">Batal</button>
-          <button class="btn btn-primary">Simpan</button>
-        </div>
+                            <div class="modal-body">
+                                <select name="status" class="form-select" required>
+                                    <option value="0" <?= $k->status==0?'selected':'' ?>>Tersedia</option>
+                                    <option value="1" <?= $k->status==1?'selected':'' ?>>Terisi</option>
+                                </select>
+                            </div>
 
-      </form>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary w-100">
+                                    Simpan Perubahan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
-    </div>
-  </div>
+        <?php endforeach; ?>
 
+        <!-- TUTUP TR & TABLE ROOM TERAKHIR -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-  <div class="col-md-8">
-    <div class="card p-4 shadow-sm">
+    <?php endif; ?>
 
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="fw-semibold">Daftar Kursi</h4>
-      </div>
-
-      <table class="table table-premium align-middle">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Room</th>
-            <th>Kode Kursi</th>
-            <th>Status</th>
-            <th style="width: 120px;" class="text-center">Aksi</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <?php if (!empty($data)): ?>
-            <?php $no = 1; foreach ($data as $k): ?>
-              <tr>
-                <td><?= $no++ ?></td>
-                <td><?= esc($k->id_room) ?></td>
-                <td class="fw-semibold"><?= esc($k->kode_kursi) ?></td>
-
-                <td>
-                  <?php if ($k->status == '0'): ?>
-                    <span class="badge bg-success">Tersedia</span>
-                  <?php else: ?>
-                    <span class="badge bg-danger">Terisi</span>
-                  <?php endif ?>
-                </td>
-
-                <td class="text-center">
-
-                  <button class="btn btn-outline-primary action-btn me-2"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalUbah"
-                    onclick='editKursi(<?= json_encode($k) ?>)'>
-                    <i data-feather="edit"></i>
-                  </button>
-
-                  <button class="btn btn-outline-danger action-btn"
-                          onclick="hapusKursi(<?= $k->id_kursi ?>)">
-                    <i data-feather="trash-2"></i>
-                  </button>
-
-                </td>
-              </tr>
-            <?php endforeach ?>
-
-          <?php else: ?>
-            <tr>
-              <td colspan="5" class="text-center py-3 text-muted">
-                Belum ada data kursi.
-              </td>
-            </tr>
-          <?php endif ?>
-        </tbody>
-
-      </table>
-
-    </div>
-  </div>
 </div>
-
-
-<div class="modal fade" id="modalUbah" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title fw-semibold">Ubah Kursi</h5>
-        <button class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <form id="formUbah" method="post">
-        <?= csrf_field() ?>
-
-        <div class="modal-body">
-
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Room</label>
-            <input type="number" name="id_room" id="u-room" class="form-control" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Kode Kursi</label>
-            <input type="text" name="kode_kursi" id="u-kode" class="form-control" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Status</label>
-            <select name="status" id="u-status" class="form-control">
-              <option value="tersedia">Tersedia</option>
-              <option value="terisi">Terisi</option>
-            </select>
-          </div>
-
-        </div>
-
-        <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <button class="btn btn-primary">Update</button>
-        </div>
-
-      </form>
-
-    </div>
-  </div>
-</div>
-
-<script>
-  function editKursi(k) {
-    document.getElementById('u-room').value = k.id_room;
-    document.getElementById('u-kode').value = k.kode_kursi;
-    document.getElementById('u-status').value = k.status;
-    document.getElementById('formUbah').action =
-      "<?= base_url('kursi/update') ?>/" + k.id_kursi;
-  }
-
-  function hapusKursi(id) {
-    Swal.fire({
-      title: 'Hapus Kursi?',
-      text: "Data kursi akan dihapus permanen!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Hapus'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        window.location.href = "<?= base_url('kursi/hapus') ?>/" + id;
-      }
-    });
-  }
-
-  feather.replace();
-</script>
 
 <?= $this->endSection() ?>

@@ -15,7 +15,8 @@ class JadwalTayangModel extends Model
         'jam_mulai',
         'jam_selesai',
         'harga',
-        'id_film'
+        'id_film',
+        'id_room'
     ];
 
     protected bool $allowEmptyInserts = false; 

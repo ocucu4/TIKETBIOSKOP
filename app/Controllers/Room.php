@@ -4,93 +4,116 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\RoomModel;
-use App\Models\JadwalTayangModel;
 use App\Models\KursiModel;
+use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Room extends BaseController
 {
     protected $room;
-    protected $tayang;
     protected $kursi;
 
-    public function __construct() {
-        $this->room   = new RoomModel();
-        $this->tayang = new JadwalTayangModel();
+    public function __construct()
+    {
+        $this->room  = new RoomModel();
         $this->kursi = new KursiModel();
-        helper('debug');
     }
 
+    /**
+     * LIST ROOM + FORM TAMBAH
+     */
     public function index()
     {
-        $data['data']   = $this->room->findAll();
-        $data['tayang'] = $this->tayang->findAll();
-        // print_r($data);
-        return view('room/index', $data);
+        return view('room/index', [
+            'data' => $this->room->findAll()
+        ]);
     }
 
-    public function tambah()
-    {
-        $data['tayang'] = $this->tayang->findAll();
-        return view('room/tambah', $data);
-    }
-
+    /**
+     * SIMPAN ROOM + AUTO GENERATE KURSI
+     */
     public function add()
     {
-        $conn = \Config\Database::connect();
-        try {
-            // $conn->transBegin();
-            $param = $this->request->getPost();
-            $id_room = $this->room->insert($param, true);
-            $kapasitas = $param['kapasitas'];
-            $panjang = $param['panjang'];
-            $result = [];
-            $limit = $kapasitas/$panjang;
-            if($limit == 1) $set = "A";
-            else if($limit==2) $set = "B";
-            else if($limit == 3) $set = "C";
-            else if($limit == 4) $set = "D"; 
-            else if($limit == 5) $set = "E"; 
-            else if($limit == 6) $set = "F"; 
-            else if($limit == 7) $set = "G"; 
-            for ($i="A";  $i <= $set ; $i++) { 
-                for ($j=1; $j<=$panjang ; $j++) { 
-                    $item = [
-                        'id_room'=>$id_room,
-                        'kode_kursi'=>$i.$j,
-                        'status'=>"0",
-                    ];
-                    $result[] = $item;
-                }
-            }
-            $this->kursi->insertBatch($result);
-            $conn->transCommit();
-            return redirect()->to(base_url('room'));
-        } catch (\Throwable $th) {
-            $conn->transRollback();
-            return redirect()->to(base_url('room'))->with('error', $th->getMessage());
+        if (!$this->request->is('post')) {
+            throw new PageNotFoundException();
         }
 
+        $nama_room = trim($this->request->getPost('nama_room'));
+        $kapasitas = (int) $this->request->getPost('kapasitas');
+        $panjang   = (int) $this->request->getPost('panjang');
+
+        if ($nama_room === '' || $kapasitas <= 0 || $panjang <= 0) {
+            return redirect()->back()->with('error', 'Input tidak valid');
+        }
+
+        $db = \Config\Database::connect();
+        $db->transBegin();
+
+        try {
+            // ✅ SIMPAN ROOM (LENGKAP)
+            $id_room = $this->room->insert([
+                'nama_room' => $nama_room,
+                'kapasitas' => $kapasitas,
+                'panjang'   => $panjang
+            ], true);
+
+            if (!$id_room) {
+                throw new \RuntimeException('Gagal menyimpan room');
+            }
+
+            // ✅ GENERATE KURSI
+            $totalBaris = ceil($kapasitas / $panjang);
+            $kursiData  = [];
+
+            for ($row = 0; $row < $totalBaris; $row++) {
+                $huruf = chr(65 + $row); // A, B, C, ...
+
+                for ($col = 1; $col <= $panjang; $col++) {
+                    $nomor = ($row * $panjang) + $col;
+                    if ($nomor > $kapasitas) break;
+
+                    $kursiData[] = [
+                        'id_room'    => $id_room,
+                        'kode_kursi' => $huruf . $col,
+                        'status'     => 0
+                    ];
+                }
+            }
+
+            if (empty($kursiData)) {
+                throw new \RuntimeException('Kursi gagal digenerate');
+            }
+
+            $this->kursi->insertBatch($kursiData);
+
+            $db->transCommit();
+            return redirect()->to(site_url('room'))
+                ->with('success', 'Room berhasil ditambahkan');
+
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function ubah($id)
+    /**
+     * HAPUS ROOM + KURSI TERKAIT
+     */
+    public function delete($id)
     {
-        $data['data']   = $this->room->find($id);
-        $data['tayang'] = $this->tayang->findAll();
+        $db = \Config\Database::connect();
+        $db->transBegin();
 
-        return view('room/ubah', $data);
-    }
+        try {
+            $this->kursi->where('id_room', $id)->delete();
+            $this->room->delete($id);
 
-    public function update($id)
-    {
-        $param = $this->request->getPost();
-        $this->room->update($id, $param);
+            $db->transCommit();
+            return redirect()->to(site_url('room'))
+                ->with('success', 'Room berhasil dihapus');
 
-        return redirect()->to(base_url('room'));
-    }
-
-    public function hapus($id)
-    {
-        $this->room->delete($id);
-        return redirect()->to(base_url('room'));
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 }
