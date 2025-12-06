@@ -1,109 +1,119 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 
+<style>
+.seat-btn {
+    width: 44px;
+    height: 36px;
+    padding: 0;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+    white-space: nowrap;
+    line-height: 1;
+    pointer-events: none; /* READ ONLY */
+    
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.seat-empty {
+    background: #dc3545; /* MERAH = Kosong */
+    color: white;
+}
+
+.seat-filled {
+    background: #28a745; /* HIJAU = Terisi */
+    color: white;
+}
+
+.row-label {
+    font-size: 15px;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.room-title {
+    background: #f8f9fa;
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+</style>
+
 <div class="card shadow-sm p-4">
-    <h5 class="fw-semibold mb-3">Daftar Kursi per Room</h5>
+    <h4 class="fw-semibold mb-4">Layout Kursi (Read Only)</h4>
+
+    <div class="mb-3">
+        <span class="badge bg-danger px-3">Kosong</span>
+        <span class="badge bg-success px-3 ms-2">Terisi</span>
+    </div>
 
     <?php if (empty($data)): ?>
         <p class="text-muted">Data kursi belum tersedia.</p>
     <?php else: ?>
 
         <?php
-        // DATA SUDAH DI-ORDER BY nama_room, kode_kursi DI CONTROLLER
         $currentRoom = null;
+        $seatIndex   = 0;
+        $rowIndex    = 0;
+        $PER_ROW     = 10;
         ?>
 
         <?php foreach ($data as $k): ?>
+
             <?php
-            // Deteksi pergantian room
             if ($currentRoom !== $k->nama_room):
-                // Tutup grid room sebelumnya (kalau ada)
                 if ($currentRoom !== null): ?>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
-                <?php endif; ?>
+                <?php endif;
 
-                <!-- HEADER ROOM BARU -->
-                <div class="mb-4">
-                    <h6 class="fw-bold mb-2">
-                        Room: <?= esc($k->nama_room) ?>
-                    </h6>
-                    <table class="table table-bordered align-middle text-center mb-0">
-                        <tbody>
-                <?php
                 $currentRoom = $k->nama_room;
-                $currentRowLetter = null;
-            endif;
+                $seatIndex   = 0;
+                $rowIndex    = 0;
+            ?>
+                <div class="mb-4">
+                    <div class="room-title mb-2 fw-semibold">
+                        <?= esc($currentRoom) ?>
+                    </div>
 
-            // Dapatkan huruf baris (A, B, C) dan nomor kursi
-            $rowLetter = substr($k->kode_kursi, 0, 1);
-            $nomorKursi = substr($k->kode_kursi, 1);
+                    <table class="table table-borderless text-center align-middle mb-0">
+                        <tbody>
+            <?php endif; ?>
 
-            // Kalau huruf baris ganti, mulai baris <tr> baru
-            if (!isset($currentRowLetter) || $currentRowLetter !== $rowLetter):
-                // Kalau bukan baris pertama di room ini, tutup baris lama
-                if (isset($currentRowLetter)): ?>
-                            </tr>
-                        <?php endif; ?>
+            <?php
+            if ($seatIndex % $PER_ROW === 0):
+                if ($seatIndex !== 0): ?>
+                        </tr>
+                <?php endif; ?>
+                <tr>
+                    <th class="row-label"><?= chr(65 + $rowIndex) ?></th>
+                <?php $rowIndex++; ?>
+            <?php endif; ?>
 
-                        <tr>
-                            <th class="text-nowrap"><?= $rowLetter ?></th>
-                <?php
-                $currentRowLetter = $rowLetter;
-            endif;
+            <?php
+            $label = chr(65 + $rowIndex - 1) . (($seatIndex % $PER_ROW) + 1);
             ?>
 
-            <!-- CELL KURSI -->
-            <td class="text-nowrap">
-                <button class="btn btn-sm <?= $k->status == 0 ? 'btn-success' : 'btn-danger' ?>"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modal<?= $k->id_kursi ?>">
-                    <?= esc($k->kode_kursi) ?>
-                </button>
+            <td>
+                <span class="btn seat-btn <?= $k->status == 1 ? 'seat-filled' : 'seat-empty' ?>">
+                    <?= $label ?>
+                </span>
             </td>
 
-            <!-- MODAL UPDATE STATUS -->
-            <div class="modal fade" id="modal<?= $k->id_kursi ?>" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <form action="<?= site_url('kursi/update/'.$k->id_kursi) ?>" method="post">
-                            <?= csrf_field() ?>
-
-                            <div class="modal-header">
-                                <h6 class="modal-title">
-                                    Update Status Kursi <?= esc($k->kode_kursi) ?> (Room <?= esc($k->nama_room) ?>)
-                                </h6>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-
-                            <div class="modal-body">
-                                <select name="status" class="form-select" required>
-                                    <option value="0" <?= $k->status==0?'selected':'' ?>>Tersedia</option>
-                                    <option value="1" <?= $k->status==1?'selected':'' ?>>Terisi</option>
-                                </select>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button class="btn btn-primary w-100">
-                                    Simpan Perubahan
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+            <?php $seatIndex++; ?>
 
         <?php endforeach; ?>
 
-        <!-- TUTUP TR & TABLE ROOM TERAKHIR -->
                         </tr>
                     </tbody>
                 </table>
             </div>
 
     <?php endif; ?>
-
 </div>
 
 <?= $this->endSection() ?>

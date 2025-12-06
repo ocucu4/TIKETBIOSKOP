@@ -2,109 +2,154 @@
 <?= $this->section('content') ?>
 
 <style>
-.table-premium thead {
-    background: #4a90e2;
+.seat-btn {
+    width: 44px;
+    height: 36px;
+    padding: 0;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+}
+
+.seat-empty {
+    background: #dc3545;
     color: white;
-    font-weight: bold;
 }
-.table-premium tbody tr:hover {
-    background-color: #f0f6ff !important;
+
+.seat-filled {
+    background: #28a745;
+    color: white;
 }
-.table-premium {
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+
+.row-label {
+    font-size: 15px;
+    color: #6c757d;
+    font-weight: 600;
 }
-.action-btn {
-    width: 38px;
-    height: 38px;
-    padding: 6px;
-    border-radius: 50%;
+
+.room-title {
+    background: #f8f9fa;
+    padding: 8px 12px;
+    border-radius: 6px;
 }
 </style>
 
-<div class="card p-4 shadow-sm">
+<div class="card shadow-sm p-4">
+    <h4 class="fw-semibold mb-4">Status Kursi (Admin)</h4>
 
-    <h4 class="fw-semibold mb-4">
-        Status Kursi
-    </h4>
+    <!-- PILIH ROOM -->
+    <form method="get" class="mb-3">
+        <select name="room"
+                class="form-select w-25"
+                onchange="this.form.submit()">
+            <?php foreach ($rooms as $r): ?>
+                <option value="<?= $r->id_room ?>"
+                    <?= $r->id_room == $active_room ? 'selected' : '' ?>>
+                    <?= esc($r->nama_room) ?>
+                </option>
+            <?php endforeach ?>
+        </select>
+    </form>
 
-    <table class="table table-premium align-middle">
-        <thead>
-            <tr>
-                <th style="width:60px">No</th>
-                <th>Kode Kursi</th>
-                <th>Status</th>
-                <th class="text-center" style="width:120px">Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="mb-3">
+        <span class="badge bg-danger px-3">Kosong</span>
+        <span class="badge bg-success px-3 ms-2">Terisi</span>
+    </div>
 
-        <?php if (!empty($data)): ?>
-            <?php $no = 1; foreach ($data as $d): ?>
-            <tr>
-                <td><?= $no++ ?></td>
+    <?php if (empty($data)): ?>
+        <p class="text-muted">Data kursi belum tersedia.</p>
+    <?php else: ?>
 
-                <td class="fw-semibold"><?= esc($d->kode_kursi) ?></td>
+        <?php
+        $seatIndex = 0;
+        $rowIndex  = 0;
+        $PER_ROW   = 10;
+        ?>
 
-                <td>
-                    <?php if ($d->status == 1): ?>
-                        <span class="badge bg-danger px-3">Terisi</span>
-                    <?php else: ?>
-                        <span class="badge bg-success px-3">Kosong</span>
-                    <?php endif ?>
-                </td>
+        <div class="mb-4">
+            <div class="room-title mb-2 fw-semibold">
+                <?= esc(
+                    $activeRoomName
+                ) ?>
+            </div>
 
-                <td class="text-center">
-                    <button class="btn btn-outline-primary action-btn"
+            <table class="table table-borderless text-center align-middle mb-0">
+                <tbody>
+
+                <?php foreach ($data as $d): ?>
+
+                    <?php
+                    if ($seatIndex % $PER_ROW === 0):
+                        if ($seatIndex !== 0): ?>
+                            </tr>
+                        <?php endif; ?>
+                        <tr>
+                            <th class="row-label">
+                                <?= chr(65 + $rowIndex) ?>
+                            </th>
+                        <?php $rowIndex++; ?>
+                    <?php endif; ?>
+
+                    <?php
+                    $label = chr(65 + $rowIndex - 1)
+                           . (($seatIndex % $PER_ROW) + 1);
+                    ?>
+
+                    <td>
+                        <button
+                            type="button"
+                            class="seat-btn <?= $d->status == 1 ? 'seat-filled' : 'seat-empty' ?>"
                             data-bs-toggle="modal"
                             data-bs-target="#modalUbah"
-                            onclick='editStatus(<?= json_encode($d) ?>)'>
-                        <i data-feather="edit"></i>
-                    </button>
-                </td>
-            </tr>
-            <?php endforeach; ?>
+                            onclick="setKursi(<?= $d->id_kursi ?>, <?= $d->status ?>)">
+                            <?= $label ?>
+                        </button>
+                    </td>
 
-        <?php else: ?>
-            <tr>
-                <td colspan="4" class="text-center text-muted py-3">
-                    Tidak ada data kursi
-                </td>
-            </tr>
-        <?php endif ?>
+                    <?php $seatIndex++; ?>
 
-        </tbody>
-    </table>
+                <?php endforeach; ?>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    <?php endif; ?>
 </div>
 
-<!-- MODAL UPDATE -->
+<!-- MODAL -->
 <div class="modal fade" id="modalUbah" tabindex="-1">
 <div class="modal-dialog modal-dialog-centered">
 <div class="modal-content">
 
 <div class="modal-header">
-<h5 class="modal-title fw-semibold">Ubah Status Kursi</h5>
-<button class="btn-close" data-bs-dismiss="modal"></button>
+    <h5 class="modal-title">Ubah Status Kursi</h5>
+    <button class="btn-close" data-bs-dismiss="modal"></button>
 </div>
 
-<form id="formUbah" method="post">
+<form method="post" action="<?= base_url('kursijadwalstatus/update') ?>">
 <?= csrf_field() ?>
+<input type="hidden" name="id_kursi" id="u-id-kursi">
 
 <div class="modal-body">
-    <div class="mb-3">
-        <label class="form-label fw-semibold">Status</label>
-        <select name="status" id="u-status" class="form-select" required>
-            <option value="0">Kosong</option>
-            <option value="1">Terisi</option>
-        </select>
-    </div>
+    <select name="status" id="u-status" class="form-select" required>
+        <option value="0">Kosong</option>
+        <option value="1">Terisi</option>
+    </select>
 </div>
 
 <div class="modal-footer">
-<button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-<button class="btn btn-primary">Update</button>
+    <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+    <button class="btn btn-primary">Simpan</button>
 </div>
+
 </form>
 
 </div>
@@ -112,12 +157,10 @@
 </div>
 
 <script>
-function editStatus(d) {
-    document.getElementById('u-status').value = d.status;
-    document.getElementById('formUbah').action =
-        "<?= base_url('kursijadwalstatus/update') ?>/" + d.id_status;
+function setKursi(id, status) {
+    document.getElementById('u-id-kursi').value = id;
+    document.getElementById('u-status').value = status;
 }
-feather.replace();
 </script>
 
 <?= $this->endSection() ?>

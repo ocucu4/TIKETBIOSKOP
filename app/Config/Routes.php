@@ -34,6 +34,7 @@ $routes->get('dashboard', 'Dashboard::index');
     $routes->group('film', function($routes) {
         $routes->get('/', 'Film::index');
         $routes->post('simpan', 'Film::simpan');
+        $routes->post('film/add', 'Film::add');
         $routes->post('update/(:num)', 'Film::update/$1');
         $routes->get('delete/(:num)', 'Film::delete/$1');
     });
@@ -46,6 +47,7 @@ $routes->get('dashboard', 'Dashboard::index');
         $routes->get('ubah/(:num)', 'Genre::ubah/$1');
         $routes->post('update/(:num)', 'Genre::update/$1');
         $routes->get('hapus/(:num)', 'Genre::hapus/$1');
+        $routes->get('delete/(:num)', 'Genre::delete/$1');
     });
 
     // ROOM
@@ -68,9 +70,7 @@ $routes->get('dashboard', 'Dashboard::index');
     // KURSI JADWAL STATUS
     $routes->group('kursijadwalstatus', function($routes){
         $routes->get('/', 'KursiJadwalStatus::index');
-        $routes->post('simpan', 'KursiJadwalStatus::simpan');
-        $routes->post('update/(:num)', 'KursiJadwalStatus::update/$1');
-        $routes->get('hapus/(:num)', 'KursiJadwalStatus::hapus/$1');
+        $routes->post('update', 'KursiJadwalStatus::update');
     });
 
     // ORDER

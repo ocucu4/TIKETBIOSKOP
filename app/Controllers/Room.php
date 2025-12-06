@@ -41,15 +41,22 @@ class Room extends BaseController
         $kapasitas = (int) $this->request->getPost('kapasitas');
         $panjang   = (int) $this->request->getPost('panjang');
 
+        // VALIDASI AWAL (TIDAK DIUBAH)
         if ($nama_room === '' || $kapasitas <= 0 || $panjang <= 0) {
             return redirect()->back()->with('error', 'Input tidak valid');
+        }
+
+        // VALIDASI TAMBAHAN (SATU-SATUNYA PERUBAHAN)
+        if ($panjang > $kapasitas) {
+            return redirect()->back()
+                ->with('error', 'Panjang baris tidak boleh lebih besar dari kapasitas kursi');
         }
 
         $db = \Config\Database::connect();
         $db->transBegin();
 
         try {
-            // ✅ SIMPAN ROOM (LENGKAP)
+            // SIMPAN ROOM (LENGKAP)
             $id_room = $this->room->insert([
                 'nama_room' => $nama_room,
                 'kapasitas' => $kapasitas,
@@ -60,12 +67,12 @@ class Room extends BaseController
                 throw new \RuntimeException('Gagal menyimpan room');
             }
 
-            // ✅ GENERATE KURSI
+            // GENERATE KURSI (TIDAK DIUBAH)
             $totalBaris = ceil($kapasitas / $panjang);
             $kursiData  = [];
 
             for ($row = 0; $row < $totalBaris; $row++) {
-                $huruf = chr(65 + $row); // A, B, C, ...
+                $rowLetter = chr(65 + $row); //A, B, C, ....
 
                 for ($col = 1; $col <= $panjang; $col++) {
                     $nomor = ($row * $panjang) + $col;
@@ -73,7 +80,7 @@ class Room extends BaseController
 
                     $kursiData[] = [
                         'id_room'    => $id_room,
-                        'kode_kursi' => $huruf . $col,
+                        'kode_kursi' => $rowLetter . $col,
                         'status'     => 0
                     ];
                 }

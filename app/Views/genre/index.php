@@ -154,7 +154,7 @@
       confirmButtonText: 'Hapus'
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = "<?= base_url('genre/hapus') ?>/" + id;
+        window.location.href = "<?= base_url('genre/delete') ?>/" + id;
       }
     });
   }

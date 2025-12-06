@@ -79,6 +79,9 @@
                                     <td><?= esc($r->kapasitas) ?></td>
                                     <td><?= esc($r->panjang) ?></td>
                                     <td>
+                                        <a href="<?= site_url('kursijadwalstatus') ?>" class="btn btn-primary btn-sm">
+                                            Status Kursi
+                                        </a>
                                         <a href="<?= site_url('room/delete/'.$r->id_room) ?>"
                                            class="btn btn-sm btn-danger"
                                            onclick="return confirm('Yakin hapus room ini?')">
