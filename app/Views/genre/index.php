@@ -3,7 +3,7 @@
 
 <style>
   .table-premium thead {
-    background: #4a90e2;
+    background: #fdfeffff;
     color: white;
     font-weight: bold;
   }
@@ -29,7 +29,7 @@
 <div class="row">
   <div class="col-md-4">
     <div class="card p-4 shadow-sm">
-      <form action="<?= base_url('genre/simpan') ?>" method="post">
+      <form action="<?= base_url('genre/add') ?>" method="post">
         <?= csrf_field() ?>
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h4 class="fw-semibold">Tambah Genre</h4>

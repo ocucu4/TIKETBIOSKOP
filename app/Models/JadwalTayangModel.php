@@ -14,7 +14,6 @@ class JadwalTayangModel extends Model
         'tanggal',
         'jam_mulai',
         'jam_selesai',
-        'harga',
         'id_film',
         'id_room'
     ];

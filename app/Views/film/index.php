@@ -3,7 +3,7 @@
 
 <style>
 .table-premium thead {
-    background: #6fb3ff;
+    background: #fdfeffff;
     color: white;
     font-weight: bold;
 }
@@ -40,8 +40,6 @@
                 <th>Judul</th>
                 <th>Genre</th>
                 <th>Durasi</th>
-                <th>Mulai</th>
-                <th>Selesai</th>
                 <th>Harga</th>
                 <th style="width:120px" class="text-center">Aksi</th>
             </tr>
@@ -56,14 +54,19 @@
                     <td class="fw-semibold"><?= esc($f->judul_film) ?></td>
                     <td><?= esc($f->nama_genre) ?></td>
                     <td><?= esc($f->durasi) ?> menit</td>
-                    <td><?= esc($f->tanggal_mulai) ?></td>
-                    <td><?= esc($f->tanggal_selesai) ?></td>
                     <td>Rp <?= number_format($f->harga_tiket, 0, ',', '.') ?></td>
 
                     <td class="text-center">
 
                         <button class="btn btn-outline-primary action-btn me-2"
-                            onclick='editFilm(<?= json_encode($f) ?>)'
+                            onclick='editFilm(<?= json_encode($f, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>)'
+                                <?= $f->id_film ?>,
+                                <?= json_encode($f->judul_film) ?>,
+                                <?= json_encode($f->id_genre) ?>,
+                                <?= json_encode($f->durasi) ?>,
+                                <?= json_encode($f->sinopsis) ?>,
+                                <?= json_encode($f->harga_tiket) ?>
+                            )"
                             data-bs-toggle="modal"
                             data-bs-target="#modalUbah">
                             <i data-feather="edit"></i>
@@ -97,7 +100,7 @@
                 <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <form action="<?= base_url('film/simpan') ?>" method="post">
+            <form action="<?= base_url('film/add') ?>" method="post">
                 <?= csrf_field() ?>
 
                 <div class="modal-body">
@@ -122,16 +125,6 @@
                         <div class="col-md-3">
                             <label class="form-label fw-semibold">Durasi (menit)</label>
                             <input type="number" name="durasi" class="form-control" required>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">Tanggal Mulai</label>
-                            <input type="date" name="tanggal_mulai" class="form-control" required>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">Tanggal Selesai</label>
-                            <input type="date" name="tanggal_selesai" class="form-control" required>
                         </div>
 
                         <div class="col-12">
@@ -194,16 +187,6 @@
                             <input type="number" id="u-durasi" name="durasi" class="form-control" required>
                         </div>
 
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">Tanggal Mulai</label>
-                            <input type="date" id="u-mulai" name="tanggal_mulai" class="form-control" required>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">Tanggal Selesai</label>
-                            <input type="date" id="u-selesai" name="tanggal_selesai" class="form-control" required>
-                        </div>
-
                         <div class="col-12">
                             <label class="form-label fw-semibold">Sinopsis</label>
                             <textarea id="u-sinopsis" name="sinopsis" rows="3" class="form-control" required></textarea>
@@ -232,13 +215,11 @@
 <script>
 function editFilm(f) {
 
-    document.getElementById('u-judul').value   = f.judul_film;
-    document.getElementById('u-genre').value   = f.id_genre;
-    document.getElementById('u-durasi').value  = f.durasi;
-    document.getElementById('u-mulai').value   = f.tanggal_mulai;
-    document.getElementById('u-selesai').value = f.tanggal_selesai;
-    document.getElementById('u-sinopsis').value= f.sinopsis;
-    document.getElementById('u-harga').value   = f.harga_tiket;
+    document.getElementById('u-judul').value    = f.judul_film;
+    document.getElementById('u-genre').value    = f.id_genre;
+    document.getElementById('u-durasi').value   = f.durasi;
+    document.getElementById('u-sinopsis').value = f.sinopsis;
+    document.getElementById('u-harga').value    = f.harga_tiket;
 
     document.getElementById('formUbah').action =
         "<?= base_url('film/update') ?>/" + f.id_film;

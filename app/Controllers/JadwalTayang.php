@@ -11,6 +11,7 @@ use App\Models\KursiJadwalStatusModel;
 
 class JadwalTayang extends BaseController
 {
+    protected $db;
     protected $jadwal;
     protected $film;
     protected $room;
@@ -19,6 +20,7 @@ class JadwalTayang extends BaseController
 
     public function __construct()
     {
+        $this->db          = \Config\Database::connect();
         $this->jadwal      = new JadwalTayangModel();
         $this->film        = new FilmModel();
         $this->room        = new RoomModel();
@@ -30,7 +32,7 @@ class JadwalTayang extends BaseController
     {
         return view('jadwaltayang/index', [
             'data' => $this->jadwal
-                ->select('jadwal_tayang.*, film.judul_film, room.nama_room')
+                ->select('jadwal_tayang.*, film.judul_film, film.harga_tiket AS harga, room.nama_room')
                 ->join('film', 'film.id_film = jadwal_tayang.id_film')
                 ->join('room', 'room.id_room = jadwal_tayang.id_room')
                 ->findAll(),
@@ -39,48 +41,58 @@ class JadwalTayang extends BaseController
         ]);
     }
 
-    public function add()
-    {
-        return view('jadwaltayang/form', [
-            'film' => $this->film->findAll(),
-            'room' => $this->room->findAll(),
-            'mode' => 'add'
-        ]);
+       public function create()
+{
+    $data = [
+        'tanggal'     => $this->request->getPost('tanggal'),
+        'jam_mulai'   => $this->request->getPost('jam_mulai'),
+        'jam_selesai' => $this->request->getPost('jam_selesai'),
+        'id_film'     => (int) $this->request->getPost('id_film'),
+        'id_room'     => (int) $this->request->getPost('id_room'),
+    ];
+
+    $this->db->transStart();
+
+    $idTayang = $this->jadwal->insert($data, true);
+
+    if ($idTayang === false) {
+        $this->db->transRollback();
+        return redirect()
+            ->to(base_url('jadwaltayang'))
+            ->with('error', 'Gagal menyimpan jadwal tayang');
     }
 
-    public function create()
-    {
-        $data = [
-            'tanggal'     => $this->request->getPost('tanggal'),
-            'jam_mulai'   => $this->request->getPost('jam_mulai'),
-            'jam_selesai' => $this->request->getPost('jam_selesai'),
-            'harga'       => $this->request->getPost('harga'),
-            'id_film'     => $this->request->getPost('id_film'),
-            'id_room'     => $this->request->getPost('id_room')
+    // generate kursi status
+    $kursiList = $this->kursi
+        ->where('id_room', $data['id_room'])
+        ->findAll();
+
+    $batch = [];
+    foreach ($kursiList as $k) {
+        $batch[] = [
+            'id_kursi'  => $k->id_kursi,
+            'id_tayang' => $idTayang,
+            'status'    => 0,
+            'id_order'  => null
         ];
-
-        if (!$data['id_film'] || !$data['id_room']) {
-            return redirect()->back()->with('error', 'Film dan Room wajib dipilih');
-        }
-
-        $idTayang = $this->jadwal->insert($data, true);
-
-        //GENERATE kursi_jadwal_status
-        $kursiList = $this->kursi->where('id_room', $data['id_room'])->findAll();
-
-        $batch = [];
-        foreach ($kursiList as $k) {
-            $batch[] = [
-                'id_kursi'  => $k->id_kursi,
-                'id_tayang' => $idTayang,
-                'status'    => 0 // 0 = tersedia
-            ];
-        }
-
-        $this->kursiStatus->insertBatch($batch);
-
-        return redirect()->to(base_url('jadwaltayang'));
     }
+
+    if (! empty($batch)) {
+        $this->kursiStatus->insertBatch($batch);
+    }
+
+    $this->db->transComplete();
+
+    if ($this->db->transStatus() === false) {
+        return redirect()
+            ->to(base_url('jadwaltayang'))
+            ->with('error', 'Terjadi kesalahan saat menyimpan kursi');
+    }
+
+    return redirect()
+        ->to(base_url('jadwaltayang'))
+        ->with('success', 'Jadwal tayang berhasil ditambahkan');
+}
 
     public function update($id)
     {
@@ -88,17 +100,16 @@ class JadwalTayang extends BaseController
             'tanggal'     => $this->request->getPost('tanggal'),
             'jam_mulai'   => $this->request->getPost('jam_mulai'),
             'jam_selesai' => $this->request->getPost('jam_selesai'),
-            'harga'       => $this->request->getPost('harga'),
             'id_film'     => $this->request->getPost('id_film'),
             'id_room'     => $this->request->getPost('id_room')
         ]);
 
-        return redirect()->to(base_url('jadwaltayang'));
+        return redirect()->to('/jadwaltayang');
     }
 
     public function delete($id)
     {
         $this->jadwal->delete($id);
-        return redirect()->to(base_url('jadwaltayang'));
+        return redirect()->to('/jadwaltayang');
     }
 }

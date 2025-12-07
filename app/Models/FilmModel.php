@@ -13,8 +13,6 @@ class FilmModel extends Model
         'judul_film',
         'id_genre',
         'durasi',
-        'tanggal_mulai',
-        'tanggal_selesai',
         'sinopsis',
         'harga_tiket'
     ];

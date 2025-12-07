@@ -32,9 +32,8 @@ $routes->get('dashboard', 'Dashboard::index');
 
     // FILM
     $routes->group('film', function($routes) {
-        $routes->get('/', 'Film::index');
-        $routes->post('simpan', 'Film::simpan');
-        $routes->post('film/add', 'Film::add');
+        $routes->get('/', 'Film::index');          
+        $routes->post('add', 'Film::add');          
         $routes->post('update/(:num)', 'Film::update/$1');
         $routes->get('delete/(:num)', 'Film::delete/$1');
     });
@@ -44,6 +43,7 @@ $routes->get('dashboard', 'Dashboard::index');
         $routes->get('/', 'Genre::index');
         $routes->get('tambah', 'Genre::tambah');
         $routes->post('simpan', 'Genre::simpan');
+        $routes->post('add', 'Genre::add');
         $routes->get('ubah/(:num)', 'Genre::ubah/$1');
         $routes->post('update/(:num)', 'Genre::update/$1');
         $routes->get('hapus/(:num)', 'Genre::hapus/$1');
@@ -58,7 +58,7 @@ $routes->get('dashboard', 'Dashboard::index');
     // JADWAL TAYANG
     $routes->group('jadwaltayang', function($routes){
         $routes->get('/', 'JadwalTayang::index');
-        $routes->post('simpan', 'JadwalTayang::simpan');
+        $routes->post('create', 'JadwalTayang::create');
         $routes->post('update/(:num)', 'JadwalTayang::update/$1');
         $routes->get('delete/(:num)', 'JadwalTayang::delete/$1');
     });
