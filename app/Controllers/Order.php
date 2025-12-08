@@ -17,6 +17,7 @@ class Order extends BaseController
         $this->jadwal = new JadwalTayangModel();
     }
 
+    // ================= LIST =================
     public function index()
     {
         $orders = $this->order
@@ -33,83 +34,61 @@ class Order extends BaseController
             ->join('room', 'room.id_room = jadwal_tayang.id_room')
             ->findAll();
 
+        $jadwal = $this->jadwal
+            ->select('jadwal_tayang.*, film.judul_film, room.nama_room')
+            ->join('film', 'film.id_film = jadwal_tayang.id_film')
+            ->join('room', 'room.id_room = jadwal_tayang.id_room')
+            ->findAll();
+
         return view('order/index', [
-            'mode' => 'list',
-            'data' => $orders
+            'data'   => $orders,
+            'jadwal' => $jadwal
         ]);
     }
 
+    // ================= ADD (POST ONLY) =================
     public function add()
     {
-        if ($this->request->getMethod() === 'post') {
+        $dataInsert = [
+            'nama_pemesan' => $this->request->getPost('nama_pemesan'),
+            'id_tayang'    => (int) $this->request->getPost('id_tayang'),
+            'total_bayar'  => (int) $this->request->getPost('total_bayar'),
+            'status_order' => $this->request->getPost('status_order') ?? 'pending',
+            'tanggal_order' => $this->request->getPost('tanggal_order'),
+        ];
 
-            $data = [
-                'nama_pemesan' => $this->request->getPost('nama_pemesan'),
-                'total_bayar'  => $this->request->getPost('total_bayar'),
-                'status_order' => $this->request->getPost('status_order') ?? 'pending',
-                'id_tayang'    => $this->request->getPost('id_tayang'),
-            ];
-
-            if (!$data['nama_pemesan'] || !$data['id_tayang']) {
-                return redirect()->back()->with('error', 'Nama pemesan dan jadwal wajib diisi');
-            }
-
-            $this->order->insert($data);
-            return redirect()->to(base_url('order'));
+        if (
+            !$dataInsert['nama_pemesan'] || 
+            !$dataInsert['id_tayang'] || 
+            !$dataInsert['tanggal_order']
+        ) {
+            return redirect()->to('/order')->with('error', 'Data wajib diisi');
         }
 
-        $jadwal = $this->jadwal
-            ->select('jadwal_tayang.*, film.judul_film, room.nama_room')
-            ->join('film', 'film.id_film = jadwal_tayang.id_film')
-            ->join('room', 'room.id_room = jadwal_tayang.id_room')
-            ->findAll();
+        if ($this->order->insert($dataInsert) === false) {
+            return redirect()->to('/order')->with('error', json_encode($this->order->errors()));
+        }
 
-        return view('order/index', [
-            'mode'   => 'add',
-            'jadwal' => $jadwal
-        ]);
+        return redirect()->to('/order')->with('success', 'Order berhasil ditambahkan');
     }
 
+    // ================= UPDATE =================
     public function update($id)
     {
-        $order = $this->order->find($id);
-        if (!$order) {
-            return redirect()->to(base_url('order'))->with('error', 'Order tidak ditemukan');
-        }
-
-        if ($this->request->getMethod() === 'post') {
-
-            $data = [
-                'nama_pemesan' => $this->request->getPost('nama_pemesan'),
-                'total_bayar'  => $this->request->getPost('total_bayar'),
-                'status_order' => $this->request->getPost('status_order'),
-                'id_tayang'    => $this->request->getPost('id_tayang'),
-            ];
-
-            if (!$data['nama_pemesan'] || !$data['id_tayang']) {
-                return redirect()->back()->with('error', 'Data wajib diisi');
-            }
-
-            $this->order->update($id, $data);
-            return redirect()->to(base_url('order'));
-        }
-
-        $jadwal = $this->jadwal
-            ->select('jadwal_tayang.*, film.judul_film, room.nama_room')
-            ->join('film', 'film.id_film = jadwal_tayang.id_film')
-            ->join('room', 'room.id_room = jadwal_tayang.id_room')
-            ->findAll();
-
-        return view('order/index', [
-            'mode'   => 'edit',
-            'data'   => $order,
-            'jadwal' => $jadwal
+        $this->order->update($id, [
+            'nama_pemesan' => $this->request->getPost('nama_pemesan'),
+            'id_tayang'    => $this->request->getPost('id_tayang'),
+            'total_bayar'  => $this->request->getPost('total_bayar'),
+            'status_order' => $this->request->getPost('status_order')
         ]);
+
+        return redirect()->to('/order');
     }
 
+    // ================= DELETE =================
     public function delete($id)
     {
         $this->order->delete($id);
-        return redirect()->to(base_url('order'));
+        return redirect()->to('/order');
     }
 }

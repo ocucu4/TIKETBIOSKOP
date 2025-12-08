@@ -76,23 +76,15 @@ $routes->get('dashboard', 'Dashboard::index');
     // ORDER
     $routes->group('order', function($routes){
         $routes->get('/', 'Order::index');
-        // add
-        $routes->get('add', 'Order::add');
         $routes->post('add', 'Order::add');
-        // update
-        $routes->get('update/(:num)', 'Order::update/$1');
         $routes->post('update/(:num)', 'Order::update/$1');
-        // delete
         $routes->get('delete/(:num)', 'Order::delete/$1');
     });
 
     // DETAIL ORDER
     $routes->group('detailorder', function($routes){
-        $routes->get('/', 'DetailOrder::index');
-        $routes->get('tambah', 'DetailOrder::tambah');
+        $routes->get('order/(:num)', 'DetailOrder::index/$1');
         $routes->post('add', 'DetailOrder::add');
-        $routes->get('ubah/(:num)', 'DetailOrder::ubah/$1');
-        $routes->post('update/(:num)', 'DetailOrder::update/$1');
         $routes->get('delete/(:num)', 'DetailOrder::delete/$1');
     });
 

@@ -102,25 +102,41 @@ class Room extends BaseController
         }
     }
 
-    /**
-     * HAPUS ROOM + KURSI TERKAIT
-     */
-    public function delete($id)
-    {
-        $db = \Config\Database::connect();
-        $db->transBegin();
+        /**
+         * HAPUS ROOM + KURSI TERKAIT
+         */
+        public function delete($id)
+{
+    $db = \Config\Database::connect();
+    $db->transBegin();
 
-        try {
-            $this->kursi->where('id_room', $id)->delete();
-            $this->room->delete($id);
+    try {
+        // ambil kursi
+        $kursiIds = $this->kursi
+            ->where('id_room', $id)
+            ->findColumn('id_kursi');
 
-            $db->transCommit();
-            return redirect()->to(site_url('room'))
-                ->with('success', 'Room berhasil dihapus');
-
-        } catch (\Throwable $e) {
-            $db->transRollback();
-            return redirect()->back()->with('error', $e->getMessage());
+        if ($kursiIds) {
+            // hapus kursi_jadwal_status
+            $db->table('kursi_jadwal_status')
+               ->whereIn('id_kursi', $kursiIds)
+               ->delete();
         }
+
+        // hapus kursi
+        $this->kursi->where('id_room', $id)->delete();
+
+        // hapus room
+        $this->room->delete($id);
+
+        $db->transCommit();
+        return redirect()->to('room')
+            ->with('success', 'Room berhasil dihapus');
+
+    } catch (\Throwable $e) {
+        $db->transRollback();
+        return redirect()->back()
+            ->with('error', 'Room gagal dihapus karena masih digunakan');
     }
+}
 }

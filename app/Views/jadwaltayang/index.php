@@ -13,6 +13,12 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
 }
 </style>
 
@@ -63,17 +69,22 @@
                 <td><?= esc($d->jam_mulai) ?> - <?= esc($d->jam_selesai) ?></td>
                 <td>Rp <?= number_format($d->harga, 0, ',', '.') ?></td>
                 <td class="text-center">
-                    <button class="btn btn-outline-primary action-btn"
+                <div class="btn-group justify-content-center">
+                        
+                    <button class="btn btn-outline-primary action-btn me-1"
                         data-bs-toggle="modal"
                         data-bs-target="#modalEdit<?= $d->id_tayang ?>">
-                        Edit
+                        <i data-feather="edit"></i>
                     </button>
+                        
                     <a href="<?= base_url('jadwaltayang/delete/'.$d->id_tayang) ?>"
                        class="btn btn-outline-danger action-btn"
                        onclick="return confirm('Hapus jadwal?')">
-                        Hapus
+                        <i data-feather="trash-2"></i>
                     </a>
-                </td>
+                        
+                </div>
+            </td>
             </tr>
             <?php endforeach ?>
         <?php else: ?>

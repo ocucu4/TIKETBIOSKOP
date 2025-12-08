@@ -12,7 +12,11 @@ class DetailOrderModel extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id_order','id_kursi', 'jumlah', 'subtotal'];
+    protected $allowedFields    = [
+        'id_order', 
+        'jumlah', 
+        'subtotal'
+    ];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

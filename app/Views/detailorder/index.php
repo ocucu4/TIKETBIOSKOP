@@ -1,67 +1,56 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 
-<div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h4 class="mb-0">Detail Order</h4>
-        <a href="<?= base_url('detailorder/tambah') ?>" class="btn btn-primary">
-            <i data-feather="plus" class="me-1"></i> Tambah
-        </a>
-    </div>
+<div class="card p-4 shadow-sm">
 
-    <div class="card-body table-responsive">
-        <table class="table table-bordered align-middle text-center">
-            <thead class="table-light">
+    <h4 class="fw-semibold mb-3">Detail Order</h4>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle text-center">
+            <thead>
                 <tr>
                     <th>No</th>
-                    <th>ID Order</th>
-                    <th>Kursi</th>
-                    <th>Jumlah</th>
+                    <th>Nama Pemesan</th>
+                    <th>Jumlah Kursi</th>
                     <th>Subtotal</th>
+                    <th>Status</th>
+                    <th>Tanggal Order</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
-
             <tbody>
-                <?php if (!empty($data)): ?>
-                    <?php $no = 1; foreach ($data as $d): ?>
-                        <tr>
-                            <td><?= $no++ ?></td>
-                            <td><?= esc($d->id_order) ?></td>
-                            <td><?= esc($d->kode_kursi ?? '-') ?></td>
-                            <td><?= esc($d->jumlah) ?></td>
-                            <td>Rp <?= number_format($d->subtotal, 0, ',', '.') ?></td>
-                            <td>
-                                <div class="btn-group">
-                                    <a href="<?= base_url('detailorder/ubah/'.$d->id_detail) ?>"
-                                        class="btn btn-outline-primary action-circle">
-                                        <i data-feather="edit"></i>
-                                    </a>
 
-                                    <button onclick="hapusData(<?= $d->id_detail ?>)"
-                                        class="btn btn-outline-danger action-circle">
-                                        <i data-feather="trash-2"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="6" class="text-center">Belum ada detail order.</td>
-                    </tr>
-                <?php endif; ?>
+            <?php if (!empty($data)): ?>
+                <?php foreach ($data as $i => $d): ?>
+                <tr>
+                    <td><?= $i + 1 ?></td>
+                    <td><?= esc($d->nama_pemesan) ?></td>
+                    <td><?= esc($d->jumlah) ?></td>
+                    <td>Rp <?= number_format($d->subtotal, 0, ',', '.') ?></td>
+                    <td>
+                        <?= $d->status_order === 'lunas'
+                            ? '<span class="badge bg-success">LUNAS</span>'
+                            : '<span class="badge bg-warning text-dark">PENDING</span>' ?>
+                    </td>
+                    <td><?= $d->tanggal_order ?></td>
+                    <td>
+                        <a href="<?= base_url('detailorder/delete/'.$d->id_detail) ?>"
+                           onclick="return confirm('Hapus detail order?')"
+                           class="btn btn-sm btn-outline-danger">
+                            Hapus
+                        </a>
+                    </td>
+                </tr>
+                <?php endforeach ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="7" class="text-muted">Belum ada detail order</td>
+                </tr>
+            <?php endif ?>
+
             </tbody>
         </table>
     </div>
 </div>
-
-<script>
-function hapusData(id) {
-    if (confirm("Apakah yakin ingin menghapus data ini?")) {
-        window.location.href = "<?= base_url('detailorder/delete/') ?>" + id;
-    }
-}
-</script>
 
 <?= $this->endSection() ?>

@@ -108,8 +108,27 @@ class JadwalTayang extends BaseController
     }
 
     public function delete($id)
-    {
-        $this->jadwal->delete($id);
-        return redirect()->to('/jadwaltayang');
+{
+    $this->db->transStart();
+
+    // 1. Hapus semua kursi milik jadwal ini
+    $this->kursiStatus
+         ->where('id_tayang', $id)
+         ->delete();
+
+    // 2. Baru hapus jadwal tayang
+    $this->jadwal->delete($id);
+
+    $this->db->transComplete();
+
+    if ($this->db->transStatus() === false) {
+        return redirect()
+            ->back()
+            ->with('error', 'Gagal menghapus jadwal tayang');
     }
+
+    return redirect()
+        ->to(base_url('jadwaltayang'))
+        ->with('success', 'Jadwal tayang berhasil dihapus');
+}
 }

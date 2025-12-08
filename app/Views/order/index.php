@@ -40,16 +40,36 @@
           </td>
           <td><?= $o->tanggal_order ?></td>
           <td>
-            <span class="badge <?= $o->status_order=='lunas'?'bg-success':'bg-warning' ?>">
-              <?= $o->status_order ?>
-            </span>
-          </td>
+  <?php if ($o->status_order === 'lunas'): ?>
+    <span class="badge bg-success px-3 py-2 fw-semibold text-white">
+      LUNAS
+    </span>
+  <?php else: ?>
+    <span class="badge bg-warning px-3 py-2 fw-semibold text-dark">
+      PENDING
+    </span>
+  <?php endif; ?>
+</td>
+
           <td>Rp <?= number_format($o->total_bayar,0,',','.') ?></td>
           <td>
+            <a href="<?= base_url('detailorder/order/'.$o->id_order) ?>"
+               class="btn btn-sm btn-outline-secondary action-btn">
+              <title="Detail Order"></title>
+              <i data-feather="list"></i>
+            </a>
+
+            <a href="<?= base_url('kursijadwalstatus/index/'.$o->id_tayang) ?>"
+                  class="btn btn-sm btn-outline-info action-btn"
+                  title="Status Kursi">
+              <i data-feather="grid"></i>
+            </a>
+            
             <button class="btn btn-sm btn-outline-primary"
               onclick='editOrder(<?= json_encode($o) ?>)'>
               Edit
             </button>
+            
             <button class="btn btn-sm btn-outline-danger"
               onclick="hapusOrder(<?= $o->id_order ?>)">
               Hapus
@@ -67,7 +87,7 @@
 <!-- ======================= -->
 <div class="modal fade" id="modalAdd" tabindex="-1">
   <div class="modal-dialog modal-lg">
-    <form method="post" action="<?= base_url('order/add') ?>" class="modal-content">
+    <form method="post" action="<?= base_url('order/add') ?>" class="modal-content"> <?=  csrf_field() ?>
       <div class="modal-header">
         <h5 class="modal-title">Tambah Order</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -152,7 +172,16 @@ function editOrder(o) {
   document.getElementById('e-total').value = o.total_bayar;
   document.getElementById('e-status').value = o.status_order;
   document.getElementById('e-tayang').value = o.id_tayang;
-  document.getElementById('e-tanggal').value = o.tanggal_order.replace(' ', 'T');
+  const dt = new Date(o.tanggal_order.replace(' ', 'T'));
+
+  const yyyy = dt.getFullYear();
+  const mm = String(dt.getMonth()+1).padStart(2,'0');
+  const dd = String(dt.getDate()).padStart(2,'0');
+  const hh = String(dt.getHours()).padStart(2,'0');
+  const mi = String(dt.getMinutes()).padStart(2,'0');
+
+  document.getElementById('e-tanggal').value =
+    `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
 
   new bootstrap.Modal(document.getElementById('modalEdit')).show();
 }
