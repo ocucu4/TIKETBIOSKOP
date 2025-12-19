@@ -77,33 +77,43 @@ class KursiJadwalStatus extends BaseController
         ]);
     }
 
+    public function byOrder($id_order)
+{
+    $data = $this->db->table('kursi_jadwal_status')
+        ->select('kursi_jadwal_status.*, kursi.kode_kursi')
+        ->join('kursi', 'kursi.id_kursi = kursi_jadwal_status.id_kursi')
+        ->where('kursi_jadwal_status.id_order', $id_order)
+        ->get()->getResult();
+
+    return view('kursijadwalstatus/order', [
+        'data' => $data,
+        'id_order' => $id_order
+    ]);
+}
+
     public function update()
-    {
-        $id_kursi = $this->request->getPost('id_kursi');
-        $status   = $this->request->getPost('status');
+{
+    $id_kursi  = $this->request->getPost('id_kursi');
+    $id_tayang = $this->request->getPost('id_tayang');
+    $status    = $this->request->getPost('status');
 
-        if (!$id_kursi || !in_array($status, ['0','1'], true)) {
-            return redirect()->back();
-        }
-
-        $existing = $this->db->table('kursi_jadwal_status')
-            ->where('id_kursi', $id_kursi)
-            ->where('id_order IS NULL')
-            ->get()
-            ->getRow();
-
-        if ($existing) {
-            $this->db->table('kursi_jadwal_status')
-                ->where('id_status', $existing->id_status)
-                ->update(['status' => $status]);
-        } else {
-            $this->db->table('kursi_jadwal_status')->insert([
-                'id_kursi' => $id_kursi,
-                'status'   => $status,
-                'id_order' => null
-            ]);
-        }
-
+    if (
+        !$id_kursi ||
+        !$id_tayang ||
+        !in_array($status, ['0','1'], true)
+    ) {
         return redirect()->back();
     }
+
+    $this->db->table('kursi_jadwal_status')
+        ->where('id_kursi', $id_kursi)
+        ->where('id_tayang', $id_tayang)
+        ->where('id_order IS NULL')
+        ->update([
+            'status' => $status
+        ]);
+
+    return redirect()->back();
+}
+
 }

@@ -7,7 +7,7 @@
     <h4 class="m-0 fw-semibold"><?= esc($title ?? 'Dashboard') ?></h4>
 
     <button class="btn btn-light d-flex align-items-center" style="margin-right: 20px;" onclick="openProfilePanel()">
-        <img src="<?= base_url('assets/images/user/mypfp.jpg') ?>" class="rounded-circle me-2" width="34" height="34">
+        <img src="<?= base_url('assets/images/user/avatar-1.jpg') ?>" class="rounded-circle me-2" width="34" height="34">
         <span class="fw-semibold">Admin</span>
     </button>
 

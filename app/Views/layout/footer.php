@@ -1,5 +1,5 @@
-<footer class="text-center py-2 border-top mt-5 mb-3 bg-white rounded" style="margin-top: 200px !important;">
+<footer class="text-center py-3 border-top bg-white">
   <p class="mb-0 small text-muted">
-    © <?= date('Y') ?> Tiket Bioskop — Dashboard Admin Template
+    © <?= date('Y') ?> Tiket Bioskop — Dashboard Admin
   </p>
 </footer>

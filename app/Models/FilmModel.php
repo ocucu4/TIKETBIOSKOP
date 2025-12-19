@@ -10,11 +10,13 @@ class FilmModel extends Model
     protected $primaryKey = 'id_film';
     protected $returnType = 'object';
     protected $allowedFields = [
+
         'judul_film',
         'id_genre',
         'durasi',
         'sinopsis',
         'harga_tiket'
+        
     ];
 
     protected bool $allowEmptyInserts = false;

@@ -70,10 +70,14 @@ body {
 .pc-content {
     margin-left: 250px;
     width: calc(100% - 250px);
-    padding: 90px 20px 20px;
-    min-height: calc(100vh - 100px);
+    padding: 90px 20px 0px;
+    min-height: 100vh;
     transition: .3s;
+
+    display: flex;
+    flex-direction: column;
 }
+
 .pc-content.closed {
     margin-left: 0;
     width: 100%;
@@ -140,7 +144,7 @@ body {
         <?= $this->include('layout/header') ?>
     </div>
 
-    <div class="page-wrapper">
+    <div class="page-wrapper flex-fill">
         <?= $this->renderSection('content') ?>
     </div>
 
@@ -156,7 +160,7 @@ body {
         </div>
 
         <div class="text-center mb-3">
-            <img src="<?= base_url('assets/images/user/mypfp.jpg') ?>" width="70" class="rounded-circle mb-2">
+            <img src="<?= base_url('assets/images/user/avatar-1.jpg') ?>" width="70" class="rounded-circle mb-2">
             <h6 class="fw-semibold"><?= session()->get('admin_name') ?></h6>
         </div>
 

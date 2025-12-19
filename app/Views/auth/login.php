@@ -26,7 +26,7 @@
                         <img src="<?= base_url('assets/images/tiket-logo.ico') ?>" alt="Logo">
                     </div>
 
-                    <h4 class="text-center f-w-500 mb-4">WELCOME ADMIN</h4>
+                    <h4 class="text-center f-w-500 mb-4">WELCOME</h4>
                     <h5 class="text-center f-w-500 mb-4">Login to your account</h5>
 
                     <?php if (session()->getFlashdata('error')): ?>

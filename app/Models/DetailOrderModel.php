@@ -13,9 +13,11 @@ class DetailOrderModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
+        
         'id_order', 
         'jumlah', 
         'subtotal'
+        
     ];
 
     protected bool $allowEmptyInserts = false;

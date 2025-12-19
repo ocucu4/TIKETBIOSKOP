@@ -13,10 +13,21 @@ $routes->get('login', 'UserAuth::loginForm');
 $routes->post('auth/login', 'UserAuth::login');
 $routes->get('logout', 'UserAuth::logout');
 
-// KASIR
-$routes->group('kasir', ['filter' => 'kasirAuth'], function ($routes) {
+// =======================\\
+// KASIR (TANPA FILTER)
+// =======================
+$routes->group('kasir', function ($routes) {
+
+    // dashboard kasir (opsional)
     $routes->get('dashboard', 'Kasir\Dashboard::index');
+
+    // FLOW TRANSAKSI
     $routes->get('transaksi', 'Kasir\Transaksi::index');
+    $routes->get('transaksi/(:num)', 'Kasir\Transaksi::kursi/$1');          
+    $routes->get('kursi/(:num)', 'Kasir\Transaksi::kursi/$1');   
+    $routes->post('buat-order', 'Kasir\Transaksi::buatOrder');    
+    $routes->get('bayar/(:num)', 'Kasir\Transaksi::bayar/$1');
+    $routes->post('proses-bayar', 'Kasir\Transaksi::proses');    
 });
 
 // ADMIN
@@ -70,6 +81,7 @@ $routes->get('dashboard', 'Dashboard::index');
     // KURSI JADWAL STATUS
     $routes->group('kursijadwalstatus', function($routes){
         $routes->get('/', 'KursiJadwalStatus::index');
+        $routes->get('order/(:num)', 'KursiJadwalStatus::index');
         $routes->post('update', 'KursiJadwalStatus::update');
     });
 
@@ -91,10 +103,8 @@ $routes->get('dashboard', 'Dashboard::index');
     // PEMBAYARAN
     $routes->group('pembayaran', function($routes){
         $routes->get('/', 'Pembayaran::index');
-        $routes->get('tambah', 'Pembayaran::tambah');
         $routes->post('add', 'Pembayaran::add');
-        $routes->get('ubah/(:num)', 'Pembayaran::ubah/$1');
-        $routes->post('update', 'Pembayaran::update');
-        $routes->get('hapus/(:num)', 'Pembayaran::hapus/$1');
+        $routes->post('update/(:num)', 'Pembayaran::update/$1');
+        $routes->get('delete/(:num)', 'Pembayaran::delete/$1');
     });
 

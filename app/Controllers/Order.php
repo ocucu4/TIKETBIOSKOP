@@ -5,16 +5,19 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\OrderModel;
 use App\Models\JadwalTayangModel;
+use App\Models\PembayaranModel;
 
 class Order extends BaseController
 {
     protected $order;
     protected $jadwal;
+    protected $pembayaran;
 
     public function __construct()
     {
         $this->order  = new OrderModel();
         $this->jadwal = new JadwalTayangModel();
+        $this->pembayaran = new PembayaranModel();
     }
 
     // ================= LIST =================
@@ -87,8 +90,18 @@ class Order extends BaseController
 
     // ================= DELETE =================
     public function delete($id)
-    {
-        $this->order->delete($id);
-        return redirect()->to('/order');
+{
+    $exist = $this->pembayaran
+        ->where('id_order', $id)
+        ->countAllResults();
+
+    if ($exist > 0) {
+        return redirect()->back()
+            ->with('error', 'Order sudah dibayar, tidak bisa dihapus');
     }
+
+    $this->order->delete($id);
+    return redirect()->to(base_url('order'));
+}
+
 }

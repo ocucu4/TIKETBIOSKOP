@@ -54,15 +54,15 @@
           <td>Rp <?= number_format($o->total_bayar,0,',','.') ?></td>
           <td>
             <a href="<?= base_url('detailorder/order/'.$o->id_order) ?>"
-               class="btn btn-sm btn-outline-secondary action-btn">
-              <title="Detail Order"></title>
+             class="btn btn-sm btn-outline-secondary action-btn"
+             title="Detail Order">
               <i data-feather="list"></i>
             </a>
 
-            <a href="<?= base_url('kursijadwalstatus/index/'.$o->id_tayang) ?>"
-                  class="btn btn-sm btn-outline-info action-btn"
-                  title="Status Kursi">
-              <i data-feather="grid"></i>
+            <a href="<?= base_url('kursijadwalstatus/order/'.$o->id_order) ?>"
+               class="btn btn-sm btn-outline-info action-btn"
+               title="Status Kursi">
+               <i data-feather="grid"></i>
             </a>
             
             <button class="btn btn-sm btn-outline-primary"

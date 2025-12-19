@@ -65,26 +65,10 @@
       Order
     </a>
 
-    <a href="<?= base_url('detailorder') ?>" 
-       class="nav-link text-dark mb-2 d-flex align-items-center">
-      <img src="<?= base_url('assets/icons-sidebar/Orderdetail.png') ?>" width="24" class="me-2">
-      Detail Order
-    </a>
-
     <a href="<?= base_url('pembayaran') ?>" 
        class="nav-link text-dark mb-2 d-flex align-items-center">
       <img src="<?= base_url('assets/icons-sidebar/Payment.png') ?>" width="24" class="me-2">
       Pembayaran
-    </a>
-
-    <hr>
-
-    <p class="menu-title">Pengguna</p>
-
-    <a href="<?= base_url('kasir') ?>" 
-       class="nav-link text-dark mb-2 d-flex align-items-center">
-      <img src="<?= base_url('assets/icons-sidebar/Cashier.png') ?>" width="24" class="me-2">
-      Kasir
     </a>
 
   </nav>

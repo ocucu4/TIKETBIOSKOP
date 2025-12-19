@@ -19,65 +19,54 @@ class Pembayaran extends BaseController
 
     public function index()
     {
+        $data = $this->pembayaran
+            ->select('pembayaran.*, `order`.nama_pemesan, `order`.status_order')
+            // JANGAN pakai backtick di parameter join()
+            ->join('order', 'order.id_order = pembayaran.id_order')
+            ->findAll();
+
         return view('pembayaran/index', [
-            'title' => 'Pembayaran',
-            'data'  => $this->pembayaran
-                ->select('pembayaran.*, `order`.status_order')
-                ->join('`order`', '`order`.id_order = pembayaran.id_order')
-                ->findAll()
+            'data'   => $data,
+            'orders' => $this->order->findAll()
         ]);
     }
 
     public function add()
     {
-        if ($this->request->getMethod() === 'post') {
+        $data = [
+            'id_order'      => (int) $this->request->getPost('id_order'),
+            'metode_bayar'  => $this->request->getPost('metode_bayar'),
+            'tanggal_bayar' => $this->request->getPost('tanggal_bayar'),
+            'jumlah_bayar'  => (float) $this->request->getPost('jumlah_bayar'),
+            'keterangan'    => $this->request->getPost('keterangan'),
+        ];
 
-            $data = [
-                'id_order'      => $this->request->getPost('id_order'),
-                'metode_bayar'  => $this->request->getPost('metode_bayar'),
-                'jumlah_bayar'  => $this->request->getPost('jumlah_bayar'),
-                'keterangan'    => $this->request->getPost('keterangan')
-            ];
-
-            if (!$data['id_order'] || !$data['jumlah_bayar']) {
-                return redirect()->back()->with('error', 'Order dan jumlah bayar wajib diisi');
-            }
-
-            $db = \Config\Database::connect();
-            $db->transStart();
-
-            $this->pembayaran->insert($data);
-            $this->order->update($data['id_order'], [
-                'status_order' => 'lunas'
-            ]);
-
-            $db->transComplete();
-
-            return redirect()->to(base_url('pembayaran'));
+        if (!$data['id_order'] || !$data['jumlah_bayar']) {
+            return redirect()->back()->with('error', 'Order dan jumlah bayar wajib diisi');
         }
 
-        return view('pembayaran/form', [
-            'title'  => 'Tambah Pembayaran',
-            'orders' => $this->order->findAll(),
-            'mode'   => 'add'
-        ]);
-    }
+        $db = \Config\Database::connect();
+        $db->transStart();
 
-    public function edit($id)
-    {
-        return view('pembayaran/form', [
-            'title' => 'Ubah Pembayaran',
-            'row'   => $this->pembayaran->find($id),
-            'mode'  => 'edit'
+        $this->pembayaran->insert($data);
+
+        // otomatis set status order = lunas
+        $this->order->update($data['id_order'], [
+            'status_order' => 'lunas'
         ]);
+
+        $db->transComplete();
+
+        return redirect()->to('/pembayaran')->with('success', 'Pembayaran berhasil ditambahkan');
     }
 
     public function update($id)
     {
         $data = [
-            'metode_bayar' => $this->request->getPost('metode_bayar'),
-            'jumlah_bayar' => $this->request->getPost('jumlah_bayar'),
-            'keterangan'   => $this->request->getPost('keterangan')
+            'metode_bayar'  => $this->request->getPost('metode_bayar'),
+            'tanggal_bayar' => $this->request->getPost('tanggal_bayar'),
+            'jumlah_bayar'  => (float) $this->request->getPost('jumlah_bayar'),
+            'keterangan'    => $this->request->getPost('keterangan'),
         ];
 
         if (!$data['jumlah_bayar']) {
@@ -85,12 +74,13 @@ class Pembayaran extends BaseController
         }
 
         $this->pembayaran->update($id, $data);
-        return redirect()->to(base_url('pembayaran'));
+
+        return redirect()->to('/pembayaran')->with('success', 'Pembayaran berhasil diubah');
     }
 
     public function delete($id)
     {
         $this->pembayaran->delete($id);
-        return redirect()->to(base_url('pembayaran'));
+        return redirect()->to('/pembayaran')->with('success', 'Pembayaran berhasil dihapus');
     }
 }
