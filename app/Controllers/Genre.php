@@ -21,19 +21,36 @@ class Genre extends BaseController
         ]);
     }
 
-    public function add()
+        public function add()
     {
-        $nama = $this->request->getPost('nama_genre');
+        $nama = trim($this->request->getPost('nama_genre'));
 
-        if (!$nama) {
-            return redirect()->back()->with('error', 'Nama genre wajib diisi');
+        if ($nama === '') {
+            return redirect()->back()
+                ->with('error', 'Nama genre wajib diisi');
         }
 
-        $this->genre->insert([
-            'nama_genre' => $nama
-        ]);
+        $cek = $this->genre
+            ->where('LOWER(nama_genre)', strtolower($nama))
+            ->first();
 
-        return redirect()->to(base_url('genre'));
+        if ($cek) {
+            return redirect()->to(base_url('genre'))
+                ->with('error', 'Genre ini sudah ada dan tidak boleh duplikat');
+        }
+
+        try {
+            $this->genre->insert([
+                'nama_genre' => $nama
+            ]);
+        } catch (\Throwable $e) {
+
+            return redirect()->to(base_url('genre'))
+                ->with('error', 'Genre ini sudah terdaftar');
+        }
+
+        return redirect()->to(base_url('genre'))
+            ->with('success', 'Genre berhasil ditambahkan');
     }
 
     public function update($id)

@@ -13,69 +13,38 @@ class KursiJadwalStatus extends BaseController
         $this->db = \Config\Database::connect();
     }
 
-    /**
-     * =========================
-     * STATUS KURSI PER ROOM
-     * =========================
-     */
-    public function index()
-    {
-        // ambil semua room
-        $rooms = $this->db->table('room')->get()->getResult();
+    public function index($id_tayang)
+{
 
-        if (empty($rooms)) {
-            return view('kursijadwalstatus/index', [
-                'rooms'       => [],
-                'data'        => [],
-                'active_room' => null,
-                'activeRoomName' => ''
-            ]);
-        }
+    $jadwal = $this->db->table('jadwal_tayang jt')
+        ->select('jt.*, room.nama_room, film.judul_film')
+        ->join('room', 'room.id_room = jt.id_room')
+        ->join('film', 'film.id_film = jt.id_film')
+        ->where('jt.id_tayang', $id_tayang)
+        ->get()
+        ->getRow();
 
-        // default room pertama
-        $id_room = $rooms[0]->id_room;
-
-        if ($this->request->getGet('room')) {
-            $id_room = $this->request->getGet('room');
-        }
-
-        // ✅ cari nama room (UNTUK VIEW)
-        $activeRoomName = '';
-        foreach ($rooms as $r) {
-            if ($r->id_room == $id_room) {
-                $activeRoomName = $r->nama_room;
-                break;
-            }
-        }
-
-        // ✅ QUERY KURSI (ADMIN STATUS)
-        $data = $this->db->table('kursi k')
-            ->select("
-                k.id_kursi,
-                k.kode_kursi,
-                IF(ks.status IS NULL, 0, ks.status) AS status
-            ")
-            ->join(
-                'kursi_jadwal_status ks',
-                'ks.id_kursi = k.id_kursi AND ks.id_order IS NULL',
-                'left'
-            )
-            ->where('k.id_room', $id_room)
-            ->orderBy(
-                "LEFT(k.kode_kursi,1) ASC, CAST(SUBSTRING(k.kode_kursi,2) AS UNSIGNED) ASC",
-                '',
-                false
-            )
-            ->get()
-            ->getResult();
-
-        return view('kursijadwalstatus/index', [
-            'rooms'          => $rooms,
-            'data'           => $data,
-            'active_room'    => $id_room,
-            'activeRoomName' => $activeRoomName
-        ]);
+    if (!$jadwal) {
+        return redirect()->back()->with('error', 'Jadwal tidak ditemukan');
     }
+
+    $data = $this->db->table('kursi_jadwal_status ks')
+        ->select('ks.id_status, ks.id_kursi, ks.status, k.kode_kursi')
+        ->join('kursi k', 'k.id_kursi = ks.id_kursi')
+        ->where('ks.id_tayang', $id_tayang)
+        ->orderBy(
+            "LEFT(k.kode_kursi,1), CAST(SUBSTRING(k.kode_kursi,2) AS UNSIGNED)",
+            '',
+            false
+        )
+        ->get()
+        ->getResult();
+
+    return view('kursijadwalstatus/index', [
+        'data'   => $data,
+        'jadwal' => $jadwal
+    ]);
+}
 
     public function byOrder($id_order)
 {

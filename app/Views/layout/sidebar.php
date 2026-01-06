@@ -13,22 +13,16 @@
       Dashboard
     </a>
 
-    <a href="<?= base_url('bioskop') ?>" 
+    <a href="<?= base_url('film') ?>" 
        class="nav-link text-dark mb-2 d-flex align-items-center">
-      <img src="<?= base_url('assets/icons-sidebar/Cinema.png') ?>" width="24" class="me-2">
-      Bioskop
+      <img src="<?= base_url('assets/icons-sidebar/Film.png') ?>" width="24" class="me-2">
+      Film
     </a>
 
     <a href="<?= base_url('genre') ?>" 
        class="nav-link text-dark mb-2 d-flex align-items-center">
       <img src="<?= base_url('assets/icons-sidebar/Genre.png') ?>" width="24" class="me-2">
       Genre
-    </a>
-
-    <a href="<?= base_url('film') ?>" 
-       class="nav-link text-dark mb-2 d-flex align-items-center">
-      <img src="<?= base_url('assets/icons-sidebar/Film.png') ?>" width="24" class="me-2">
-      Film
     </a>
 
     <a href="<?= base_url('room') ?>" 
@@ -56,20 +50,6 @@
     </a>
 
     <hr>
-
-    <p class="menu-title">PROSES PENJUALAN TIKET</p>
-
-    <a href="<?= base_url('order') ?>" 
-       class="nav-link text-dark mb-2 d-flex align-items-center">
-      <img src="<?= base_url('assets/icons-sidebar/Order.png') ?>" width="24" class="me-2">
-      Order
-    </a>
-
-    <a href="<?= base_url('pembayaran') ?>" 
-       class="nav-link text-dark mb-2 d-flex align-items-center">
-      <img src="<?= base_url('assets/icons-sidebar/Payment.png') ?>" width="24" class="me-2">
-      Pembayaran
-    </a>
 
   </nav>
 </aside>

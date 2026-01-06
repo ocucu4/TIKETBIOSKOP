@@ -38,9 +38,10 @@ class Film extends BaseController
             'id_genre'         => $this->request->getPost('id_genre')
         ];
 
-        if (!$data['judul_film'] || !$data['id_genre']) {
-            return redirect()->back()->with('error', 'Judul film & genre wajib diisi');
-        }
+        if (!$data['judul_film'] || !$data['id_genre'] || !$data['harga_tiket']) {
+        return redirect()->back()
+            ->with('error', 'Semua field wajib diisi');
+    }
 
         $this->film->insert($data);
         return redirect()->to(base_url('film'));

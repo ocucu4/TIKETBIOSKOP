@@ -83,6 +83,11 @@
                         <i data-feather="trash-2"></i>
                     </a>
                         
+                    <a href="<?= base_url('kursijadwalstatus/'.$d->id_tayang) ?>"
+                       class="btn btn-outline-secondary action-btn">
+                       Kursi
+                    </a>
+
                 </div>
             </td>
             </tr>

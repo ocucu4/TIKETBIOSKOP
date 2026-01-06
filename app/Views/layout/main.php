@@ -23,15 +23,16 @@ body {
 .pc-sidebar {
     width: 250px;
     height: 100vh;
-    background: #fff;
-    border-right: 1px solid #e5e7eb;
+    background: #eef1f5;
+    border-right: 1px solid #d1d5db;
     position: fixed;
     top: 0;
     left: 0;
     transition: .1s;
     overflow-y: auto;
-    z-index: 3000;
+    z-index: 1040;
 }
+
 .pc-sidebar.closed {
     width: 0;
     overflow: hidden;
@@ -48,8 +49,8 @@ body {
 }
 
 .pc-header {
-    background: #fff;
-    border: 1px solid #e5e7eb;
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
     border-radius: 12px;
     padding: 12px 20px;
     display: flex;
@@ -132,6 +133,7 @@ body {
 .profile-menu .menu-item:hover {
     background: #f1f3f7;
 }
+
 </style>
 </head>
 
@@ -179,7 +181,10 @@ body {
 <script src="<?= base_url('assets/js/plugins/bootstrap.min.js') ?>"></script>
 <script src="<?= base_url('assets/js/plugins/feather.min.js') ?>"></script>
 <script src="<?= base_url('assets/js/script.js') ?>"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="<?= base_url('assets/js/plugins/apexcharts.min.js') ?>"></script>
+<script src="<?= base_url('assets/js/pages/dashboard-default.js') ?>"></script>
 
 <script>
 const sidebar = document.querySelector(".pc-sidebar");
@@ -188,18 +193,18 @@ const header = document.querySelector(".pc-header");
 const toggleBtn = document.getElementById("toggleSidebar");
 
 toggleBtn?.addEventListener("click", () => {
-    sidebar.classList.toggle("closed");
-    content.classList.toggle("closed");
-    header.classList.toggle("closed");
+  sidebar.classList.toggle("closed");
+  content.classList.toggle("closed");
+  header.classList.toggle("closed");
 });
 
 function openProfilePanel() {
-    document.getElementById("profileCard").classList.add("show");
-    document.getElementById("profileOverlay").classList.add("show");
+  document.getElementById("profileCard").classList.add("show");
+  document.getElementById("profileOverlay").classList.add("show");
 }
 function closeProfilePanel() {
-    document.getElementById("profileCard").classList.remove("show");
-    document.getElementById("profileOverlay").classList.remove("show");
+  document.getElementById("profileCard").classList.remove("show");
+  document.getElementById("profileOverlay").classList.remove("show");
 }
 </script>
 

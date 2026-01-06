@@ -41,7 +41,7 @@ class JadwalTayang extends BaseController
         ]);
     }
 
-       public function create()
+   public function create()
 {
     $data = [
         'tanggal'     => $this->request->getPost('tanggal'),
@@ -50,6 +50,34 @@ class JadwalTayang extends BaseController
         'id_film'     => (int) $this->request->getPost('id_film'),
         'id_room'     => (int) $this->request->getPost('id_room'),
     ];
+
+        $today = date('Y-m-d');
+    if ($data['tanggal'] < $today) {
+        return redirect()
+            ->to(base_url('jadwaltayang'))
+            ->with('error', 'Tanggal tayang tidak boleh kurang dari hari ini');
+    }
+
+    if ($data['jam_selesai'] <= $data['jam_mulai']) {
+        return redirect()
+            ->to(base_url('jadwaltayang'))
+            ->with('error', 'Jam selesai harus lebih besar dari jam mulai');
+    }
+
+    $bentrok = $this->jadwal
+        ->where('tanggal', $data['tanggal'])
+        ->where('id_room', $data['id_room'])
+        ->groupStart()
+            ->where('jam_mulai <', $data['jam_selesai'])
+            ->where('jam_selesai >', $data['jam_mulai'])
+        ->groupEnd()
+        ->first();
+
+    if ($bentrok) {
+        return redirect()
+            ->to(base_url('jadwaltayang'))
+            ->with('error', 'Jadwal bentrok dengan jadwal lain di room yang sama');
+    }
 
     $this->db->transStart();
 
@@ -62,7 +90,6 @@ class JadwalTayang extends BaseController
             ->with('error', 'Gagal menyimpan jadwal tayang');
     }
 
-    // generate kursi status
     $kursiList = $this->kursi
         ->where('id_room', $data['id_room'])
         ->findAll();
@@ -77,7 +104,7 @@ class JadwalTayang extends BaseController
         ];
     }
 
-    if (! empty($batch)) {
+    if (!empty($batch)) {
         $this->kursiStatus->insertBatch($batch);
     }
 
@@ -95,28 +122,60 @@ class JadwalTayang extends BaseController
 }
 
     public function update($id)
-    {
-        $this->jadwal->update($id, [
-            'tanggal'     => $this->request->getPost('tanggal'),
-            'jam_mulai'   => $this->request->getPost('jam_mulai'),
-            'jam_selesai' => $this->request->getPost('jam_selesai'),
-            'id_film'     => $this->request->getPost('id_film'),
-            'id_room'     => $this->request->getPost('id_room')
-        ]);
+{
+    $data = [
+        'tanggal'     => $this->request->getPost('tanggal'),
+        'jam_mulai'   => $this->request->getPost('jam_mulai'),
+        'jam_selesai' => $this->request->getPost('jam_selesai'),
+        'id_film'     => (int) $this->request->getPost('id_film'),
+        'id_room'     => (int) $this->request->getPost('id_room'),
+    ];
 
-        return redirect()->to('/jadwaltayang');
+    $today = date('Y-m-d');
+
+    if ($data['tanggal'] < $today) {
+        return redirect()
+            ->to(base_url('jadwaltayang'))
+            ->with('error', 'Tanggal tayang tidak boleh kurang dari hari ini');
     }
+
+    if ($data['jam_selesai'] <= $data['jam_mulai']) {
+        return redirect()
+            ->to(base_url('jadwaltayang'))
+            ->with('error', 'Jam selesai harus lebih besar dari jam mulai');
+    }
+
+    $bentrok = $this->jadwal
+        ->where('tanggal', $data['tanggal'])
+        ->where('id_room', $data['id_room'])
+        ->where('id_tayang !=', $id)
+        ->groupStart()
+            ->where('jam_mulai <', $data['jam_selesai'])
+            ->where('jam_selesai >', $data['jam_mulai'])
+        ->groupEnd()
+        ->first();
+
+    if ($bentrok) {
+        return redirect()
+            ->to(base_url('jadwaltayang'))
+            ->with('error', 'Jadwal bentrok dengan jadwal lain di room yang sama');
+    }
+
+    $this->jadwal->update($id, $data);
+
+    return redirect()
+        ->to(base_url('jadwaltayang'))
+        ->with('success', 'Jadwal tayang berhasil diperbarui');
+}
 
     public function delete($id)
 {
     $this->db->transStart();
 
-    // 1. Hapus semua kursi milik jadwal ini
     $this->kursiStatus
          ->where('id_tayang', $id)
          ->delete();
 
-    // 2. Baru hapus jadwal tayang
     $this->jadwal->delete($id);
 
     $this->db->transComplete();

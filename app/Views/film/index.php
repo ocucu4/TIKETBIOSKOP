@@ -58,19 +58,12 @@
 
                     <td class="text-center">
 
-                        <button class="btn btn-outline-primary action-btn me-2"
+                    <button class="btn btn-outline-primary action-btn me-2"
                             onclick='editFilm(<?= json_encode($f, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>)'
-                                <?= $f->id_film ?>,
-                                <?= json_encode($f->judul_film) ?>,
-                                <?= json_encode($f->id_genre) ?>,
-                                <?= json_encode($f->durasi) ?>,
-                                <?= json_encode($f->sinopsis) ?>,
-                                <?= json_encode($f->harga_tiket) ?>
-                            )"
                             data-bs-toggle="modal"
                             data-bs-target="#modalUbah">
-                            <i data-feather="edit"></i>
-                        </button>
+                        <i data-feather="edit"></i>
+                    </button>
 
                         <button class="btn btn-outline-danger action-btn"
                                 onclick="hapusFilm(<?= $f->id_film ?>)">

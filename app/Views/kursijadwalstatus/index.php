@@ -41,22 +41,17 @@
 </style>
 
 <div class="card shadow-sm p-4">
-    <h4 class="fw-semibold mb-4">Status Kursi (Admin)</h4>
+    <h4 class="fw-semibold mb-2">Status Kursi</h4>
 
-    <!-- PILIH ROOM -->
-    <form method="get" class="mb-3">
-        <select name="room"
-                class="form-select w-25"
-                onchange="this.form.submit()">
-            <?php foreach ($rooms as $r): ?>
-                <option value="<?= $r->id_room ?>"
-                    <?= $r->id_room == $active_room ? 'selected' : '' ?>>
-                    <?= esc($r->nama_room) ?>
-                </option>
-            <?php endforeach ?>
-        </select>
-    </form>
+    <h5 class="mb-4 text-muted">
+        <?= esc($jadwal->judul_film) ?> |
+        <?= esc($jadwal->nama_room) ?> |
+        <?= esc($jadwal->tanggal) ?>
+        (<?= $jadwal->jam_mulai ?> - <?= $jadwal->jam_selesai ?>)
+    </h5>
 
+    
+    
     <div class="mb-3">
         <span class="badge bg-danger px-3">Kosong</span>
         <span class="badge bg-success px-3 ms-2">Terisi</span>
@@ -73,11 +68,6 @@
         ?>
 
         <div class="mb-4">
-            <div class="room-title mb-2 fw-semibold">
-                <?= esc(
-                    $activeRoomName
-                ) ?>
-            </div>
 
             <table class="table table-borderless text-center align-middle mb-0">
                 <tbody>
@@ -137,6 +127,7 @@
 <form method="post" action="<?= base_url('kursijadwalstatus/update') ?>">
 <?= csrf_field() ?>
 <input type="hidden" name="id_kursi" id="u-id-kursi">
+<input type="hidden" name="id_tayang" value="<?= $jadwal->id_tayang ?>">
 
 <div class="modal-body">
     <select name="status" id="u-status" class="form-select" required>
