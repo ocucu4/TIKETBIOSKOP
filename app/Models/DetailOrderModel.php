@@ -15,9 +15,8 @@ class DetailOrderModel extends Model
     protected $allowedFields    = [
         
         'id_order', 
-        'jumlah', 
-        'subtotal'
-        
+        'id_kursi',
+        'harga'
     ];
 
     protected bool $allowEmptyInserts = false;

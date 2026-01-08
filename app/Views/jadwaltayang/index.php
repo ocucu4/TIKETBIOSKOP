@@ -1,27 +1,6 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 
-<style>
-.table-premium thead {
-    background: #f8f9fa;
-    font-weight: bold;
-}
-.table-premium tbody tr:hover {
-    background-color: #f0f6ff !important;
-}
-.action-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 0;
-}
-</style>
-
 <div class="card p-4 shadow-sm">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -68,8 +47,8 @@
                 <td><?= esc($d->tanggal) ?></td>
                 <td><?= esc($d->jam_mulai) ?> - <?= esc($d->jam_selesai) ?></td>
                 <td>Rp <?= number_format($d->harga, 0, ',', '.') ?></td>
+                
                 <td class="text-center">
-                <div class="btn-group justify-content-center">
                         
                     <button class="btn btn-outline-primary action-btn me-1"
                         data-bs-toggle="modal"
@@ -84,8 +63,11 @@
                     </a>
                         
                     <a href="<?= base_url('kursijadwalstatus/'.$d->id_tayang) ?>"
-                       class="btn btn-outline-secondary action-btn">
-                       Kursi
+                       class="btn btn-outline-secondary action-btn ms-1"
+                       title="Status Kursi">
+                        <img src="<?= base_url('assets/icons-sidebar/seat-schedule-status.png') ?>"
+                             width="20"
+                             alt="Status Kursi">
                     </a>
 
                 </div>
@@ -101,7 +83,6 @@
     </table>
 </div>
 
-<!-- ================= TAMBAH JADWAL ================= -->
 <div class="modal fade" id="modalTambah" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -153,7 +134,6 @@
                             <input type="time" name="jam_selesai" class="form-control" required>
                         </div>
 
-                        <!-- TIDAK ADA INPUT HARGA -->
                     </div>
                 </div>
 
@@ -166,7 +146,6 @@
     </div>
 </div>
 
-<!-- ================= EDIT JADWAL (DIPISAH, WAJIB!) ================= -->
 <?php foreach ($data as $d): ?>
 <div class="modal fade" id="modalEdit<?= $d->id_tayang ?>" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -221,7 +200,6 @@
                             <input type="time" name="jam_selesai" value="<?= $d->jam_selesai ?>" class="form-control">
                         </div>
 
-                        <!-- HARGA TIDAK BISA DIUBAH DI SINI -->
                     </div>
                 </div>
 

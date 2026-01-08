@@ -14,22 +14,23 @@ class DetailOrder extends BaseController
         $this->db = \Config\Database::connect();
     }
 
-    public function index($id_order)
+        public function index($id_order)
     {
         $data = $this->db->table('detail_order d')
             ->select('
                 d.id_detail,
+                k.kode_kursi,
+                d.harga,
                 o.nama_pemesan,
-                d.jumlah,
-                d.subtotal,
                 o.status_order,
                 o.tanggal_order
             ')
             ->join('order o', 'o.id_order = d.id_order')
+            ->join('kursi k', 'k.id_kursi = d.id_kursi')
             ->where('d.id_order', $id_order)
             ->get()
             ->getResult();
-
+    
         return view('detailorder/index', [
             'data' => $data
         ]);

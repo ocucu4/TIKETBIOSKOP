@@ -15,12 +15,18 @@ $routes->get('logout', 'UserAuth::logout');
 
 // =======================
 // KASIR
-// =======================
 $routes->group('kasir', function ($routes) {
-    $routes->get('dashboard', 'Kasir\Transaksi::dashboard');
-    $routes->get('jadwal', 'Kasir\Transaksi::pilihJadwal');
-    $routes->get('kursi/(:num)', 'Kasir\Transaksi::pilihKursi/$1');
-    $routes->get('bayar', 'Kasir\Transaksi::pembayaran');
+    $routes->get('dashboard', 'Kasir::dashboard');
+    $routes->get('pilih-film', 'Kasir::pilihFilm');
+    $routes->get('pilih-kursi/(:num)', 'Kasir::pilihKursi/$1');
+    $routes->post('konfirmasi-pembayaran', 'Kasir::konfirmasiPembayaran');
+    $routes->post('proses-pembayaran', 'Kasir::prosesPembayaran');
+    $routes->get('verifikasi', 'Kasir::verifikasiPembayaran');
+    $routes->post('verifikasi/berhasil', 'Kasir::pembayaranBerhasil');
+    $routes->post('verifikasi/batal', 'Kasir::pembayaranBatal');
+    $routes->get('sukses/(:num)', 'Kasir::transaksiBerhasil/$1');
+    $routes->get('cetak-tiket/(:num)', 'Kasir::cetakTiket/$1');
+    $routes->get('riwayat', 'Kasir::riwayat');
 });
 
 // ADMIN
@@ -88,3 +94,9 @@ $routes->get('dashboard', 'Dashboard::index');
         $routes->get('delete/(:num)', 'Pembayaran::delete/$1');
     });
 
+    // LAPORAN
+    $routes->group('laporan', function($routes){
+        $routes->get('/', 'Laporan::index');
+    });
+
+    

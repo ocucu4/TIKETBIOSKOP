@@ -46,7 +46,7 @@
     </span>
   <?php else: ?>
     <span class="badge bg-warning px-3 py-2 fw-semibold text-dark">
-      PENDING
+      BELUM BAYAR
     </span>
   <?php endif; ?>
 </td>
@@ -110,7 +110,7 @@
         <input type="number" name="total_bayar" class="form-control mb-2" placeholder="Total Bayar" required>
 
         <select name="status_order" class="form-select">
-          <option value="pending">Pending</option>
+          <option value="belum_bayar">BELUM BAYAR</option>
           <option value="lunas">Lunas</option>
         </select>
 
@@ -149,7 +149,7 @@
         <input type="number" id="e-total" name="total_bayar" class="form-control mb-2" required>
 
         <select id="e-status" name="status_order" class="form-select">
-          <option value="pending">Pending</option>
+          <option value="belum_bayar">BELUM BAYAR</option>
           <option value="lunas">Lunas</option>
         </select>
 

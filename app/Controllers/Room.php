@@ -18,9 +18,6 @@ class Room extends BaseController
         $this->kursi = new KursiModel();
     }
 
-    /**
-     * LIST ROOM + FORM TAMBAH
-     */
     public function index()
     {
         return view('room/index', [
@@ -28,9 +25,6 @@ class Room extends BaseController
         ]);
     }
 
-    /**
-     * SIMPAN ROOM + AUTO GENERATE KURSI
-     */
     public function add()
     {
         if (!$this->request->is('post')) {
@@ -41,12 +35,10 @@ class Room extends BaseController
         $kapasitas = (int) $this->request->getPost('kapasitas');
         $panjang   = (int) $this->request->getPost('panjang');
 
-        // VALIDASI AWAL (TIDAK DIUBAH)
         if ($nama_room === '' || $kapasitas <= 0 || $panjang <= 0) {
             return redirect()->back()->with('error', 'Input tidak valid');
         }
 
-        // VALIDASI TAMBAHAN (SATU-SATUNYA PERUBAHAN)
         if ($panjang > $kapasitas) {
             return redirect()->back()
                 ->with('error', 'Panjang baris tidak boleh lebih besar dari kapasitas kursi');
@@ -56,7 +48,6 @@ class Room extends BaseController
         $db->transBegin();
 
         try {
-            // SIMPAN ROOM (LENGKAP)
             $id_room = $this->room->insert([
                 'nama_room' => $nama_room,
                 'kapasitas' => $kapasitas,
@@ -67,12 +58,11 @@ class Room extends BaseController
                 throw new \RuntimeException('Gagal menyimpan room');
             }
 
-            // GENERATE KURSI (TIDAK DIUBAH)
             $totalBaris = ceil($kapasitas / $panjang);
             $kursiData  = [];
 
             for ($row = 0; $row < $totalBaris; $row++) {
-                $rowLetter = chr(65 + $row); //A, B, C, ....
+                $rowLetter = chr(65 + $row);
 
                 for ($col = 1; $col <= $panjang; $col++) {
                     $nomor = ($row * $panjang) + $col;
@@ -102,31 +92,25 @@ class Room extends BaseController
         }
     }
 
-        /**
-         * HAPUS ROOM + KURSI TERKAIT
-         */
-        public function delete($id)
+    public function delete($id)
 {
     $db = \Config\Database::connect();
     $db->transBegin();
 
     try {
-        // ambil kursi
         $kursiIds = $this->kursi
             ->where('id_room', $id)
             ->findColumn('id_kursi');
 
         if ($kursiIds) {
-            // hapus kursi_jadwal_status
+
             $db->table('kursi_jadwal_status')
                ->whereIn('id_kursi', $kursiIds)
                ->delete();
         }
 
-        // hapus kursi
         $this->kursi->where('id_room', $id)->delete();
 
-        // hapus room
         $this->room->delete($id);
 
         $db->transCommit();

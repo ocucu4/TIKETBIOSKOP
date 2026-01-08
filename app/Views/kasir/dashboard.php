@@ -1,50 +1,67 @@
-<?= $this->extend('layoutkasir/template') ?>
+<?= $this->extend('kasir/layout/main') ?>
 <?= $this->section('content') ?>
 
-<div class="min-h-screen p-8" style="background-color:#0F0F0F">
-  <div class="max-w-7xl mx-auto">
+<div class="container py-4">
 
-    <!-- Header -->
-    <div class="mb-12 flex justify-between items-start">
-      <div>
-        <h1 style="color:#FFFFFF">Cinema Cashier</h1>
-        <p style="color:#B5B5B5" class="mt-2">
-          <?= date('l, d F Y') ?> • Welcome, Kasir
-        </p>
-      </div>
+    <h3 class="fw-bold mb-4">Dashboard Kasir</h3>
 
-      <a href="<?= base_url('logout') ?>"
-         class="flex items-center gap-2 px-4 py-2 rounded-lg"
-         style="background-color:#1A1A1A;color:#FFFFFF">
-        Logout
-      </a>
-    </div>
+    <div class="row g-4 mb-4">
 
-    <!-- Summary -->
-    <div class="grid grid-cols-2 gap-6 mb-12">
+        <div class="col-md-6">
+            <a href="<?= base_url('kasir/pilih-film') ?>"
+               class="card text-decoration-none shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h5 class="fw-semibold">🎬 Mulai Order</h5>
+                    <p class="text-muted mb-0">
+                        Pilih film & kursi pelanggan
+                    </p>
+                </div>
+            </a>
+        </div>
 
-      <div class="p-6 rounded-lg" style="background:#1A1A1A;border:1px solid #2A2A2A">
-        <h3 style="color:#B5B5B5">Daily Transactions</h3>
-        <p style="color:#FFFFFF;font-size:2.5rem">0</p>
-      </div>
-
-      <div class="p-6 rounded-lg" style="background:#1A1A1A;border:1px solid #2A2A2A">
-        <h3 style="color:#B5B5B5">Total Revenue Today</h3>
-        <p style="color:#FFFFFF;font-size:2.5rem">Rp 0</p>
-      </div>
+        <div class="col-md-6">
+            <a href="<?= base_url('kasir/riwayat') ?>"
+               class="card text-decoration-none shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h5 class="fw-semibold">📜 Riwayat Order</h5>
+                    <p class="text-muted mb-0">
+                        Lihat transaksi sebelumnya
+                    </p>
+                </div>
+            </a>
+        </div>
 
     </div>
 
-    <!-- Start Transaction -->
-    <div class="flex justify-center">
-      <a href="<?= base_url('kasir/jadwal') ?>"
-         class="px-12 py-6 rounded-lg"
-         style="background:#FFFFFF;color:#0F0F0F;font-size:1.25rem;font-weight:600">
-        Start Transaction
-      </a>
+    <div class="row g-3">
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h6 class="text-muted">Order Hari Ini</h6>
+                <h4 class="fw-bold"><?= $orderHariIni ?></h4>
+            </div>
+        </div>
     </div>
 
-  </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h6 class="text-muted">Berhasil</h6>
+                <h4 class="fw-bold"><?= $berhasil ?></h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h6 class="text-muted">Gagal / Batal</h6>
+                <h4 class="fw-bold text-danger"><?= $batal ?></h4>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <?= $this->endSection() ?>

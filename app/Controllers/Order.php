@@ -56,7 +56,7 @@ class Order extends BaseController
             'nama_pemesan' => $this->request->getPost('nama_pemesan'),
             'id_tayang'    => (int) $this->request->getPost('id_tayang'),
             'total_bayar'  => (int) $this->request->getPost('total_bayar'),
-            'status_order' => $this->request->getPost('status_order') ?? 'pending',
+            'status_order' => $this->request->getPost('status_order') ?? 'belum_bayar',
             'tanggal_order' => $this->request->getPost('tanggal_order'),
         ];
 

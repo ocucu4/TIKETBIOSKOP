@@ -1,116 +1,130 @@
-<?= $this->extend('layoutkasir/template') ?>
+<?= $this->extend('kasir/layout/main') ?>
 <?= $this->section('content') ?>
 
-<div class="min-h-screen p-8" style="background-color:#0F0F0F">
-  <div class="max-w-7xl mx-auto">
+<style>
+/* WRAPPER */
+.kursi-wrapper {
+    max-width: 900px;
+    margin: auto;
+}
 
-    <!-- Header -->
-    <div class="flex items-center gap-4 mb-8">
-      <a href="<?= base_url('kasir/jadwal') ?>"
-         class="p-2 rounded-lg hover:opacity-70"
-         style="background-color:#1A1A1A;color:#FFFFFF">
-        ←
-      </a>
-      <div>
-        <h1 style="color:#FFFFFF">Select Seats</h1>
-        <p style="color:#B5B5B5" class="mt-1">
-          Film - Studio - Jam
-        </p>
-      </div>
+/* GRID KURSI */
+.kursi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 10px;
+    justify-items: center;
+}
+
+/* TOMBOL KURSI */
+.seat-btn {
+    width: 60px;
+    height: 60px;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 10px;
+    padding: 0;
+    text-align: center;
+    line-height: 1;
+}
+
+/* STATUS */
+.seat-btn.btn-success {
+    background-color: #198754;
+}
+
+.seat-btn.btn-danger {
+    background-color: #dc3545;
+}
+
+.seat-btn.btn-primary {
+    background-color: #0d6efd;
+}
+
+/* HOVER */
+.seat-btn:not(:disabled):hover {
+    transform: scale(1.08);
+    transition: 0.15s ease-in-out;
+}
+
+/* LEGEND */
+.kursi-legend span {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+}
+</style>
+
+
+<div class="container py-4">
+    <h4 class="fw-bold text-center mb-3">Pilih Kursi</h4>
+
+    <div class="d-flex justify-content-center gap-2 mb-4 kursi-legend">
+        <span class="bg-success text-white">Tersedia</span>
+        <span class="bg-danger text-white">Terisi</span>
+        <span class="bg-primary text-white">Dipilih</span>
     </div>
 
-    <div class="flex gap-8">
+    <form method="post" action="<?= base_url('kasir/konfirmasi-pembayaran') ?>">
+        <?= csrf_field() ?>
+        <input type="hidden" name="id_tayang" value="<?= $id_tayang ?>">
+        <input type="hidden" name="kursi_terpilih" id="kursiTerpilih">
 
-      <!-- Seat Grid -->
-      <div class="flex-1">
+        <div class="kursi-wrapper">
+            <div class="kursi-grid">
 
-        <!-- Screen -->
-        <div class="mb-12">
-          <div class="py-2 text-center rounded-lg" style="background-color:#1A1A1A">
-            <span style="color:#B5B5B5">SCREEN</span>
-          </div>
-        </div>
+                <?php foreach ($kursi as $k): ?>
+                    <button
+                        type="button"
+                        class="btn seat-btn
+                            <?= $k->status == 1 ? 'btn-danger' : 'btn-success' ?>"
+                        <?= $k->status == 1 ? 'disabled' : '' ?>
+                        data-id="<?= $k->id_kursi ?>"
+                    >
+                        <?= esc($k->kode_kursi) ?>
+                    </button>
+                <?php endforeach; ?>
 
-        <?php
-        // ===== DATA SEMENTARA (NANTI DARI DB) =====
-        $rows = ['A','B','C','D','E','F','G','H'];
-        $seats = [];
-        foreach ($rows as $r) {
-          for ($i=1; $i<=10; $i++) {
-            $seats[$r][$i] = (rand(0,10) > 7) ? 'occupied' : 'available';
-          }
-        }
-        ?>
-
-        <!-- Seats -->
-        <div class="space-y-3">
-          <?php foreach ($rows as $row): ?>
-            <div class="flex items-center gap-3">
-              <span style="color:#B5B5B5;width:24px;font-weight:600">
-                <?= $row ?>
-              </span>
-
-              <div class="flex gap-2">
-                <?php for ($i=1; $i<=10; $i++): 
-                  $status = $seats[$row][$i];
-                  $style = match($status) {
-                    'available' => 'background:#0F0F0F;border:2px solid #FFFFFF;color:#FFFFFF',
-                    'occupied'  => 'background:#3A3A3A;border:2px solid #3A3A3A;color:#6A6A6A',
-                  };
-                ?>
-                  <button
-                    class="w-12 h-12 rounded-lg flex items-center justify-center"
-                    style="<?= $style ?>;font-weight:600"
-                    <?= $status === 'occupied' ? 'disabled' : '' ?>>
-                    <?= $i ?>
-                  </button>
-                <?php endfor ?>
-              </div>
             </div>
-          <?php endforeach ?>
         </div>
 
-        <!-- Legend -->
-        <div class="flex items-center gap-6 mt-8">
-          <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg" style="background:#0F0F0F;border:2px solid #FFFFFF"></div>
-            <span style="color:#B5B5B5">Available</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg" style="background:#3A3A3A"></div>
-            <span style="color:#B5B5B5">Occupied</span>
-          </div>
+        <div class="text-center mt-4">
+            <button class="btn btn-primary px-4">
+                Lanjut Pembayaran
+            </button>
         </div>
-      </div>
-
-      <!-- Summary Sidebar -->
-      <div style="width:320px">
-        <div class="p-6 rounded-lg sticky top-8"
-             style="background:#1A1A1A;border:1px solid #2A2A2A">
-
-          <h3 style="color:#FFFFFF;margin-bottom:1rem">Order Summary</h3>
-
-          <p style="color:#B5B5B5;font-size:.875rem">Selected Seats</p>
-          <p style="color:#FFFFFF">-</p>
-
-          <hr style="border-color:#2A2A2A;margin:1rem 0">
-
-          <p style="color:#B5B5B5;font-size:.875rem">Total Price</p>
-          <p style="color:#FFFFFF;font-size:1.5rem;font-weight:600">
-            Rp 0
-          </p>
-
-          <a href="<?= base_url('kasir/bayar') ?>"
-             class="block text-center mt-6 px-6 py-3 rounded-lg"
-             style="background:#FFFFFF;color:#0F0F0F;font-weight:600">
-            Continue to Payment
-          </a>
-
-        </div>
-      </div>
-
-    </div>
-  </div>
+    </form>
 </div>
+
+<script>
+const selected = new Set();
+document.querySelectorAll('.seat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+
+        if (selected.has(id)) {
+            selected.delete(id);
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-success');
+        } else {
+            selected.add(id);
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-primary');
+        }
+
+        document.getElementById('kursiTerpilih').value =
+            Array.from(selected).join(',');
+    });
+});
+
+document.querySelector('form').addEventListener('submit', e => {
+    if (selected.size === 0) {
+        e.preventDefault();
+        alert('Pilih minimal 1 kursi!');
+    }
+});
+</script>
 
 <?= $this->endSection() ?>

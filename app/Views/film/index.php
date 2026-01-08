@@ -93,8 +93,11 @@
                 <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <form action="<?= base_url('film/add') ?>" method="post">
-                <?= csrf_field() ?>
+           <form action="<?= base_url('film/add') ?>" 
+                  method="post" 
+                  enctype="multipart/form-data">
+
+            <?= csrf_field() ?>
 
                 <div class="modal-body">
 
@@ -103,6 +106,15 @@
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Judul Film</label>
                             <input type="text" name="judul_film" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Poster Film</label>
+                            <input type="file" 
+                                   name="poster" 
+                                   class="form-control"
+                                   accept="image/*"
+                                   required>
                         </div>
 
                         <div class="col-md-6">
@@ -154,8 +166,11 @@
                 <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <form id="formUbah" method="post">
-                <?= csrf_field() ?>
+            <form id="formUbah" 
+                    method="post" 
+                    enctype="multipart/form-data">
+
+            <?= csrf_field() ?>
 
                 <div class="modal-body">
 
@@ -164,6 +179,16 @@
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Judul Film</label>
                             <input type="text" id="u-judul" name="judul_film" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                Poster Film (kosongkan jika tidak diganti)
+                            </label>
+                            <input type="file" 
+                                   name="poster" 
+                                   class="form-control"
+                                   accept="image/*">
                         </div>
 
                         <div class="col-md-6">

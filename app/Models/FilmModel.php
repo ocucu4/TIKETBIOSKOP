@@ -15,8 +15,8 @@ class FilmModel extends Model
         'id_genre',
         'durasi',
         'sinopsis',
-        'harga_tiket'
-        
+        'harga_tiket',
+        'poster'
     ];
 
     protected bool $allowEmptyInserts = false;

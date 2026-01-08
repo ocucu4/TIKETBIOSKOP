@@ -3,7 +3,6 @@
 
 <div class="row g-4">
 
-    <!-- FLASH MESSAGE -->
     <div class="col-12">
         <?php if (session()->getFlashdata('error')): ?>
             <div class="alert alert-danger">
@@ -18,7 +17,6 @@
         <?php endif; ?>
     </div>
 
-    <!-- FORM TAMBAH ROOM -->
     <div class="col-md-4">
         <div class="card shadow-sm p-4">
             <h5 class="fw-semibold mb-3">Tambah Room</h5>
@@ -48,55 +46,77 @@
         </div>
     </div>
 
-    <!-- DAFTAR ROOM -->
     <div class="col-md-8">
         <div class="card shadow-sm p-4">
             <h5 class="fw-semibold mb-3">Daftar Room</h5>
 
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>No.</th>
-                            <th>Nama Room</th>
-                            <th>Kapasitas</th>
-                            <th>Panjang Baris</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($data)): ?>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
                             <tr>
-                                <td colspan="5" class="text-center text-muted">
-                                    Belum ada room.
-                                </td>
+                                <th>No.</th>
+                                <th>Nama Room</th>
+                                <th>Kapasitas</th>
+                                <th>Panjang Baris</th>
+                                <th>Aksi</th>
                             </tr>
-                        <?php else: ?>
-                            <?php $no = 1; foreach ($data as $r): ?>
+                        </thead>
+                        <tbody>
+                            <?php if (empty($data)): ?>
                                 <tr>
-                                    <td><?= $no++ ?></td>
-                                    <td><?= esc($r->nama_room) ?></td>
-                                    <td><?= esc($r->kapasitas) ?></td>
-                                    <td><?= esc($r->panjang) ?></td>
-                                    <td>
-                                        <a href="<?= site_url('kursijadwalstatus') ?>" class="btn btn-primary btn-sm">
-                                            Status Kursi
-                                        </a>
-                                        <a href="<?= site_url('room/delete/'.$r->id_room) ?>"
-                                           class="btn btn-sm btn-danger"
-                                           onclick="return confirm('Yakin hapus room ini?')">
-                                            Hapus
-                                        </a>
+                                    <td colspan="5" class="text-center text-muted">
+                                        Belum ada room.
                                     </td>
                                 </tr>
-                            <?php endforeach ?>
-                        <?php endif ?>
-                    </tbody>
-                </table>
+                            <?php else: ?>
+                                <?php $no = 1; foreach ($data as $r): ?>
+                                    <tr>
+                                        <td><?= $no++ ?></td>
+                                        <td><?= esc($r->nama_room) ?></td>
+                                        <td><?= esc($r->kapasitas) ?></td>
+                                        <td><?= esc($r->panjang) ?></td>
+
+                                        <td class="text-center">
+
+                                        <button class="btn btn-outline-danger action-btn"
+                                                onclick="hapusRoom(<?= $r->id_room ?>)">
+                                            <i data-feather="trash-2"></i>
+                                        </button>
+
+                                        </td>                       
+                                    </tr>
+                                <?php endforeach ?>
+                            <?php endif ?>
+                        </tbody>
+                    </table>
+                </div>
+              </div>
             </div>
         </div>
     </div>
-
 </div>
+</div>
+
+<script>
+
+function hapusRoom(id) {
+    Swal.fire({
+        title: 'Hapus Room?',
+        text: 'Room dan kursinya akan dihapus permanen!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'Hapus'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = "<?= base_url('room/delete') ?>/" + id;
+        }
+    });
+}
+
+feather.replace();
+
+</script>
+
 
 <?= $this->endSection() ?>
