@@ -2,12 +2,12 @@
     <div class="d-flex align-items-center">
         <img src="<?= base_url('assets/images/MYCINEMA.png') ?>" alt="Logo"
              style="height:32px" class="me-2">
-        <span class="navbar-brand mb-0 h5">Kasir Bioskop</span>
+        <span class="navbar-brand mb-0 h5">MYCINEMA CASHIER</span>
     </div>
 
     <div class="d-flex align-items-center text-white">
         <span class="me-3">
-            <?= session('nama_user') ?> (Kasir)
+            <?= session('nama_user') ?>
         </span>
         <a href="<?= base_url('logout') ?>" class="btn btn-sm btn-outline-light">
             Logout

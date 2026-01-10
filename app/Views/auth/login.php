@@ -41,29 +41,9 @@
             padding: 2.5rem;
             color: #fff;
             box-shadow: 0 25px 50px rgba(0,0,0,0.4);
-        }
 
-        .fade-item {
-            opacity: 0;
-            animation: fadeUp 0.6s ease-out forwards;
-        }
-
-        .fade-logo {
-            animation-delay: 0.25s;
-        }
-
-        .fade-title {
-            animation-delay: 0.45s;
-        }
-
-        .fade-form {
-            animation-delay: 0.55s;
-        }
-        
-        .auto-form .card {
             opacity: 0;
             animation: fadeUp 0.7s ease-out forwards;
-            animation-delay: 0.3;
         }
 
         .login-card input {
@@ -95,6 +75,38 @@
             font-weight: 600;
         }
 
+        .demo-account {
+            font-size: 0.95rem;
+        }
+
+        .demo-account strong {
+            font-size: 1.30rem;
+        }
+
+        .demo-account code {
+            font-size: 1rem;
+            color: #ffb3d9;
+        }
+
+        .demo-box {
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            margin-top: 1rem;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15);
+        }
+
+        .demo-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
             @keyframes fadeUp {
         from {
             opacity: 0;
@@ -114,12 +126,10 @@
 
 <div class="login-card text-center">
     <img src="<?= base_url('assets/images/MYCINEMA.png') ?>"
-     alt="MYCINEMA"
-     class="login-logo fade-item fade-logo">
+         alt="MYCINEMA"
+         class="login-logo">
 
-    <div class="login-title fade-item fade-title">LOGIN</div>
-
-    <div class="fade-item fade-form">
+    <div class="login-title">LOGIN</div>
 
     <?php if (session()->getFlashdata('error')): ?>
         <div class="alert alert-danger">
@@ -144,6 +154,26 @@
             Login
         </button>
     </form>
+
+    <hr class="my-4" style="border-color: rgba(255,255,255,0.3);">
+
+    <div class="demo-box demo-account text-start" style="opacity: 0.95;">
+      <div class="demo-title">
+          👤 Akun Demo
+        </div>
+
+        <div class="mb-2">
+            <strong>Admin</strong><br>
+            Username: <code>admin</code><br>
+            Password: <code>admin123</code>
+        </div>
+
+        <div>
+            <strong>Kasir</strong><br>
+            Username: <code>kasir</code><br>
+            Password: <code>kasir123</code>
+        </div>
+    </div>
 </div>
 
 </body>
