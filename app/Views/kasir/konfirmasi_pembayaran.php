@@ -24,7 +24,7 @@
 
             <p class="fw-semibold mb-2">Kursi Dipilih</p>
             <div class="mb-3">
-                <?php foreach ($kursi as $k): ?>
+                <?php foreach ($kursiKode as $k): ?>
                     <span class="badge bg-primary me-1"><?= esc($k) ?></span>
                 <?php endforeach; ?>
             </div>
@@ -43,7 +43,7 @@
         <?= csrf_field() ?>
 
         <input type="hidden" name="id_tayang" value="<?= $id_tayang ?>">
-        <input type="hidden" name="kursi" value="<?= implode(',', $kursi) ?>">
+        <input type="hidden" name="kursi" value="<?= implode(',', $kursiId) ?>">
         <input type="hidden" name="total_bayar" value="<?= $total_bayar ?>">
 
         <div class="card mb-4">
