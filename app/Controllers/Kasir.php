@@ -150,10 +150,10 @@ class Kasir extends BaseController
     public function prosesPembayaran()
     {  
         $db = \Config\Database::connect();
-        $db->transStart();
+        $db->transBegin();
 
         $id_tayang    = $this->request->getPost('id_tayang');
-        $kursiRaw     = $this->request->getPost('kursi');
+        $kursiRaw = $this->request->getPost('kursi_terpilih');
         $metode_bayar = $this->request->getPost('metode_bayar');
 
         if (!$id_tayang || !$kursiRaw || !$metode_bayar) {
@@ -174,6 +174,20 @@ class Kasir extends BaseController
         }
 
         $total_bayar = count($idKursi) * $film->harga_tiket;
+
+        $kursiTerpakai = $db->table('kursi_jadwal_status')
+            ->where('id_tayang', $id_tayang)
+            ->whereIn('id_kursi', $idKursi)
+            ->where('status', 1)
+            ->countAllResults();
+
+        if ($kursiTerpakai > 0) {
+            $db->transRollback();
+            return redirect()->back()->with(
+                'error',
+                'Salah satu kursi sudah dipesan oleh pelanggan lain. Silakan pilih ulang.'
+            );
+        }
 
         $db->table('order')->insert([
             'tanggal_order' => date('Y-m-d H:i:s'),
@@ -199,7 +213,7 @@ class Kasir extends BaseController
 
         session()->set('metode_bayar_' . $id_order, $metode_bayar);
 
-        $db->transComplete();
+        $db->transCommit();
 
         return redirect()->to(base_url('kasir/verifikasi?id_order=' . $id_order));
     }

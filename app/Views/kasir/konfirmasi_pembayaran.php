@@ -10,7 +10,6 @@
 
     <h3 class="fw-bold mb-4">Konfirmasi & Pembayaran</h3>
 
-    <!-- Ringkasan -->
     <div class="card mb-4">
         <div class="card-body">
             <h5 class="fw-bold mb-3">Ringkasan Pesanan</h5>
@@ -38,7 +37,6 @@
         </div>
     </div>
 
-    <!-- Metode Pembayaran -->
     <form action="<?= base_url('kasir/proses-pembayaran') ?>" method="post">
         <?= csrf_field() ?>
 

@@ -302,7 +302,8 @@ hr {
                 </div>
 
                 <button class="btn btn-primary w-100 mt-3" id="btnSubmit" disabled>
-                    Lanjut Pembayaran
+                    <span class="btn-text">Lanjut Pembayaran</span>
+                    <span class="spinner-border spinner-border-sm d-none" id="btnLoading"></span>
                 </button>
             </div>
 
@@ -367,6 +368,17 @@ function renderSummary() {
 
     btn.disabled = false;
 }
+
+    const form = document.querySelector('form');
+    const btn = document.getElementById('btnSubmit');
+    const btnText = document.querySelector('.btn-text');
+    const btnLoading = document.getElementById('btnLoading');
+
+form.addEventListener('submit', () => {
+    btn.disabled = true;
+    btnText.textContent = 'Memproses...';
+    btnLoading.classList.remove('d-none');
+});
 </script>
 
 <?= $this->endSection() ?>
