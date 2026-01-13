@@ -69,20 +69,33 @@ class Kasir extends BaseController
     public function pilihKursi($id_tayang)
     {
         $kursi = $this->db->table('kursi_jadwal_status kjs')
-            ->select('
-                k.id_kursi,
-                k.kode_kursi,
-                kjs.status
-            ')
+            ->select('k.id_kursi, k.kode_kursi, kjs.status')
             ->join('kursi k', 'k.id_kursi = kjs.id_kursi')
             ->where('kjs.id_tayang', $id_tayang)
-            ->orderBy('k.kode_kursi', 'ASC')
+            ->orderBy('LEFT(k.kode_kursi,1)', 'ASC', false)
+            ->orderBy('CAST(SUBSTRING(k.kode_kursi,2) AS UNSIGNED)', 'ASC', false)
             ->get()
             ->getResult();
-    
+
+        $jadwal = $this->db->table('jadwal_tayang jt')
+            ->select('
+                f.judul_film,
+                jt.tanggal,
+                jt.jam_mulai,
+                r.nama_room,
+                f.harga_tiket
+            ')
+            ->join('film f', 'f.id_film = jt.id_film')
+            ->join('room r', 'r.id_room = jt.id_room')
+            ->where('jt.id_tayang', $id_tayang)
+            ->get()
+            ->getRow();
+
         return view('kasir/pilih_kursi', [
             'id_tayang' => $id_tayang,
-            'kursi'     => $kursi
+            'kursi'     => $kursi,
+            'jadwal'    => $jadwal,
+            'harga'     => $jadwal->harga_tiket
         ]);
     }
 
@@ -98,7 +111,6 @@ class Kasir extends BaseController
 
         $idKursi = explode(',', $kursiRaw);
 
-        // ambil kode kursi untuk tampilan
         $kursiData = $this->db->table('kursi')
             ->select('id_kursi, kode_kursi')
             ->whereIn('id_kursi', $idKursi)
@@ -127,8 +139,8 @@ class Kasir extends BaseController
 
         return view('kasir/konfirmasi_pembayaran', [
             'film'        => $film,
-            'kursiKode'   => $kodeKursi, // untuk ditampilkan
-            'kursiId'     => $idKursi,   // untuk dikirim ke proses
+            'kursiKode'   => $kodeKursi,
+            'kursiId'     => $idKursi,
             'total_bayar' => count($idKursi) * $film->harga_tiket,
             'id_tayang'   => $id_tayang
         ]);
@@ -136,13 +148,12 @@ class Kasir extends BaseController
     }
 
     public function prosesPembayaran()
-    {
+    {  
         $db = \Config\Database::connect();
         $db->transStart();
 
         $id_tayang    = $this->request->getPost('id_tayang');
         $kursiRaw     = $this->request->getPost('kursi');
-        $total_bayar  = $this->request->getPost('total_bayar');
         $metode_bayar = $this->request->getPost('metode_bayar');
 
         if (!$id_tayang || !$kursiRaw || !$metode_bayar) {
@@ -150,6 +161,19 @@ class Kasir extends BaseController
         }
 
         $idKursi = explode(',', $kursiRaw);
+
+        $film = $db->table('jadwal_tayang jt')
+            ->select('f.harga_tiket')
+            ->join('film f', 'f.id_film = jt.id_film')
+            ->where('jt.id_tayang', $id_tayang)
+            ->get()
+            ->getRow();
+
+        if (!$film) {
+            return redirect()->back()->with('error', 'Harga tiket tidak ditemukan');
+        }
+
+        $total_bayar = count($idKursi) * $film->harga_tiket;
 
         $db->table('order')->insert([
             'tanggal_order' => date('Y-m-d H:i:s'),
@@ -164,7 +188,7 @@ class Kasir extends BaseController
             $db->table('detail_order')->insert([
                 'id_order' => $id_order,
                 'id_kursi' => $id_kursi,
-                'harga'    => $total_bayar / count($idKursi)
+                'harga'    => $film->harga_tiket
             ]);
 
             $db->table('kursi_jadwal_status')
@@ -235,6 +259,18 @@ class Kasir extends BaseController
             return redirect()->to('kasir/dashboard');
         }
 
+        $metode = session()->get('metode_bayar_' . $id_order);
+
+        if ($metode) {
+            $this->db->table('pembayaran')->insert([
+                'id_order'      => $id_order,
+                'metode_bayar'  => $metode,
+                'jumlah_bayar'  => $order->total_bayar,
+                'tanggal_bayar' => date('Y-m-d H:i:s'),
+                'keterangan'    => 'Dibatalkan'
+            ]);
+        }
+
         $detail = $this->db->table('detail_order')
             ->where('id_order', $id_order)
             ->get()
@@ -250,6 +286,8 @@ class Kasir extends BaseController
         $this->db->table('order')
             ->where('id_order', $id_order)
             ->update(['status_order' => 'batal']);
+
+        session()->remove('metode_bayar_' . $id_order);
 
         return redirect()->to('kasir/dashboard');
     }

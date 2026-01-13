@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title><?= $title ?? 'Kasir Bioskop' ?></title>
+    <title><?= $title ?? 'MYCINEMA | CASHIER' ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -13,9 +13,11 @@
         body {
             background: #f5f6fa;
         }
+
         .kasir-content {
             padding: 24px;
         }
+
     </style>
 </head>
 <body>
