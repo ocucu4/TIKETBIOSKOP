@@ -142,6 +142,7 @@ class Kasir extends BaseController
             'kursiKode'   => $kodeKursi,
             'kursiId'     => $idKursi,
             'total_bayar' => count($idKursi) * $film->harga_tiket,
+            'harga_tiket' => $film->harga_tiket,
             'id_tayang'   => $id_tayang
         ]);
 
@@ -308,7 +309,22 @@ class Kasir extends BaseController
 
     public function verifikasiPembayaran()
     {
-        return view('kasir/verifikasi');
+        $id_order = $this->request->getGet('id_order');
+    
+        if (!$id_order) {
+            return redirect()->to('kasir/dashboard');
+        }
+    
+        $metode = session()->get('metode_bayar_' . $id_order);
+    
+        if (!$metode) {
+            return redirect()->to('kasir/dashboard');
+        }
+    
+        return view('kasir/verifikasi', [
+            'id_order' => $id_order,
+            'metode'   => $metode
+        ]);
     }
 
     public function transaksiBerhasil($id_order)
