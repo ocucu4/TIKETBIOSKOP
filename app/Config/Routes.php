@@ -25,6 +25,7 @@ $routes->group('kasir', function ($routes) {
     $routes->post('verifikasi/berhasil', 'Kasir::pembayaranBerhasil');
     $routes->post('verifikasi/batal', 'Kasir::pembayaranBatal');
     $routes->get('sukses/(:num)', 'Kasir::transaksiBerhasil/$1');
+    $routes->get('batal', 'Kasir::batal');
     $routes->get('cetak-tiket/(:num)', 'Kasir::cetakTiket/$1');
     $routes->get('riwayat', 'Kasir::riwayat');
 });

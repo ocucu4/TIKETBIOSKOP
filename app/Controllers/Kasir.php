@@ -214,6 +214,12 @@ class Kasir extends BaseController
 
         session()->set('metode_bayar_' . $id_order, $metode_bayar);
 
+        $expiredKey = 'expired_at_' . $id_order;
+
+        if (!session()->has($expiredKey)) {
+            session()->set($expiredKey, time() + 300);
+        }
+
         $db->transCommit();
 
         return redirect()->to(base_url('kasir/verifikasi?id_order=' . $id_order));
@@ -304,26 +310,40 @@ class Kasir extends BaseController
 
         session()->remove('metode_bayar_' . $id_order);
 
-        return redirect()->to('kasir/dashboard');
+        return redirect()->to('kasir/batal');
+    }
+
+    public function batal()
+    {
+        return view('kasir/batal');
     }
 
     public function verifikasiPembayaran()
     {
         $id_order = $this->request->getGet('id_order');
-    
+
         if (!$id_order) {
             return redirect()->to('kasir/dashboard');
         }
-    
+
         $metode = session()->get('metode_bayar_' . $id_order);
-    
-        if (!$metode) {
+        $expiredAt = session()->get('expired_at_' . $id_order);
+
+        if (!$metode || !$expiredAt) {
             return redirect()->to('kasir/dashboard');
         }
     
+        if (time() > $expiredAt) {
+            return redirect()->to('kasir/verifikasi/batal')
+                ->withInput(['id_order' => $id_order]);
+        }
+
+        $sisaDetik = $expiredAt - time();
+
         return view('kasir/verifikasi', [
-            'id_order' => $id_order,
-            'metode'   => $metode
+            'id_order'  => $id_order,
+            'metode'    => $metode,
+            'sisaDetik' => $sisaDetik
         ]);
     }
 
