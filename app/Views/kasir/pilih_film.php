@@ -1,8 +1,7 @@
 <?= $this->extend('kasir/layout/main') ?>
-<?= $this->section('content') ?>
 
+<?= $this->section('style') ?>
 <style>
-
 .pilih-film-row {
     align-items: stretch;
 }
@@ -42,24 +41,19 @@
     left: 0;
     right: 0;
     bottom: 0;
-
     height: 36%;
     padding: 18px 22px;
-
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
     background: linear-gradient(
         to top,
         rgba(0,0,0,.88),
         rgba(0,0,0,.45),
         rgba(0,0,0,.18)
     );
-
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-
     border-top: 1px solid rgba(255,255,255,.25);
     color: #fff;
     text-align: center;
@@ -123,26 +117,39 @@
     padding: 6px 14px;
     font-weight: 500;
 }
-
 </style>
+<?= $this->endSection() ?>
 
+
+<?= $this->section('content') ?>
 <div class="container py-4">
-    <div class="d-flex align-items-center gap-3 mb-4">
-    <a href="<?= base_url('kasir/dashboard') ?>"
-       class="btn btn-outline-secondary d-flex align-items-center gap-2">
-        ← Kembali
-    </a>
 
-    <h4 class="fw-bold m-0">Pilih Film</h4>
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <a href="<?= base_url('kasir/dashboard') ?>"
+           class="btn btn-outline-secondary d-flex align-items-center gap-2">
+            ← Kembali
+        </a>
+        <h4 class="fw-bold m-0">Pilih Film</h4>
     </div>
 
     <div class="row g-4 pilih-film-row">
+
+        <?php if (empty($films)): ?>
+            <div class="col-12 text-center text-muted py-5">
+                <p class="fw-semibold mb-0">
+                    Belum ada jadwal film yang tersedia saat ini.
+                </p>
+            </div>
+        <?php endif; ?>
+
         <?php foreach ($films as $f): ?>
         <div class="col-12 col-md-6 col-lg-4">
 
             <div class="film-card card shadow-sm">
                 <div class="poster-wrap">
-                    <img src="<?= base_url('posterfilm/'.$f->poster) ?>" alt="<?= esc($f->judul_film) ?>">
+                    <img
+                        src="<?= base_url('posterfilm/'.$f->poster) ?>"
+                        alt="<?= esc($f->judul_film) ?>">
 
                     <div class="glass-info">
                         <h5 class="title"><?= esc($f->judul_film) ?></h5>
@@ -154,7 +161,7 @@
                         <div class="room">
                             <?= esc($f->nama_room) ?>
                         </div>
-                    </div>            
+                    </div>
                 </div>
             </div>
 
@@ -167,16 +174,22 @@
 
         </div>
         <?php endforeach; ?>
+
     </div>
 </div>
+<?= $this->endSection() ?>
 
+
+<?= $this->section('script') ?>
 <script>
 const cards = document.querySelectorAll('.film-card');
 
 function resetAll() {
     cards.forEach(card => {
         card.classList.remove('active');
-        card.parentElement.querySelector('.kursi-action').classList.remove('show');
+        card.parentElement
+            .querySelector('.kursi-action')
+            .classList.remove('show');
     });
 }
 
@@ -199,5 +212,4 @@ cards.forEach(card => {
 
 window.addEventListener('click', resetAll);
 </script>
-
 <?= $this->endSection() ?>

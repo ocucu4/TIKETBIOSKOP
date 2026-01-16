@@ -1,17 +1,23 @@
 <?= $this->extend('kasir/layout/main') ?>
-<?= $this->section('content') ?>
 
+<?= $this->section('content') ?>
 <div class="container py-4">
 
-    <a href="<?= base_url('kasir/dashboard') ?>" class="btn btn-outline-secondary mb-3">
+    <a href="<?= base_url('kasir/dashboard') ?>"
+       class="btn btn-outline-secondary mb-3">
         ← Kembali
     </a>
 
     <h3 class="fw-bold mb-1">Riwayat Transaksi</h3>
-    <p class="text-muted mb-4">History transaksi yang telah dilakukan oleh kasir</p>
+    <p class="text-muted mb-4">
+        History transaksi yang telah dilakukan oleh kasir
+    </p>
 
-    <input type="text" id="search" class="form-control mb-3"
-           placeholder="Cari film, order ID, atau kursi...">
+    <input
+        type="text"
+        id="search"
+        class="form-control mb-3"
+        placeholder="Cari film, order ID, atau kursi...">
 
     <div class="table-responsive">
         <table class="table table-bordered align-middle">
@@ -27,6 +33,7 @@
                 </tr>
             </thead>
             <tbody id="orderTable">
+
                 <?php if (empty($orders)): ?>
                     <tr>
                         <td colspan="7" class="text-center text-muted">
@@ -48,7 +55,9 @@
                     </td>
                     <td>
                         <?php foreach ($o['kursi'] as $k): ?>
-                            <span class="badge bg-primary"><?= esc($k) ?></span>
+                            <span class="badge bg-primary">
+                                <?= esc($k) ?>
+                            </span>
                         <?php endforeach; ?>
                     </td>
                     <td>
@@ -64,12 +73,16 @@
                     </td>
                 </tr>
                 <?php endforeach; ?>
+
             </tbody>
         </table>
     </div>
 
 </div>
+<?= $this->endSection() ?>
 
+
+<?= $this->section('script') ?>
 <script>
 document.getElementById('search').addEventListener('keyup', function () {
     const value = this.value.toLowerCase();
@@ -80,5 +93,4 @@ document.getElementById('search').addEventListener('keyup', function () {
     });
 });
 </script>
-
 <?= $this->endSection() ?>

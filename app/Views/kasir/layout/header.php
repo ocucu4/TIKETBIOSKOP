@@ -1,16 +1,13 @@
-<nav class="navbar navbar-dark bg-dark px-4">
-    <div class="d-flex align-items-center">
-        <img src="<?= base_url('assets/images/MYCINEMA.png') ?>" alt="Logo"
-             style="height:32px" class="me-2">
-        <span class="navbar-brand mb-0 h5">MYCINEMA CASHIER</span>
+<nav class="kasir-header">
+    <div class="kasir-left">
+        <img src="<?= base_url('assets/images/MYCINEMA.png') ?>" alt="Logo">
+        <span class="brand">
+            MYCINEMA <small>CASHIER</small>
+        </span>
     </div>
 
-    <div class="d-flex align-items-center text-white">
-        <span class="me-3">
-            <?= session('nama_user') ?>
-        </span>
-        <a href="<?= base_url('logout') ?>" class="btn btn-sm btn-outline-light">
-            Logout
-        </a>
-    </div>
+    <button class="kasir-user" onclick="openKasirProfile()">
+        <img src="<?= base_url('assets/images/user/avatar-2.jpg') ?>">
+        <span><?= esc(session('nama_user')) ?></span>
+    </button>
 </nav>

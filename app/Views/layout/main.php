@@ -71,7 +71,7 @@ body {
 .pc-content {
     margin-left: 250px;
     width: calc(100% - 250px);
-    padding: 90px 20px 0px;
+    padding: 80px 20px 0px;
     min-height: 100vh;
     transition: .3s;
 
@@ -164,6 +164,7 @@ body {
         <div class="text-center mb-3">
             <img src="<?= base_url('assets/images/user/avatar-1.jpg') ?>" width="70" class="rounded-circle mb-2">
             <h6 class="fw-semibold"><?= session()->get('admin_name') ?></h6>
+            <h6 class="text-muted">Admin</h6>
         </div>
 
         <hr>
@@ -184,7 +185,6 @@ body {
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="<?= base_url('assets/js/plugins/apexcharts.min.js') ?>"></script>
-<script src="<?= base_url('assets/js/pages/dashboard-default.js') ?>"></script>
 
 <script>
 const sidebar = document.querySelector(".pc-sidebar");

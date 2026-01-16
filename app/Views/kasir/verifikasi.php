@@ -1,6 +1,27 @@
 <?= $this->extend('kasir/layout/main') ?>
-<?= $this->section('content') ?>
 
+<?= $this->section('style') ?>
+<style>
+.qr-box {
+  display: inline-block;
+  padding: 12px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.12);
+}
+
+.bank-box {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: inline-block;
+  font-size: 14px;
+}
+</style>
+<?= $this->endSection() ?>
+
+
+<?= $this->section('content') ?>
 <div class="container py-5" style="max-width: 720px">
 
   <div class="card p-5 text-center shadow-sm">
@@ -114,28 +135,12 @@
 
   </div>
 </div>
+<?= $this->endSection() ?>
 
-<style>
-.qr-box {
-  display: inline-block;
-  padding: 12px;
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 6px 20px rgba(0,0,0,.12);
-}
 
-.bank-box {
-  background: #f8fafc;
-  border-radius: 12px;
-  padding: 16px 18px;
-  display: inline-block;
-  font-size: 14px;
-}
-</style>
-
+<?= $this->section('script') ?>
 <script>
 let timeLeft = <?= $sisaDetik ?>;
-
 const countdownEl = document.getElementById('countdown');
 
 const timer = setInterval(() => {
@@ -153,5 +158,4 @@ const timer = setInterval(() => {
   timeLeft--;
 }, 1000);
 </script>
-
 <?= $this->endSection() ?>

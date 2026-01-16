@@ -1,6 +1,35 @@
 <?= $this->extend('kasir/layout/main') ?>
 <?= $this->section('content') ?>
 
+<?= $this->section('style') ?>
+<style>
+.dashboard-card {
+    height: 100%;
+    border-radius: 14px;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+}
+
+.dashboard-card .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.dashboard-action {
+    min-height: 110px;
+}
+
+.dashboard-stat {
+    min-height: 90px;
+}
+</style>
+<?= $this->endSection() ?>
+
 <div class="container py-4">
 
     <h3 class="fw-bold mb-4">Dashboard Kasir</h3>

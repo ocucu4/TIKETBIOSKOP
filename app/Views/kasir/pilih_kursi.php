@@ -1,8 +1,7 @@
 <?= $this->extend('kasir/layout/main') ?>
-<?= $this->section('content') ?>
 
+<?= $this->section('style') ?>
 <style>
-
 .pilih-kursi-layout {
     display: grid;
     grid-template-columns: 1fr 340px;
@@ -21,6 +20,7 @@
     border-radius: 14px;
     padding: 24px;
     box-shadow: 0 10px 28px rgba(0,0,0,.08);
+    max-width: 900px;
 }
 
 .screen {
@@ -54,12 +54,6 @@
     justify-content: center;
 }
 
-.seat-grid {
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    gap: 10px;
-}
-
 .seat {
     height: 44px;
     border-radius: 10px;
@@ -69,11 +63,11 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: 
+    user-select: none;
+    transition:
         transform .18s ease,
         box-shadow .18s ease,
-        background-color .18 ease;
-    user-select: none;
+        background-color .18s ease;
 }
 
 .seat.available {
@@ -91,12 +85,12 @@
     background: #2563eb;
     color: #fff;
     transform: scale(1.08);
-    box-shadow: 0 6px 18px rgba(47, 99, 235,.45) ;
+    box-shadow: 0 6px 18px rgba(37,99,235,.45);
 }
 
 .seat.available:hover {
     transform: scale(1.08);
-    box-shadow: 0 4px 14px rgba(22, 163, 74,.45);
+    box-shadow: 0 4px 14px rgba(22,163,74,.45);
 }
 
 .legend {
@@ -119,6 +113,12 @@
     height: 16px;
     border-radius: 4px;
     display: inline-block;
+}
+
+.summary-panel {
+    position: sticky;
+    top: 96px;
+    align-self: start;
 }
 
 .summary-item {
@@ -151,28 +151,12 @@ hr {
     margin-top: 6px;
 }
 
-.panel {
-    max-width: 900px;
-}
-
 .kursi-badge {
     background: #2563eb;
     color: #fff;
     font-size: 12px;
     padding: 4px 8px;
     border-radius: 6px;
-}
-
-.kursi-area {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-.kursi-row {
-    display: grid;
-    grid-template-columns: 32px auto;
-    align-items: center;
 }
 
 .total {
@@ -193,18 +177,16 @@ hr {
     cursor: not-allowed;
     box-shadow: none;
 }
-
-.summary-panel {
-    position: sticky;
-    top: 96px;
-    align-self: start;
-}
 </style>
+<?= $this->endSection() ?>
 
+
+<?= $this->section('content') ?>
 <div class="container py-4">
 
     <div class="d-flex align-items-center gap-3 mb-4">
-        <a href="<?= base_url('kasir/pilih-film') ?>" class="btn btn-outline-secondary btn-sm">
+        <a href="<?= base_url('kasir/pilih-film') ?>"
+           class="btn btn-outline-secondary btn-sm">
             ← Kembali
         </a>
         <h4 class="fw-bold m-0">Pilih Kursi</h4>
@@ -215,7 +197,7 @@ hr {
         <input type="hidden" name="id_tayang" value="<?= $id_tayang ?>">
         <input type="hidden" name="kursi_terpilih" id="kursiTerpilih">
 
-            <div class="pilih-kursi-layout">
+        <div class="pilih-kursi-layout">
 
             <div class="panel">
                 <div class="screen">LAYAR</div>
@@ -229,26 +211,22 @@ hr {
                 }
                 ?>
 
-                <div class="kursi-area">
-                    <?php foreach ($grouped as $row => $items): ?>
-                        <div class="kursi-row">
-                            <div class="row-label"><?= $row ?></div>
-                    
-                            <div class="row-seats">
-                                <?php foreach ($items as $k): ?>
-                                    <div
-                                        class="seat <?= $k->status == 1 ? 'booked' : 'available' ?>"
-                                        data-id="<?= $k->id_kursi ?>"
-                                        data-code="<?= esc($k->kode_kursi) ?>"
-                                    >
-                                        <?= substr($k->kode_kursi, 1) ?>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
+                <?php foreach ($grouped as $row => $items): ?>
+                    <div class="mb-2">
+                        <div class="row-label mb-1"><?= $row ?></div>
+                        <div class="row-seats">
+                            <?php foreach ($items as $k): ?>
+                                <div
+                                    class="seat <?= $k->status == 1 ? 'booked' : 'available' ?>"
+                                    data-id="<?= $k->id_kursi ?>"
+                                    data-code="<?= esc($k->kode_kursi) ?>">
+                                    <?= substr($k->kode_kursi, 1) ?>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
-                    <?php endforeach; ?>
-                </div>
-                                
+                    </div>
+                <?php endforeach; ?>
+
                 <div class="legend">
                     <span><i style="background:#16a34a"></i> Tersedia</span>
                     <span><i style="background:#dc2626"></i> Terisi</span>
@@ -260,22 +238,22 @@ hr {
                 <h6 class="fw-bold mb-3">Ringkasan</h6>
 
                 <div class="summary-item">
-                    <small class="text-muted">Film</small>
+                    <small>Film</small>
                     <strong><?= esc($jadwal->judul_film) ?></strong>
                 </div>
 
                 <div class="summary-item">
-                    <small class="text-muted">Tanggal</small>
+                    <small>Tanggal</small>
                     <div><?= date('d F Y', strtotime($jadwal->tanggal)) ?></div>
                 </div>
 
                 <div class="summary-item">
-                    <small class="text-muted">Jam</small>
+                    <small>Jam</small>
                     <div><?= substr($jadwal->jam_mulai, 0, 5) ?> WIB</div>
                 </div>
 
                 <div class="summary-item">
-                    <small class="text-muted">Ruang</small>
+                    <small>Ruang</small>
                     <div><?= esc($jadwal->nama_room) ?></div>
                 </div>
 
@@ -286,15 +264,13 @@ hr {
                     <div class="kursi-list" id="kursiList">
                         <span class="text-muted">Belum ada kursi</span>
                     </div>
-                    <small class="text-muted mt-1 d-block">
+                    <small class="text-muted d-block mt-1">
                         Harga per kursi: Rp <?= number_format($harga, 0, ',', '.') ?>
                     </small>
                 </div>
 
                 <div class="summary-item">
-                    <small class="text-muted" id="subtotalInfo">
-                        Subtotal
-                    </small>
+                    <small class="text-muted" id="subtotalInfo">Subtotal</small>
                     <div class="d-flex justify-content-between align-items-center">
                         <strong>Total</strong>
                         <div class="total" id="totalHarga">Rp 0</div>
@@ -310,7 +286,10 @@ hr {
         </div>
     </form>
 </div>
+<?= $this->endSection() ?>
 
+
+<?= $this->section('script') ?>
 <script>
 const selected = new Map();
 const harga = <?= (int) $harga ?>;
@@ -361,18 +340,18 @@ function renderSummary() {
 
     input.value = Array.from(selected.keys()).join(',');
     const subtotal = selected.size * harga;
+
     document.getElementById('subtotalInfo').textContent =
         `Subtotal (${selected.size} × Rp ${harga.toLocaleString('id-ID')})`;
 
     total.textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
-
     btn.disabled = false;
 }
 
-    const form = document.querySelector('form');
-    const btn = document.getElementById('btnSubmit');
-    const btnText = document.querySelector('.btn-text');
-    const btnLoading = document.getElementById('btnLoading');
+const form = document.querySelector('form');
+const btn = document.getElementById('btnSubmit');
+const btnText = document.querySelector('.btn-text');
+const btnLoading = document.getElementById('btnLoading');
 
 form.addEventListener('submit', () => {
     btn.disabled = true;
@@ -380,5 +359,4 @@ form.addEventListener('submit', () => {
     btnLoading.classList.remove('d-none');
 });
 </script>
-
 <?= $this->endSection() ?>
