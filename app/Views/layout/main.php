@@ -10,9 +10,10 @@
 <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
 <link rel="stylesheet" href="<?= base_url('assets/css/style-preset.css') ?>">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-<link rel="icon" href="<?= base_url('assets/images/favicon.svg') ?>">
+<link rel="icon" href="<?= base_url('assets/images/MYCINEMA.png') ?>">
 
 <style>
+    
 body {
     background: #f5f7fa;
     overflow-x: hidden;
@@ -72,7 +73,7 @@ body {
     margin-left: 250px;
     width: calc(100% - 250px);
     padding: 80px 20px 0px;
-    min-height: 100vh;
+    min-height: calc(100vh - 70px);
     transition: .3s;
 
     display: flex;

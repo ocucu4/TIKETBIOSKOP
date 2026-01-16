@@ -47,7 +47,6 @@ body {
     color: #9ca3af;
 }
 
-/* user button */
 .kasir-user {
     background: rgba(255,255,255,.08);
     border: none;
@@ -105,7 +104,6 @@ main.kasir-content {
     display: block;
 }
 
-/* logout */
 .btn-logout {
     background: #dc2626;
     border: none;

@@ -9,7 +9,11 @@
   animation: cardFadeUp 0.6s ease forwards;
   transition: transform .2s ease, box-shadow .2s ease;
   cursor: default;
-  background: linear-gradient(180deg, #ffffff, #fafbfc);
+  background: linear-gradient(
+    180deg,
+    var(--bg-card),
+    var(--bg-soft)
+  );
 }
 
 .dashboard-card h3 {
@@ -49,6 +53,10 @@
   padding-bottom: 0;
 }
 
+.card {
+  height: auto;
+}
+
 .card-header {
   user-select: none;
 }
@@ -84,6 +92,36 @@
 
 .col-md-4 .dashboard-card {
   align-self: flex-start;
+}
+
+.list-group-item {
+  transition: background-color .2s ease;
+}
+
+.list-group-item:hover {
+  background-color: #f8fafc;
+}
+
+.chart-responsive {
+  min-height: 260px;
+  height: 35vh;
+  max-height: 420px;
+  overflow: hidden;
+}
+
+@media (max-width: 1200px) {
+  .col-md-8, .col-md-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+html {
+  font-size: clamp(14px, 1vw, 16px);
+}
+
+.dashboard-spacer {
+  min-height: clamp(4vh, 8vh, 12vh);
 }
 
 </style>
@@ -122,7 +160,7 @@
 <div class="row">
 
   <div class="col-md-8">
-    <div class="card h-100">
+    <div class="card">
       <div class="card-header">
         <h5 class="mb-1">Grafik Penjualan</h5>
         <small class="text-muted" id="chartInsight">
@@ -130,13 +168,13 @@
         </small>
       </div>
       <div class="card-body">
-        <div id="grafik-penjualan" style="height:340px;"></div>
+        <div id="grafik-penjualan" class="chart-responsive"></div>
       </div>
     </div>
   </div>
 
   <div class="col-md-4">
-    <div class="card h-100 dashboard-card delay-4">
+    <div class="card dashboard-card delay-4">
       <div class="card-header d-flex justify-content-between align-items-center"
            style="cursor:pointer"
            onclick="toggleTopFilm()">
@@ -169,6 +207,40 @@
 
 </div>
 
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card dashboard-card delay-1">
+      <div class="card-header">
+        <h5 class="mb-0">Aktivitas Terakhir</h5>
+      </div>
+
+      <div class="card-body p-0">
+        <ul class="list-group list-group-flush">
+          <?php if (empty($recentActivity)): ?>
+            <li class="list-group-item text-muted text-center py-4">
+              Belum ada aktivitas terbaru
+            </li>
+          <?php else: ?>
+            <?php foreach ($recentActivity as $a): ?>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <strong><?= esc($a['film']) ?></strong><br>
+                  <small class="text-muted">
+                    <?= date('d M Y H:i', strtotime($a['waktu'])) ?>
+                  </small>
+                </div>
+                <span class="badge bg-success">Lunas</span>
+              </li>
+            <?php endforeach ?>
+          <?php endif ?>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-spacer"></div>
+
 <script>
 function toggleTopFilm() {
   const body = document.getElementById('topFilmBody');
@@ -187,8 +259,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const options = {
     chart: {
       type: 'area',
-      height: 340,
-      toolbar: { show: false }
+      height: '100%',
+      toolbar: { show: false },
+      foreColor: getComputedStyle(document.body)
+        .getPropertyValue('--text-muted')
+    },
+    theme: {
+      mode: document.body.classList.contains('dark-mode')
+        ? 'dark'
+        : 'light'
     },
     series: [{
       name: 'Tiket Terjual',

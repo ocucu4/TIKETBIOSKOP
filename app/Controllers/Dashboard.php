@@ -72,6 +72,19 @@ class Dashboard extends BaseController
             ];
         }
 
+        $recentActivity = $db->table('order o')
+            ->select('
+                o.tanggal_order AS waktu,
+                f.judul_film AS film
+            ')
+            ->join('jadwal_tayang j', 'j.id_tayang = o.id_tayang')
+            ->join('film f', 'f.id_film = j.id_film')
+            ->where('o.status_order', 'lunas')
+            ->orderBy('o.tanggal_order', 'DESC')
+            ->limit(5)
+            ->get()
+            ->getResultArray();
+
         return view('dashboard/index', [
             'title'           => 'Dashboard',
             'totalKasir'      => $totalKasir,
@@ -79,7 +92,8 @@ class Dashboard extends BaseController
             'tiketTerjual'    => $tiketTerjual,
             'topFilm'         => $topFilm,
             'grafikPenjualan' => array_values($grafik),
-            'tooltipFilm'     => $tooltipData
+            'tooltipFilm'     => $tooltipData,
+            'recentActivity' => $recentActivity
         ]);
     }
 }
