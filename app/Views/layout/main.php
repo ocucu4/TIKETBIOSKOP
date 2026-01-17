@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +12,6 @@
 <link rel="icon" href="<?= base_url('assets/images/MYCINEMA.png') ?>">
 
 <style>
-    
 body {
     background: #f5f7fa;
     overflow-x: hidden;
@@ -29,14 +27,9 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    transition: .1s;
+    transition: .25s ease;
     overflow-y: auto;
     z-index: 1040;
-}
-
-.pc-sidebar.closed {
-    width: 0;
-    overflow: hidden;
 }
 
 .pc-sidebar .nav-link {
@@ -44,9 +37,39 @@ body {
     padding: 10px 12px;
     transition: .2s;
 }
+
 .pc-sidebar .nav-link:hover {
     background: #edf0f5;
-    color: #000 !important;
+}
+
+.pc-sidebar .nav-link.active {
+    background: #eef2ff;
+    color: #1e3a8a !important;
+    font-weight: 600;
+}
+
+.pc-sidebar .nav-link.active img {
+    filter: brightness(0) saturate(100%) invert(20%) sepia(90%) saturate(300%) hue-rotate(210deg);
+}
+
+.pc-sidebar.mini {
+    width: 80px;
+}
+
+.pc-sidebar.mini .nav-link {
+    justify-content: center;
+    padding: 10px;
+}
+
+.pc-sidebar.mini .nav-link span {
+    display: none;
+}
+
+.pc-sidebar.mini .nav-link img {
+    margin-right: 0 !important;
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
 }
 
 .pc-header {
@@ -54,35 +77,33 @@ body {
     border: 1px solid #d1d5db;
     border-radius: 12px;
     padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     position: fixed;
     top: 0;
     left: 250px;
     right: 0;
     height: 70px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-    transition: .3s;
-}
-.pc-header.closed {
-    left: 0;
+    box-shadow: 0 3px 8px rgba(0,0,0,.05);
+    transition: .25s ease;
+    z-index: 1030;
 }
 
 .pc-content {
     margin-left: 250px;
     width: calc(100% - 250px);
-    padding: 80px 20px 0px;
+    padding: 80px 20px 0;
     min-height: calc(100vh - 70px);
-    transition: .3s;
-
+    transition: .25s ease;
     display: flex;
     flex-direction: column;
 }
 
-.pc-content.closed {
-    margin-left: 0;
-    width: 100%;
+.pc-sidebar.mini + .pc-content {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+}
+
+.pc-sidebar.mini + .pc-content .pc-header {
+    left: 80px;
 }
 
 .profile-card {
@@ -104,10 +125,7 @@ body {
 
 .profile-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background: rgba(0,0,0,.35);
     display: none;
     z-index: 3000;
@@ -117,22 +135,181 @@ body {
     display: block;
 }
 
-.profile-menu .menu-item {
-    display: flex;
+.table-premium {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0,0,0,.06);
+    table-layout: fixed;
+    width: 100%;
+}
+
+.table-premium thead {
+    background: #f8fafc;
+    color: #111827;
+    font-weight: 600;
+}
+
+.table-premium th,
+.table-premium td {
+    padding: 12px;
+    vertical-align: middle;
+}
+
+.table-premium thead th {
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: .4px;
+}
+
+.table-premium tbody tr:hover {
+    background-color: #f0f6ff;
+}
+
+.action-btn {
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+    border-radius: 50%;
+    display: inline-flex;
     align-items: center;
-    padding: 10px 8px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: .2s;
+    justify-content: center;
 }
 
-.profile-menu .menu-item i {
-    margin-right: 10px;
-    font-size: 1.2rem;
+.empty-state {
+    padding: 40px 0;
+    color: #6b7280;
 }
 
-.profile-menu .menu-item:hover {
-    background: #f1f3f7;
+.table-premium th:nth-child(2),
+.table-premium td:nth-child(2) {
+    max-width: 420px;
+}
+
+.table-premium td:nth-child(2) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dashboard-card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: cardFadeUp 0.6s ease forwards;
+  transition: transform .2s ease, box-shadow .2s ease;
+  cursor: default;
+  background: linear-gradient(
+    180deg,
+    var(--bg-card),
+    var(--bg-soft)
+  );
+}
+
+.dashboard-card h3 {
+  transition: transform .2s ease;
+}
+
+.dashboard-card:hover h3 {
+  transform: scale(1.05);
+}
+
+.dashboard-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,.08);
+  border-color: #c7d2fe;
+}
+
+.dashboard-card.delay-1 { animation-delay: .1s; }
+.dashboard-card.delay-2 { animation-delay: .2s; }
+.dashboard-card.delay-3 { animation-delay: .3s; }
+.dashboard-card.delay-4 { animation-delay: .4s; }
+
+@keyframes cardFadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dashboard-section { margin-bottom: 1.5rem; }
+
+.collapse-body {
+  overflow: hidden;
+  max-height: 500px;
+  transition: max-height .35s ease, padding .2s ease;
+}
+
+.collapse-body.collapsed {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.card {
+  height: auto;
+}
+
+.card-header {
+  user-select: none;
+}
+.card-header:hover {
+  background: #f8fafc;
+}
+
+.top-film-item {
+  transition: transform 0.35s ease, background-color 0.2s ease;
+}
+
+.top-film-item.moving {
+  background-color: #f1f5ff;
+}
+
+.rank {
+  width: 22px;
+  height: 22px;
+  font-weight: 600;
+  border-radius: 50%;
+  background: #e0e7ff;
+  color: #1e3a8a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+#topFilmList.collapsed {
+  max-height: 0;
+  overflow: hidden;
+}
+
+.col-md-4 .dashboard-card {
+  align-self: flex-start;
+}
+
+.list-group-item {
+  transition: background-color .2s ease;
+}
+
+.list-group-item:hover {
+  background-color: #f8fafc;
+}
+
+.chart-responsive {
+  min-height: 260px;
+  height: 35vh;
+  max-height: 420px;
+  overflow: hidden;
+}
+
+@media (max-width: 1200px) {
+  .col-md-8, .col-md-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+html {
+  font-size: clamp(14px, 1vw, 16px);
+}
+
+.dashboard-spacer {
+  min-height: clamp(4vh, 8vh, 12vh);
 }
 
 </style>
@@ -154,58 +331,39 @@ body {
     <?= $this->include('layout/footer') ?>
 </div>
 
-<div id="profileCard" class="profile-card">
-    <div class="card-inner">
-
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="m-0">Profile</h5>
-            <button class="btn-close" onclick="closeProfilePanel()"></button>
-        </div>
-
-        <div class="text-center mb-3">
-            <img src="<?= base_url('assets/images/user/avatar-1.jpg') ?>" width="70" class="rounded-circle mb-2">
-            <h6 class="fw-semibold"><?= session()->get('admin_name') ?></h6>
-            <h6 class="text-muted">Admin</h6>
-        </div>
-
-        <hr>
-
-        <a href="<?= base_url('logout') ?>" class="btn btn-danger w-100 mt-2" style="font-weight: 600;">
-            <i class="bi bi-box-arrow-right"></i> Logout
-        </a>
-
-    </div>
-</div>
-
+<div id="profileCard" class="profile-card"></div>
 <div id="profileOverlay" class="profile-overlay" onclick="closeProfilePanel()"></div>
 
 <script src="<?= base_url('assets/js/plugins/popper.min.js') ?>"></script>
 <script src="<?= base_url('assets/js/plugins/bootstrap.min.js') ?>"></script>
 <script src="<?= base_url('assets/js/plugins/feather.min.js') ?>"></script>
 <script src="<?= base_url('assets/js/script.js') ?>"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="<?= base_url('assets/js/plugins/apexcharts.min.js') ?>"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-const sidebar = document.querySelector(".pc-sidebar");
-const content = document.querySelector(".pc-content");
-const header = document.querySelector(".pc-header");
-const toggleBtn = document.getElementById("toggleSidebar");
+const sidebar   = document.querySelector('.pc-sidebar');
+const toggleBtn = document.getElementById('toggleSidebar');
 
-toggleBtn?.addEventListener("click", () => {
-  sidebar.classList.toggle("closed");
-  content.classList.toggle("closed");
-  header.classList.toggle("closed");
+if (localStorage.getItem('sidebarMini') === 'true') {
+    sidebar.classList.add('mini');
+}
+
+toggleBtn?.addEventListener('click', () => {
+    sidebar.classList.toggle('mini');
+    localStorage.setItem(
+        'sidebarMini',
+        sidebar.classList.contains('mini')
+    );
 });
 
 function openProfilePanel() {
-  document.getElementById("profileCard").classList.add("show");
-  document.getElementById("profileOverlay").classList.add("show");
+    document.getElementById("profileCard").classList.add("show");
+    document.getElementById("profileOverlay").classList.add("show");
 }
 function closeProfilePanel() {
-  document.getElementById("profileCard").classList.remove("show");
-  document.getElementById("profileOverlay").classList.remove("show");
+    document.getElementById("profileCard").classList.remove("show");
+    document.getElementById("profileOverlay").classList.remove("show");
 }
 </script>
 

@@ -41,7 +41,6 @@ class Film extends BaseController
         $data = [
             'judul_film'       => $this->request->getPost('judul_film'),
             'durasi'           => $this->request->getPost('durasi'),
-            'sinopsis'         => $this->request->getPost('sinopsis'),
             'harga_tiket'      => $this->request->getPost('harga_tiket'),
             'id_genre'         => $this->request->getPost('id_genre'),
             'poster'           => $namaPoster
@@ -71,7 +70,6 @@ class Film extends BaseController
         $this->film->update($id, [
             'judul_film'  => $this->request->getPost('judul_film'),
             'durasi'      => $this->request->getPost('durasi'),
-            'sinopsis'    => $this->request->getPost('sinopsis'),
             'harga_tiket' => $this->request->getPost('harga_tiket'),
             'id_genre'    => $this->request->getPost('id_genre'),
             'poster'      => $namaPoster
