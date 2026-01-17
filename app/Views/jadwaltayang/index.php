@@ -24,16 +24,16 @@
     </div>
 <?php endif; ?>
 
-    <table class="table table-premium align-middle">
+    <table class="table table-premium align-middle table-jadwal">
         <thead>
             <tr>
-                <th>No</th>
+                <th style="width:60px" class="text-center">No</th>
                 <th>Film</th>
-                <th>Room</th>
-                <th>Tanggal</th>
-                <th>Jam</th>
-                <th>Harga</th>
-                <th class="text-center">Aksi</th>
+                <th class="text-center">Room</th>
+                <th class="text-center">Tanggal</th>
+                <th class="text-center">Jam</th>
+                <th style="width:140px" class="text-end col-harga">Harga</th>
+                <th style="width:150px" class="text-center">Aksi</th>
             </tr>
         </thead>
 
@@ -41,37 +41,47 @@
         <?php if (!empty($data)): ?>
             <?php $no=1; foreach ($data as $d): ?>
             <tr>
-                <td><?= $no++ ?></td>
-                <td><?= esc($d->judul_film) ?></td>
-                <td><?= esc($d->nama_room) ?></td>
-                <td><?= esc($d->tanggal) ?></td>
-                <td><?= esc($d->jam_mulai) ?> - <?= esc($d->jam_selesai) ?></td>
-                <td>Rp <?= number_format($d->harga, 0, ',', '.') ?></td>
-                
-                <td class="text-center">
-                        
-                    <button class="btn btn-outline-primary action-btn me-1"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modalEdit<?= $d->id_tayang ?>">
-                        <i data-feather="edit"></i>
-                    </button>
-                        
-                    <a href="<?= base_url('jadwaltayang/delete/'.$d->id_tayang) ?>"
-                       class="btn btn-outline-danger action-btn"
-                       onclick="return confirm('Hapus jadwal?')">
-                        <i data-feather="trash-2"></i>
-                    </a>
-                        
-                    <a href="<?= base_url('kursijadwalstatus/'.$d->id_tayang) ?>"
-                       class="btn btn-outline-secondary action-btn ms-1"
-                       title="Status Kursi">
-                        <img src="<?= base_url('assets/icons-sidebar/seat-schedule-status.png') ?>"
-                             width="20"
-                             alt="Status Kursi">
-                    </a>
+                <td class="text-center"><?= $no++ ?></td>
 
-                </div>
-            </td>
+                <td><?= esc($d->judul_film) ?></td>
+
+                <td class="text-center"><?= esc($d->nama_room) ?></td>
+
+                <td class="text-center"><?= esc($d->tanggal) ?></td>
+
+                <td class="text-center">
+                    <?= esc($d->jam_mulai) ?> - <?= esc($d->jam_selesai) ?>
+                </td>
+
+                <td class="text-end col-harga">
+                    Rp <?= number_format($d->harga, 0, ',', '.') ?>
+                </td>
+
+                <td class="text-center">
+                    <div class="d-flex justify-content-center gap-1">
+
+                        <button class="btn btn-outline-primary action-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalEdit<?= $d->id_tayang ?>">
+                            <i data-feather="edit"></i>
+                        </button>
+
+                        <a href="<?= base_url('jadwaltayang/delete/'.$d->id_tayang) ?>"
+                           class="btn btn-outline-danger action-btn"
+                           onclick="return confirm('Hapus jadwal?')">
+                            <i data-feather="trash-2"></i>
+                        </a>
+
+                        <a href="<?= base_url('kursijadwalstatus/'.$d->id_tayang) ?>"
+                           class="btn btn-outline-secondary action-btn"
+                           title="Status Kursi">
+                            <img src="<?= base_url('assets/icons-sidebar/seat-schedule-status.png') ?>"
+                                 width="18"
+                                 alt="Status Kursi">
+                        </a>
+
+                    </div>
+                </td>
             </tr>
             <?php endforeach ?>
         <?php else: ?>

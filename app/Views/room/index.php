@@ -51,14 +51,14 @@
             <h5 class="fw-semibold mb-3">Daftar Room</h5>
 
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table table-premium align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th>No.</th>
+                                <th style="width:60px" class="text-center">No.</th>
                                 <th>Nama Room</th>
-                                <th>Kapasitas</th>
-                                <th>Panjang Baris</th>
-                                <th>Aksi</th>
+                                <th class="text-center">Kapasitas</th>
+                                <th class="text-center">Panjang Baris</th>
+                                <th style="width:100px" class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -73,17 +73,16 @@
                                     <tr>
                                         <td><?= $no++ ?></td>
                                         <td><?= esc($r->nama_room) ?></td>
-                                        <td><?= esc($r->kapasitas) ?></td>
-                                        <td><?= esc($r->panjang) ?></td>
-
+                                        <td class="text-center"><?= esc($r->kapasitas) ?></td>
+                                        <td class="text-center"><?= esc($r->panjang) ?></td>
                                         <td class="text-center">
-
-                                        <button class="btn btn-outline-danger action-btn"
-                                                onclick="hapusRoom(<?= $r->id_room ?>)">
-                                            <i data-feather="trash-2"></i>
-                                        </button>
-
-                                        </td>                       
+                                        <div class="d-flex justify-content-center">
+                                            <button class="btn btn-outline-danger action-btn"
+                                                    onclick="hapusRoom(<?= $r->id_room ?>)">
+                                                <i data-feather="trash-2"></i>
+                                            </button>
+                                        </div>
+                                    </td>                       
                                     </tr>
                                 <?php endforeach ?>
                             <?php endif ?>
@@ -93,9 +92,6 @@
               </div>
             </div>
         </div>
-    </div>
-</div>
-</div>
 
 <script>
 

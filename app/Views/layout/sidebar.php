@@ -12,13 +12,13 @@ $uri = service('uri')->getSegment(1);
 
     <a href="<?= base_url('dashboard') ?>"
        class="nav-link mb-2 d-flex align-items-center <?= ($uri === 'dashboard' || $uri === '') ? 'active' : '' ?>">
-      <img src="<?= base_url('assets/icons-sidebar/Dashboard.png') ?>" width="28" class="me-2">
+      <img src="<?= base_url('assets/icons-sidebar/Dashboard.svg') ?>" width="28" class="me-2">
       <span>Dashboard</span>
     </a>
 
     <a href="<?= base_url('film') ?>"
        class="nav-link mb-2 d-flex align-items-center <?= ($uri === 'film') ? 'active' : '' ?>">
-      <img src="<?= base_url('assets/icons-sidebar/Film.png') ?>" width="28" class="me-2">
+      <img src="<?= base_url('assets/icons-sidebar/Movie-Roll.svg') ?>" width="28" class="me-2">
       <span>Film</span>
     </a>
 

@@ -15,11 +15,12 @@
         <thead>
             <tr>
                 <th class="text-center" style="width:60px">No</th>
+                <th class="text-center" style="width:90px">Poster</th>
                 <th>Judul</th>
                 <th class="text-center" style="width:120px">Genre</th>
                 <th class="text-end" style="width:110px">Durasi</th>
                 <th class="text-end" style="width:140px">Harga</th>
-                <th class="text-center" style="width:110px">Aksi</th>
+                <th class="text-center" style="width:150px">Aksi</th>
             </tr>
         </thead>
 
@@ -28,6 +29,15 @@
                 <?php $no=1; foreach($data as $f): ?>
                 <tr>
                     <td class="text-center"><?= $no++ ?></td>
+
+                    <td class="text-center">
+                        <?php if ($f->poster): ?>
+                            <img src="<?= base_url('posterfilm/'.$f->poster) ?>"
+                                 style="width:55px;height:80px;object-fit:cover;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.15)">
+                        <?php else: ?>
+                            <span class="text-muted">-</span>
+                        <?php endif; ?>
+                    </td>
 
                     <td class="fw-semibold"><?= esc($f->judul_film) ?></td>
 
@@ -40,6 +50,14 @@
                     </td>
 
                     <td class="text-center">
+
+                        <?php if ($f->poster): ?>
+                        <button class="btn btn-outline-secondary action-btn me-2"
+                                onclick="lihatPoster('<?= base_url('posterfilm/'.$f->poster) ?>')">
+                            <i data-feather="image"></i>
+                        </button>
+                        <?php endif; ?>
+
                         <button class="btn btn-outline-primary action-btn me-2"
                                 onclick='editFilm(<?= json_encode($f, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>)'
                                 data-bs-toggle="modal"
@@ -51,12 +69,13 @@
                                 onclick="hapusFilm(<?= $f->id_film ?>)">
                             <i data-feather="trash-2"></i>
                         </button>
+
                     </td>
                 </tr>
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="6" class="text-center empty-state">
+                    <td colspan="7" class="text-center empty-state">
                         Belum ada data film
                     </td>
                 </tr>
@@ -181,6 +200,18 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalPoster" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img id="posterView"
+                     class="img-fluid rounded"
+                     style="max-height:420px;object-fit:contain;">
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 function editFilm(f) {
     document.getElementById('u-judul').value  = f.judul_film;
@@ -190,6 +221,11 @@ function editFilm(f) {
 
     document.getElementById('formUbah').action =
         "<?= base_url('film/update') ?>/" + f.id_film;
+}
+
+function lihatPoster(src) {
+    document.getElementById('posterView').src = src;
+    new bootstrap.Modal(document.getElementById('modalPoster')).show();
 }
 
 function hapusFilm(id) {

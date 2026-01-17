@@ -12,7 +12,11 @@ class GenreModel extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['nama_genre'];
+    protected $allowedFields    = [
+        
+    'nama_genre'
+    
+    ];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

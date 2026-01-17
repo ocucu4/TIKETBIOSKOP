@@ -12,13 +12,19 @@
 <link rel="icon" href="<?= base_url('assets/images/MYCINEMA.png') ?>">
 
 <style>
+/* ===============================
+   BASE LAYOUT
+   =============================== */
 body {
     background: #f5f7fa;
     overflow-x: hidden;
     display: flex;
-    height: 100%;
+    min-height: 100vh;
 }
 
+/* ===============================
+   SIDEBAR
+   =============================== */
 .pc-sidebar {
     width: 250px;
     height: 100vh;
@@ -27,9 +33,13 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    transition: .25s ease;
     overflow-y: auto;
+    transition: .25s ease;
     z-index: 1040;
+}
+
+.pc-sidebar.mini {
+    width: 80px;
 }
 
 .pc-sidebar .nav-link {
@@ -52,26 +62,17 @@ body {
     filter: brightness(0) saturate(100%) invert(20%) sepia(90%) saturate(300%) hue-rotate(210deg);
 }
 
-.pc-sidebar.mini {
-    width: 80px;
-}
-
 .pc-sidebar.mini .nav-link {
     justify-content: center;
-    padding: 10px;
 }
 
 .pc-sidebar.mini .nav-link span {
     display: none;
 }
 
-.pc-sidebar.mini .nav-link img {
-    margin-right: 0 !important;
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-}
-
+/* ===============================
+   HEADER & CONTENT
+   =============================== */
 .pc-header {
     background: #f3f4f6;
     border: 1px solid #d1d5db;
@@ -106,6 +107,9 @@ body {
     left: 80px;
 }
 
+/* ===============================
+   PROFILE PANEL
+   =============================== */
 .profile-card {
     position: fixed;
     top: 90px;
@@ -135,12 +139,15 @@ body {
     display: block;
 }
 
+/* ===============================
+   TABLE
+   =============================== */
 .table-premium {
+    width: 100%;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 14px rgba(0,0,0,.06);
-    table-layout: fixed;
-    width: 100%;
+    background: #fff;
 }
 
 .table-premium thead {
@@ -165,6 +172,14 @@ body {
     background-color: #f0f6ff;
 }
 
+.empty-state {
+    padding: 40px 0;
+    color: #6b7280;
+}
+
+/* ===============================
+   ACTION BUTTON
+   =============================== */
 .action-btn {
     width: 36px;
     height: 36px;
@@ -175,141 +190,196 @@ body {
     justify-content: center;
 }
 
-.empty-state {
-    padding: 40px 0;
-    color: #6b7280;
+/* ===============================
+   JADWAL TAYANG
+   =============================== */
+.table-jadwal {
+    table-layout: auto;
 }
 
-.table-premium th:nth-child(2),
-.table-premium td:nth-child(2) {
-    max-width: 420px;
-}
-
-.table-premium td:nth-child(2) {
+.table-jadwal .col-harga {
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    text-align: right;
+}
+
+/* ===============================
+   CARD & DASHBOARD
+   =============================== */
+.card {
+    height: auto;
 }
 
 .dashboard-card {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: cardFadeUp 0.6s ease forwards;
-  transition: transform .2s ease, box-shadow .2s ease;
-  cursor: default;
-  background: linear-gradient(
-    180deg,
-    var(--bg-card),
-    var(--bg-soft)
-  );
-}
-
-.dashboard-card h3 {
-  transition: transform .2s ease;
-}
-
-.dashboard-card:hover h3 {
-  transform: scale(1.05);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: cardFadeUp 0.6s ease forwards;
+    transition: transform .2s ease, box-shadow .2s ease;
+    background: linear-gradient(180deg, var(--bg-card), var(--bg-soft));
 }
 
 .dashboard-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0,0,0,.08);
-  border-color: #c7d2fe;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
 }
-
-.dashboard-card.delay-1 { animation-delay: .1s; }
-.dashboard-card.delay-2 { animation-delay: .2s; }
-.dashboard-card.delay-3 { animation-delay: .3s; }
-.dashboard-card.delay-4 { animation-delay: .4s; }
 
 @keyframes cardFadeUp {
-  to { opacity: 1; transform: translateY(0); }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.dashboard-section { margin-bottom: 1.5rem; }
-
-.collapse-body {
-  overflow: hidden;
-  max-height: 500px;
-  transition: max-height .35s ease, padding .2s ease;
-}
-
-.collapse-body.collapsed {
-  max-height: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.card {
-  height: auto;
-}
-
-.card-header {
-  user-select: none;
-}
-.card-header:hover {
-  background: #f8fafc;
-}
-
-.top-film-item {
-  transition: transform 0.35s ease, background-color 0.2s ease;
-}
-
-.top-film-item.moving {
-  background-color: #f1f5ff;
-}
-
-.rank {
-  width: 22px;
-  height: 22px;
-  font-weight: 600;
-  border-radius: 50%;
-  background: #e0e7ff;
-  color: #1e3a8a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-}
-
-#topFilmList.collapsed {
-  max-height: 0;
-  overflow: hidden;
-}
-
-.col-md-4 .dashboard-card {
-  align-self: flex-start;
-}
-
-.list-group-item {
-  transition: background-color .2s ease;
-}
-
-.list-group-item:hover {
-  background-color: #f8fafc;
-}
-
-.chart-responsive {
-  min-height: 260px;
-  height: 35vh;
-  max-height: 420px;
-  overflow: hidden;
-}
-
+/* ===============================
+   RESPONSIVE
+   =============================== */
 @media (max-width: 1200px) {
-  .col-md-8, .col-md-4 {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
+    .col-md-8,
+    .col-md-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 }
 
 html {
-  font-size: clamp(14px, 1vw, 16px);
+    font-size: clamp(14px, 1vw, 16px);
 }
 
-.dashboard-spacer {
-  min-height: clamp(4vh, 8vh, 12vh);
+/* ===============================
+   RESPONSIVE TABLE
+   =============================== */
+@media (max-width: 768px) {
+
+    .pc-header {
+        left: 0 !important;
+        border-radius: 0;
+    }
+
+    .pc-content {
+        margin-left: 0 !important;
+        width: 100%;
+        padding: 90px 12px 12px;
+    }
+
+    .pc-sidebar {
+        transform: translateX(-100%);
+        position: fixed;
+    }
+
+    .pc-sidebar.show {
+        transform: translateX(0);
+    }
+
+    /* ===== TABLE STACK MODE ===== */
+    .table-premium thead {
+        display: none;
+    }
+
+    .table-premium,
+    .table-premium tbody,
+    .table-premium tr,
+    .table-premium td {
+        display: block;
+        width: 100%;
+    }
+
+    .table-premium tr {
+        margin-bottom: 12px;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 2px 10px rgba(0,0,0,.05);
+        padding: 12px;
+    }
+
+    .table-premium td {
+        padding: 6px 0;
+        border: none;
+        text-align: left !important;
+    }
+
+    .table-premium td::before {
+        content: attr(data-label);
+        font-size: 11px;
+        font-weight: 600;
+        color: #6b7280;
+        display: block;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+    }
+
+    .table-premium .action-group {
+        display: flex;
+        justify-content: flex-start;
+        gap: 8px;
+        margin-top: 8px;
+    }
+
+    .action-btn {
+        width: 34px;
+        height: 34px;
+    }
+}
+
+/* ===============================
+   SIDEBAR OVERLAY
+   =============================== */
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.35);
+    z-index: 1035;
+    display: none;
+}
+
+.sidebar-overlay.show {
+    display: block;
+}
+
+/* ===============================
+   SIDEBAR ACTIVE UX POLISH
+   =============================== */
+
+.pc-sidebar .nav-link {
+    position: relative;
+    overflow: hidden;
+}
+
+/* indicator bar */
+.pc-sidebar .nav-link::before {
+    content: "";
+    position: absolute;
+    left: -6px;
+    top: 50%;
+    width: 4px;
+    height: 0;
+    background: #4f46e5; /* indigo-600 */
+    border-radius: 4px;
+    transform: translateY(-50%);
+    transition: height .25s ease, left .25s ease;
+}
+
+/* active state */
+.pc-sidebar .nav-link.active::before {
+    height: 60%;
+    left: 0;
+}
+
+/* subtle slide effect */
+.pc-sidebar .nav-link.active {
+    transform: translateX(4px);
+}
+
+/* smooth hover (non-active) */
+.pc-sidebar .nav-link:not(.active):hover {
+    transform: translateX(2px);
+}
+
+.pc-sidebar.mini .nav-link.active {
+    transform: none;
+}
+
+.pc-sidebar.mini .nav-link.active::before {
+    height: 70%;
+    left: 2px;
 }
 
 </style>
@@ -318,6 +388,7 @@ html {
 <body>
 
 <?= $this->include('layout/sidebar') ?>
+<div id="sidebarOverlay" class="sidebar-overlay"></div>
 
 <div class="pc-content">
     <div class="pc-header">
@@ -344,12 +415,23 @@ html {
 <script>
 const sidebar   = document.querySelector('.pc-sidebar');
 const toggleBtn = document.getElementById('toggleSidebar');
+const overlay   = document.getElementById('sidebarOverlay');
 
-if (localStorage.getItem('sidebarMini') === 'true') {
+/* restore desktop mini state */
+if (window.innerWidth > 768 && localStorage.getItem('sidebarMini') === 'true') {
     sidebar.classList.add('mini');
 }
 
 toggleBtn?.addEventListener('click', () => {
+
+    /* MOBILE */
+    if (window.innerWidth <= 768) {
+        sidebar.classList.toggle('show');
+        overlay.classList.toggle('show');
+        return;
+    }
+
+    /* DESKTOP */
     sidebar.classList.toggle('mini');
     localStorage.setItem(
         'sidebarMini',
@@ -357,14 +439,19 @@ toggleBtn?.addEventListener('click', () => {
     );
 });
 
-function openProfilePanel() {
-    document.getElementById("profileCard").classList.add("show");
-    document.getElementById("profileOverlay").classList.add("show");
-}
-function closeProfilePanel() {
-    document.getElementById("profileCard").classList.remove("show");
-    document.getElementById("profileOverlay").classList.remove("show");
-}
+/* click outside */
+overlay?.addEventListener('click', () => {
+    sidebar.classList.remove('show');
+    overlay.classList.remove('show');
+});
+
+/* reset state on resize */
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+    }
+});
 </script>
 
 </body>

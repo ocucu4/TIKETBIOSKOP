@@ -80,6 +80,15 @@ class Film extends BaseController
 
     public function delete($id)
     {
+        $film = $this->film->find($id);
+
+        if ($film && $film->poster) {
+            $path = ROOTPATH.'public/posterfilm/'.$film->poster;
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
+
         $this->film->delete($id);
         return redirect()->to(base_url('film'));
     }
